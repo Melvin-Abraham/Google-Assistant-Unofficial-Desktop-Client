@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="164" height="314" viewBox="0 0 164 314">
+  <defs>
+    <filter id="Ellipse_11" x="35.873" y="-27.993" width="164.667" height="164.667" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_12" x="49.873" y="-13.993" width="136.667" height="136.667" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_2" x="72.873" y="9.007" width="89.667" height="89.667" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-NSIS_Sidebar">
+      <rect width="164" height="314"/>
+    </clipPath>
+  </defs>
+  <g id="NSIS_Sidebar" data-name="NSIS Sidebar" clip-path="url(#clip-NSIS_Sidebar)">
+    <rect width="164" height="314" fill="#121212"/>
+    <g id="Group_16" data-name="Group 16" transform="translate(53.019 164.55)">
+      <line id="Line_8" data-name="Line 8" y2="89.521" transform="translate(29.295 0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="6"/>
+      <path id="Path_14" data-name="Path 14" d="M0,29.3,29.3,0" transform="translate(29.295 61.557)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="6"/>
+      <path id="Path_13" data-name="Path 13" d="M29.3,29.3h0l-4.883-4.883L0,0" transform="translate(0 61.557)" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="6"/>
+      <line id="Line_14" data-name="Line 14" y2="33.975" transform="translate(29.295 0)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="6"/>
+    </g>
+    <circle id="Ellipse_13" data-name="Ellipse 13" cx="79.334" cy="79.334" r="79.334" transform="translate(38.873 -27.993)" fill="rgba(255,255,255,0.07)"/>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_11)">
+      <circle id="Ellipse_11-2" data-name="Ellipse 11" cx="73.334" cy="73.334" r="73.334" transform="translate(44.87 -21.99)" fill="rgba(255,255,255,0.15)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_12)">
+      <circle id="Ellipse_12-2" data-name="Ellipse 12" cx="59.334" cy="59.334" r="59.334" transform="translate(58.87 -7.99)" fill="rgba(255,255,255,0.1)"/>
+    </g>
+    <g id="Assistant_Logo" data-name="Assistant Logo" transform="translate(81.873 15.007)">
+      <g transform="matrix(1, 0, 0, 1, -81.87, -15.01)" filter="url(#Ellipse_2)">
+        <circle id="Ellipse_2-2" data-name="Ellipse 2" cx="35.834" cy="35.834" r="35.834" transform="translate(81.87 15.01)" fill="#fff"/>
+      </g>
+      <g id="Google_Assistant_logo" transform="translate(12.133 13.259)">
+        <circle id="Ellipse_1" data-name="Ellipse 1" cx="14.362" cy="14.362" r="14.362" transform="translate(0)" fill="#4285f4"/>
+        <path id="Path_1" data-name="Path 1" d="M454.314,154.107a2.919,2.919,0,1,1-2.919-2.919A2.919,2.919,0,0,1,454.314,154.107Z" transform="translate(-407.258 -138.344)" fill="#34a853"/>
+        <path id="Path_2" data-name="Path 2" d="M339.459,202.763a5.838,5.838,0,1,1-5.838-5.838A5.838,5.838,0,0,1,339.459,202.763Z" transform="translate(-297.656 -179.877)" fill="#ea4335"/>
+        <path id="Path_3" data-name="Path 3" d="M329.088,355.118a7.006,7.006,0,1,1-7.006-7.006A7.005,7.005,0,0,1,329.088,355.118Z" transform="translate(-286.118 -317.169)" fill="#fbbc05"/>
+      </g>
+    </g>
+  </g>
+</svg>

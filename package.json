@@ -1,0 +1,58 @@
+{
+    "name": "g-assist",
+    "productName": "Google Assistant",
+    "description": "Google Assistant Unofficial Desktop Client",
+    "version": "1.0.0-beta",
+    "private": true,
+    "author": "Melvin Abraham <melvinredvirus@gmail.com>",
+    "main": "app.js",
+    "build": {
+        "appId": "com.redvirus.g-assist",
+        "files": [
+            "app/**/*",
+            "node_modules/**/*",
+            "package.json",
+            "app.js"
+        ],
+        "directories": {
+            "buildResources": "app/res"
+        },
+        "publish": null,
+        "nsis": {
+            "oneClick": "false",
+            "artifactName": "${productName}-Setup-${version}.${ext}",
+            "allowToChangeInstallationDirectory": "true",
+            "installerIcon": "./app/res/icons/Installer.ico",
+            "installerSidebar": "./app/res/misc/InstallerSidebar.bmp",
+            "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp"
+        },
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64",
+                        "ia32"
+                    ]
+                }
+            ],
+            "icon": "./app/res/icons/favicon.ico"
+        }
+    },
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder",
+        "pack": "electron-builder --dir",
+        "postinstall": "npm rebuild --runtime=electron --target=4.2.12"
+    },
+    "dependencies": {
+        "google-assistant": "^0.6.0",
+        "grpc": "^1.24.2",
+        "node-record-lpcm16": "github:Melvin-Abraham/node-record-lpcm16#master"
+    },
+    "devDependencies": {
+        "electron": "^4.2.12",
+        "electron-builder": "^21.2.0",
+        "electron-rebuild": "^1.8.8"
+    }
+}

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="360" height="372" viewBox="0 0 360 372">
+  <defs>
+    <filter id="Rectangle_8" x="4" y="21" width="351" height="351" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_13" data-name="Group 13" transform="translate(-1639 -335.174)">
+    <rect id="Rectangle_12" data-name="Rectangle 12" width="360" height="360" transform="translate(1639 335.174)" fill="rgba(255,255,255,0)"/>
+    <g id="Group_6" data-name="Group 6" transform="translate(1652 335.174)">
+      <rect id="Rectangle_9" data-name="Rectangle 9" width="333" height="333" rx="15" transform="translate(0)" fill="#424242"/>
+      <g transform="matrix(1, 0, 0, 1, -13, 0)" filter="url(#Rectangle_8)">
+        <rect id="Rectangle_8-2" data-name="Rectangle 8" width="333" height="333" rx="15" transform="translate(13 27)" fill="#191919"/>
+      </g>
+    </g>
+    <rect id="Rectangle_10" data-name="Rectangle 10" width="77" height="45" transform="translate(1779.996 335.174)" fill="rgba(255,255,255,0.2)"/>
+    <rect id="Rectangle_11" data-name="Rectangle 11" width="77" height="16" transform="translate(1779.996 679.174)" fill="rgba(255,255,255,0.2)"/>
+    <g id="Assistant_Logo" data-name="Assistant Logo" transform="translate(1704.873 411.18)">
+      <circle id="Ellipse_2" data-name="Ellipse 2" cx="104.5" cy="104.5" r="104.5" fill="#fff"/>
+      <g id="Google_Assistant_logo" transform="translate(35.382 38.667)">
+        <circle id="Ellipse_1" data-name="Ellipse 1" cx="41.884" cy="41.884" r="41.884" transform="translate(0)" fill="#4285f4"/>
+        <path id="Path_1" data-name="Path 1" d="M465.5,159.7a8.513,8.513,0,1,1-8.513-8.513A8.513,8.513,0,0,1,465.5,159.7Z" transform="translate(-328.273 -113.731)" fill="#34a853"/>
+        <path id="Path_2" data-name="Path 2" d="M361.834,213.951a17.026,17.026,0,1,1-17.026-17.026A17.025,17.025,0,0,1,361.834,213.951Z" transform="translate(-239.928 -147.209)" fill="#ea4335"/>
+        <path id="Path_3" data-name="Path 3" d="M355.938,368.543a20.431,20.431,0,1,1-20.431-20.431A20.429,20.429,0,0,1,355.938,368.543Z" transform="translate(-230.628 -257.874)" fill="#fbbc05"/>
+      </g>
+    </g>
+    <g id="Group_5" data-name="Group 5" transform="translate(1915.301 391.396)">
+      <line id="Line_8" data-name="Line 8" y2="57.818" transform="translate(18.921 0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="4"/>
+      <path id="Path_14" data-name="Path 14" d="M0,18.921,18.921,0" transform="translate(18.921 39.758)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="4"/>
+      <path id="Path_13" data-name="Path 13" d="M18.921,18.921h0l-3.153-3.153L0,0" transform="translate(0 39.758)" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="4"/>
+      <line id="Line_14" data-name="Line 14" y2="21.943" transform="translate(18.921 0)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="4"/>
+    </g>
+  </g>
+</svg>

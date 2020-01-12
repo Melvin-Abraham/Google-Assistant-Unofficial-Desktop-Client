@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="67" viewBox="0 0 260 67">
+  <g id="assistant_sdk_client" transform="translate(-927 -600)">
+    <line id="Line_32" data-name="Line 32" x2="97" transform="translate(1008.5 633.5)" fill="none" stroke="rgba(255,255,255,0.5)" stroke-linecap="round" stroke-width="4" stroke-dasharray="3 9"/>
+    <g id="Group_37" data-name="Group 37" transform="translate(-192 1)">
+      <rect id="Rectangle_11" data-name="Rectangle 11" width="66" height="66" rx="10" transform="translate(1119 600)" fill="rgba(255,255,255,0.1)"/>
+      <rect id="Rectangle_12" data-name="Rectangle 12" width="66" height="58" rx="10" transform="translate(1119 608)" fill="rgba(255,255,255,0.1)"/>
+      <path id="Toubleshoot" d="M12.325,10.459,7.567,5.7a3.356,3.356,0,0,0-.784-3.608,3.456,3.456,0,0,0-3.869-.68L5.162,3.662,3.593,5.23l-2.3-2.248a3.37,3.37,0,0,0,.68,3.869,3.356,3.356,0,0,0,3.608.784l4.758,4.758a.505.505,0,0,0,.732,0l1.2-1.2a.471.471,0,0,0,.052-.732Z" transform="translate(1165.556 645.35)" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+      <path id="Subtraction_1" data-name="Subtraction 1" d="M-17589.572,28h-21.553a10.808,10.808,0,0,1-7.689-3.184,10.8,10.8,0,0,1-3.186-7.691,10.848,10.848,0,0,1,2.807-7.287,10.856,10.856,0,0,1,6.893-3.522A13.572,13.572,0,0,1-17600.25-1a13.6,13.6,0,0,1,8.676,3.13,13.635,13.635,0,0,1,4.654,7.807,9.081,9.081,0,0,1,5.971,2.832,8.963,8.963,0,0,1,2.449,6.168v.108c0,.018,0,.036,0,.054v.054a7.477,7.477,0,0,0-4-1.153,7.508,7.508,0,0,0-7.5,7.5,7.553,7.553,0,0,0,.424,2.5Z" transform="translate(18752 624)" fill="#fff"/>
+    </g>
+    <g id="first-time" transform="translate(294)">
+      <circle id="Ellipse_19" data-name="Ellipse 19" cx="33" cy="33" r="33" transform="translate(827 600)" fill="#fff"/>
+      <g id="Google_Assistant_logo" transform="translate(838.734 612.318)">
+        <circle id="Ellipse_1" data-name="Ellipse 1" cx="13.169" cy="13.169" r="13.169" transform="translate(0)" fill="#4285f4"/>
+        <path id="Path_1" data-name="Path 1" d="M453.829,153.865a2.677,2.677,0,1,1-2.677-2.677A2.677,2.677,0,0,1,453.829,153.865Z" transform="translate(-410.683 -139.411)" fill="#34a853"/>
+        <path id="Path_2" data-name="Path 2" d="M338.488,202.278a5.353,5.353,0,1,1-5.353-5.353A5.353,5.353,0,0,1,338.488,202.278Z" transform="translate(-300.16 -181.294)" fill="#ea4335"/>
+        <path id="Path_3" data-name="Path 3" d="M327.924,354.536a6.424,6.424,0,1,1-6.424-6.424A6.423,6.423,0,0,1,327.924,354.536Z" transform="translate(-288.524 -319.74)" fill="#fbbc05"/>
+      </g>
+    </g>
+  </g>
+</svg>

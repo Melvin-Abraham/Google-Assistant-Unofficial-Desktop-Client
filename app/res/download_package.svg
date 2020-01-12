@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="123" height="126" viewBox="0 0 123 126">
+  <defs>
+    <filter id="Box_Front" x="0" y="3" width="123" height="123" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Download_Icon" data-name="Download Icon" transform="translate(-1634 -335.174)">
+    <g id="Package_Box" data-name="Package Box" transform="translate(1643.017 335.174)">
+      <rect id="Box_Back" data-name="Box Back" width="105" height="105" rx="15" transform="translate(-0.017)" fill="#424242"/>
+      <g transform="matrix(1, 0, 0, 1, -9.02, 0)" filter="url(#Box_Front)">
+        <rect id="Box_Front-2" data-name="Box Front" width="105" height="105" rx="15" transform="translate(9 9)" fill="#222"/>
+      </g>
+    </g>
+    <rect id="Tape_Top" data-name="Tape Top" width="24" height="14" transform="translate(1684 335.174)" fill="rgba(255,255,255,0.2)"/>
+    <rect id="Tape_Bottom" data-name="Tape Bottom" width="24" height="6" transform="translate(1684 443.174)" fill="rgba(255,255,255,0.2)"/>
+    <g id="Install_Icon" data-name="Install Icon" transform="translate(1674.377 363.04)">
+      <line id="Line_8" data-name="Line 8" y2="64.739" transform="translate(21.186 0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="6"/>
+      <path id="Path_14" data-name="Path 14" d="M0,21.186,21.186,0" transform="translate(21.186 44.516)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="6"/>
+      <path id="Path_13" data-name="Path 13" d="M21.186,21.186h0l-3.531-3.531L0,0" transform="translate(0 44.516)" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="6"/>
+      <line id="Line_14" data-name="Line 14" y2="24.57" transform="translate(21.186 0)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="6"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="107.660527" height="100" viewBox="0 0 170.685 158.54">
+  <g id="Warning_Symbol" data-name="Warning Symbol" transform="translate(-566.435 -674.845)">
+    <g id="Exclamation" transform="translate(651.777 717.978)">
+      <line id="Line_18" data-name="Line 18" y2="69.166" transform="translate(0 0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="8"/>
+      <line id="Line_19" data-name="Line 19" y2="4.94" transform="translate(0 90.631)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="8"/>
+    </g>
+    <g id="Triangle" transform="translate(570.5 678.911)">
+      <line id="Line_17" data-name="Line 17" x2="162.554" transform="translate(0 150.409)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="6"/>
+      <line id="Line_15" data-name="Line 15" y1="150.409" x2="81.277" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="6"/>
+      <line id="Line_16" data-name="Line 16" x1="81.277" y1="150.409" transform="translate(81.277)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="6"/>
+    </g>
+  </g>
+</svg>

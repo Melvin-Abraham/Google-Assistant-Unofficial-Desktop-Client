@@ -1,0 +1,7 @@
+<svg id="Close_Btn" data-name="Close Btn" xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+  <circle id="Ellipse_8" data-name="Ellipse 8" cx="21" cy="21" r="21" fill="rgba(255,255,255,0)"/>
+  <g id="Group_6" data-name="Group 6">
+    <line id="Line_1" data-name="Line 1" x2="17.767" y2="17.767" transform="translate(12.267 12.524)" fill="none" stroke="#707070" stroke-width="2"/>
+    <line id="Line_2" data-name="Line 2" x1="17.767" y2="17.767" transform="translate(12.267 12.524)" fill="none" stroke="#707070" stroke-width="2"/>
+  </g>
+</svg>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Assistant Unofficial Client</title>
+
+    <link rel="stylesheet" href="../fonts/Product-Sans.css">
+    <link rel="stylesheet" href="../fonts/Roboto-Mono.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="./lib/player.js"></script>
+    <script src="./lib/p5.min.js"></script>
+    <script src="./lib/p5.sound.min.js"></script>
+</head>
+<body>
+    <div id="master-bg"></div>
+
+    <div id="title-bar">
+        <div id="nav-region">
+            <img id="settings-btn" class="ico-btn" type="icon" src="../res/settings_btn.svg" alt="Settings">
+        </div>
+        <div class="app-title"></div>
+        <div id="control-region">
+            <img id="expand-collapse-btn" class="ico-btn" type="icon" src="../res/expand_btn.svg" alt="Expand">
+            <img id="min-btn" class="ico-btn" type="icon" src="../res/min_btn.svg" alt="Minimize">
+            <img id="close-btn" class="ico-btn" type="icon" src="../res/close_btn.svg" alt="Close">
+        </div>
+        <div id="loader-area"></div>
+    </div>
+
+    <div class="container">
+        <div id="main-area">
+            <div class="init">
+                <center id="assistant-logo-main-parent">
+                    <img id="assistant-logo-main" src="../res/Google_Assistant_logo.svg" alt="">
+                </center>
+
+                <div id="init-headline-parent">
+                    <div id="init-headline">
+                        Hi! How can I help?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="suggestion-area">
+            <!-- <div style="
+                position: relative;
+                top: -30px;
+                left: 5px;
+                opacity: 0.75;
+            ">
+                Try Saying...
+            </div> -->
+
+            <div class="suggestion-parent">
+                <div class="suggestion" onclick="assistantTextQuery('How\'s the Weather today?')">Weather</div>
+                <div class="suggestion" onclick="assistantTextQuery('Toss a coin')">Toss a coin</div>
+                <div class="suggestion" onclick="assistantTextQuery('What can you do?')">What can you do?</div>
+            </div>
+        </div>
+
+        <div id="assistant-persistent-bar">
+            <input id="assistant-input" autofocus type="text" placeholder="Ask me anything...">
+
+            <div id="assistant-mic-parent" class="fade-scale">
+                <img id="assistant-mic" src="../res/Google_mic.svg" type="icon" alt="Speak">
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135" height="107" viewBox="0 0 135 107">
+  <g id="Offline_Icon" data-name="Offline Icon" transform="translate(-549 -679)">
+    <path id="ic_wb_cloudy_48px" d="M96.775,38.175a37.493,37.493,0,0,0-70.025-10A30,30,0,0,0,30,88H95a24.942,24.942,0,0,0,1.775-49.825Z" transform="translate(549 671)" fill="#fff"/>
+    <g id="Error" transform="translate(13 9)">
+      <circle id="Ellipse_10" data-name="Ellipse 10" cx="25.5" cy="25.5" r="25.5" transform="translate(620 726)" fill="#191919"/>
+      <g id="Warning_Symbol" data-name="Warning Symbol" transform="translate(631.999 736.529)">
+        <g id="Exclamation" transform="translate(13.689 8.107)">
+          <line id="Line_18" data-name="Line 18" y2="9.82" transform="translate(0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_19" data-name="Line 19" y2="0.701" transform="translate(0 12.868)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
+        </g>
+        <g id="Triangle" transform="translate(0)">
+          <line id="Line_17" data-name="Line 17" x2="27.378" transform="translate(0 25.332)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_15" data-name="Line 15" y1="25.332" x2="13.689" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_16" data-name="Line 16" x1="13.689" y1="25.332" transform="translate(13.689)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="2"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

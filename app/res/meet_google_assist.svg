@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="308.072" height="66" viewBox="0 0 308.072 66">
+  <g id="first-time" transform="translate(-827 -600)">
+    <g id="Group_34" data-name="Group 34" transform="translate(-118 -16)">
+      <path id="Path_36" data-name="Path 36" d="M-16.67.076,195.289,0a9.894,9.894,0,0,1,9.783,10V45a9.894,9.894,0,0,1-9.783,10H9.4A9.893,9.893,0,0,1-.38,45V18.969C-.38,13.446-22.073.076-16.67.076Z" transform="translate(1048 622)" fill="rgba(255,255,255,0.07)"/>
+      <text id="Hi_How_can_I_help_" data-name="Hi! How can I help?" transform="translate(1068 658)" fill="rgba(255,255,255,0.5)" font-size="20" font-family="ProductSans-Regular, Product Sans"><tspan x="0" y="0">Hi! How can I help?</tspan></text>
+    </g>
+    <circle id="Ellipse_19" data-name="Ellipse 19" cx="33" cy="33" r="33" transform="translate(827 600)" fill="#fff"/>
+    <g id="Google_Assistant_logo" transform="translate(838.734 612.318)">
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="13.169" cy="13.169" r="13.169" transform="translate(0)" fill="#4285f4"/>
+      <path id="Path_1" data-name="Path 1" d="M453.829,153.865a2.677,2.677,0,1,1-2.677-2.677A2.677,2.677,0,0,1,453.829,153.865Z" transform="translate(-410.683 -139.411)" fill="#34a853"/>
+      <path id="Path_2" data-name="Path 2" d="M338.488,202.278a5.353,5.353,0,1,1-5.353-5.353A5.353,5.353,0,0,1,338.488,202.278Z" transform="translate(-300.16 -181.294)" fill="#ea4335"/>
+      <path id="Path_3" data-name="Path 3" d="M327.924,354.536a6.424,6.424,0,1,1-6.424-6.424A6.423,6.423,0,0,1,327.924,354.536Z" transform="translate(-288.524 -319.74)" fill="#fbbc05"/>
+    </g>
+  </g>
+</svg>

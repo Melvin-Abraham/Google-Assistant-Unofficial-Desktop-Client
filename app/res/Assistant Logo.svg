@@ -1,0 +1,9 @@
+<svg id="Assistant_Logo" data-name="Assistant Logo" xmlns="http://www.w3.org/2000/svg" width="86" height="86" viewBox="0 0 86 86">
+  <circle id="Ellipse_2" data-name="Ellipse 2" cx="43" cy="43" r="43" fill="#fff"/>
+  <g id="Google_Assistant_logo" transform="translate(15.077 16.24)">
+    <circle id="Ellipse_1" data-name="Ellipse 1" cx="17.209" cy="17.209" r="17.209" transform="translate(0)" fill="#4285f4"/>
+    <path id="Path_1" data-name="Path 1" d="M455.472,154.686a3.5,3.5,0,1,1-3.5-3.5A3.5,3.5,0,0,1,455.472,154.686Z" transform="translate(-399.087 -135.798)" fill="#34a853"/>
+    <path id="Path_2" data-name="Path 2" d="M341.773,203.921a7,7,0,1,1-7-7A7,7,0,0,1,341.773,203.921Z" transform="translate(-291.685 -176.498)" fill="#ea4335"/>
+    <path id="Path_3" data-name="Path 3" d="M331.866,356.507a8.395,8.395,0,1,1-8.395-8.395A8.394,8.394,0,0,1,331.866,356.507Z" transform="translate(-280.378 -311.035)" fill="#fbbc05"/>
+  </g>
+</svg>
