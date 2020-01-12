@@ -46,6 +46,14 @@ const close_btn = document.querySelector('#close-btn');
 const min_btn = document.querySelector('#min-btn');
 const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
 
+//// ---- Status Flag Variables ---- ////
+
+// Assuming sox is installed initially
+let isSoxInstalled = true;
+
+// Assuming as first-time user
+let isFirstTimeUser = true;
+
 close_btn.onclick = () => {
   player.stop();
   close();
@@ -58,14 +66,6 @@ close_btn.onclick = () => {
 min_btn.onclick = () => assistantWindow.minimize();
 expand_collapse_btn.onclick = () => toggleExpandWindow();
 document.querySelector('#settings-btn').onclick = openConfig;
-
-//// ---- Status Flag Variables ---- ////
-
-// Assuming sox is installed initially
-let isSoxInstalled = true;
-
-// Assuming as first-time user
-let isFirstTimeUser = true;
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
@@ -378,16 +378,12 @@ if (assistantConfig["keyFilePath"] == "") {
 
 // starts a new conversation with the assistant
 const startConversation = (conversation) => {
-  // setup the conversation and send data to it
-  // for a full example, see `examples/mic-speaker.js`
-
   conversation
     .on('audio-data', (data) => {
       // do stuff with the audio data from the server
       // usually send it to some audio output / file
 
       if (assistantConfig["enableAudioOutput"]) {
-        console.log(data);
         player.appendBuffer(Buffer.from(data));
       }
     })
@@ -421,7 +417,6 @@ const startConversation = (conversation) => {
     })
     .on('response', (text) => {
       // do stuff with the text that the assistant said back
-      // console.log("Assistant Said: ", text);
     })
     .on('volume-percent', (percent) => {
       // do stuff with a volume percent change (range from 1-100)
@@ -442,10 +437,18 @@ const startConversation = (conversation) => {
       
       if (error) {
         console.log('Conversation Ended Error:', error);
+
+        displayErrorScreen(
+          {
+            title: "Unexpected Error",
+            details: "Unexpected Error occurred at the end of conversation",
+            subdetails: `Error: ${error.message}`
+          }
+        );
       }
 
       else if (continueConversation && isSoxInstalled && assistantConfig["enableMicOnContinousConversation"]) {
-        player.audioPlayer.addEventListener('waiting', () => assistant_mic.onclick());
+        player.audioPlayer.addEventListener('waiting', () => startMic());
       }
 
       else {
@@ -749,7 +752,6 @@ function inspectResponseType(assistantResponseString) {
     "assistantResponseString": assistantResponseString
   };
 
-  // console.log(dataObject);
   return dataObject;
 }
 
@@ -1514,9 +1516,6 @@ function displayErrorScreen(opts={}) {
  * Push the *screen data* to the `history`
  */
 function displayScreenData(screen, pushToHistory=false) {
-  console.log("SCREEN:");
-  console.log(screen);
-
   deactivateLoader();
 
   let htmlString = screen.data.toString();
@@ -1697,9 +1696,9 @@ function displayScreenData(screen, pushToHistory=false) {
     `;
   }
 
-  if (pushToHistory) {
-    // Push to History
+  // Push to History
 
+  if (pushToHistory) {
     history.push({
       "query": getCurrentQuery(),
       "screen-data": screen
@@ -2005,6 +2004,24 @@ function showGetTokenScreen(oauthValidationCallback) {
 }
 
 /**
+ * Start the microphone for transcription and visualization.
+ */
+function startMic() {
+  if (isSoxInstalled) {
+    if (config.conversation["textQuery"] !== undefined) {
+      delete config.conversation["textQuery"];
+    }
+
+    assistant.start(config.conversation);
+  }
+  else {
+    if (!document.querySelector('#sox-not-installed')) {
+      showSoxNotInstalledError();
+    }
+  }
+}
+
+/**
  * Stops the microphone for transcription and visualization.
  */
 function stopMic() {
@@ -2026,14 +2043,7 @@ function stopMic() {
   // Add Event Listener to the `Assistant Mic`
 
   assistant_mic = document.querySelector('#assistant-mic');
-
-  assistant_mic.onclick = () => {
-    if (config.conversation["textQuery"] !== undefined) {
-      delete config.conversation["textQuery"];
-    }
-
-    assistant.start(config.conversation);
-  }
+  assistant_mic.onclick = startMic();
 }
 
 /**
@@ -2063,20 +2073,7 @@ function constrain(n, low, high) {
 
 _checkSoxInstallation();
 
-assistant_mic.onclick = () => {
-  if (isSoxInstalled) {
-    if (config.conversation["textQuery"] !== undefined) {
-      delete config.conversation["textQuery"];
-    }
-
-    assistant.start(config.conversation);
-  }
-  else {
-    if (!document.querySelector('#sox-not-installed')) {
-      showSoxNotInstalledError();
-    }
-  }
-}
+assistant_mic.onclick = startMic;
 
 assistant_input.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {

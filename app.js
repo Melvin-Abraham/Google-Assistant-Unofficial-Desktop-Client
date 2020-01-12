@@ -54,7 +54,6 @@ else {
             transparent: true,
             webPreferences: {
                 nodeIntegration: true,
-                // devTools: (process.env.NODE_ENV !== 'production') ? true : false,
                 scrollBounce: true
             }
         });
