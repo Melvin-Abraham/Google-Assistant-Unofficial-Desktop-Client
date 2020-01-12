@@ -1370,13 +1370,15 @@ function updateNav() {
  * @param {String} query
  */
 function assistantTextQuery(query) {
-  player.stop();
-  
-  config.conversation["textQuery"] = query;
-  assistant.start(config.conversation);
-  setQueryTitle(query);
+  if (query) {
+    player.stop();
+    
+    config.conversation["textQuery"] = query;
+    assistant.start(config.conversation);
+    setQueryTitle(query);
 
-  stopMic();
+    stopMic();
+  }
 }
 
 /**
