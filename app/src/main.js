@@ -2043,7 +2043,7 @@ function stopMic() {
   // Add Event Listener to the `Assistant Mic`
 
   assistant_mic = document.querySelector('#assistant-mic');
-  assistant_mic.onclick = startMic();
+  assistant_mic.onclick = startMic;
 }
 
 /**
