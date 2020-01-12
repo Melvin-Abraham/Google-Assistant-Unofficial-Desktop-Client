@@ -50,7 +50,7 @@ yarn dist
 ## TODO
 
 - [ ] Set `build` for Mac and Linux in _package.json_
-- [x] Prompt user to install 'sox' (NSIS and Assistant)
+- [x] Prompt user to install 'sox'
 - [x] Create Config File
 - [x] Remove 'auth' from the `app` folder
 - [ ] Respond to "Ok Google" or "Hey Google"
@@ -60,9 +60,7 @@ yarn dist
 - [x] Improve Error Handling
 - [x] Improve Assistant Audio Output
 - [x] Git
-- [ ] Add licence
 - [x] Turn off `webAudio` after visualization
-- [ ] "Device id" and "Device Model" in Settings
 - [x] "Enable Audio Output" in Settings
 - [x] Divide Settings into sections
 - [x] Don't accept empty queries
