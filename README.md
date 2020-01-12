@@ -1,6 +1,6 @@
 # Google Assistant Unofficial Desktop Client
 
-![G Assist Banner](images/banner.png)
+![G Assist Banner](images/Banner.png)
 
 Google Assistant Unofficial Desktop Client is a cross-platform desktop client for Google Assistant based on **Google Assistant SDK**.
 
