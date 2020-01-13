@@ -129,7 +129,7 @@ else {
 
         <div id="first-time-desc-parent">
           <div id="first-time-desc">
-            This client is based on Google Assistant SDK. This means that it is limited in its capability and might not be working the same way the official client on phones and other devices works
+            This client is based on Google Assistant SDK. This means that it is limited in its capability and might not be working the same way the official client on phones and other devices work
           </div>
         </div>
       </div>
@@ -167,7 +167,7 @@ else {
   // If the user is opening the app for the first time,
   // throw `Exception` to prevent Assistant initialization 
 
-  if (isFirstTimeUser) throw Error("First Time User: Halting Initialization")
+  if (isFirstTimeUser) throw Error("First Time User: Halting Assistant Initialization")
 }
 
 if(assistantConfig["startAsMaximized"]) {
@@ -1370,7 +1370,7 @@ function updateNav() {
  * @param {String} query
  */
 function assistantTextQuery(query) {
-  if (query) {
+  if (query.trim()) {
     player.stop();
     
     config.conversation["textQuery"] = query;

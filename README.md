@@ -41,6 +41,10 @@ npm start
 yarn dist
 ```
 
+## Download
+
+Download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
+
 ## Keyboard Shortcut
 
 * **Windows:** Win + Shift + A
@@ -59,17 +63,17 @@ yarn dist
 - [ ] Improve Carousel UI Rendering in the `main_area`
 - [x] Improve Error Handling
 - [x] Improve Assistant Audio Output
-- [x] Git
 - [x] Turn off `webAudio` after visualization
 - [x] "Enable Audio Output" in Settings
 - [x] Divide Settings into sections
 - [x] Don't accept empty queries
-- [x] Info on each Setting
+- [x] Info for each Setting
 - [x] Animation while talking
 - [x] Ping when activating mic
 - [x] Welcome screen for first-time users
 - [ ] Display images from Google Images
 - [x] Option to disable auto-scaling
+- [ ] Cleanup CSS
 
 ## Other Libraries Used
 
