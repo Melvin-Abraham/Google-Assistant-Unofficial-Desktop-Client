@@ -43,7 +43,7 @@ yarn dist
 
 ## Download
 
-Download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
+If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
 
 ## Keyboard Shortcut
 
@@ -73,7 +73,7 @@ Download the Assistant Setup/Installer for the respective platform from [here (r
 - [x] Welcome screen for first-time users
 - [ ] Display images from Google Images
 - [x] Option to disable auto-scaling
-- [ ] Cleanup CSS
+- [x] Cleanup CSS
 
 ## Other Libraries Used
 
