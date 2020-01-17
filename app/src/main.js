@@ -1121,12 +1121,12 @@ function openConfig() {
               Relaunch Assistant
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button" onclick="relaunchAssistant()">
+              <label class="button setting-item-button" onclick="relaunchAssistant()">
                 <span>
                   <img src="../res/refresh.svg" style="
                     height: 20px;
                     width: 20px;
-                    vertical-align: middle;
+                    vertical-align: sub;
                     padding-right: 5px;"
                   >
                 </span>
@@ -1149,7 +1149,7 @@ function openConfig() {
               </span>
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button" onclick="quitApp()">
+              <label class="button setting-item-button" onclick="quitApp()">
                 Quit
               </label>
             </div>
@@ -1162,6 +1162,24 @@ function openConfig() {
               <div class="disabled">
                 v${app.getVersion()}
               </div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Source Available in GitHub
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client')">
+                <span>
+                  <img src="../res/github.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: sub;
+                    padding-right: 5px;"
+                  >
+                </span>
+                Fork on GitHub
+              </label>
             </div>
           </div>
         </div>
@@ -1300,7 +1318,7 @@ function openConfig() {
             {
               icon: {
                 path: '../res/refresh.svg',
-                style: 'height: 100px;'
+                style: 'height: 100px; animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);'
               },
               title: 'Relaunch Required',
               details: 'A relaunch is required for changes to take place',
