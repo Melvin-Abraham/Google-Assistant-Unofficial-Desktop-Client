@@ -33,6 +33,9 @@ After you have registered your device and downloaded the required authentication
 
 ## How to Build?
 
+### Using `npm`
+---------------
+
 ```bash
 # Get dependencies from npm
 npm install
@@ -40,7 +43,21 @@ npm install
 # Run the Assistant
 npm start
 
-# Build the Assistant (yarn recommended)
+# Build the Assistant
+npm run dist
+```
+
+### Using `yarn`
+----------------
+
+```bash
+# Get dependencies from npm registry
+yarn install
+
+# Run the Assistant
+yarn start
+
+# Build the Assistant
 yarn dist
 ```
 
