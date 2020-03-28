@@ -13,6 +13,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 
 let audPlayer = new AudioPlayer();
+let mic = new Microphone();
 let parser = new DOMParser();
 
 // Assistant config initialization
@@ -35,7 +36,6 @@ let assistantConfig = {
 let history = [];
 let historyHead = -1;
 let expanded = false;
-let mic;
 let webMic = new p5.AudioIn();  // For Audio Visualization
 let assistant_input = document.querySelector('#assistant-input');
 let assistant_mic = document.querySelector('#assistant-mic');
@@ -45,11 +45,6 @@ let main_area = document.querySelector('#main-area');
 const close_btn = document.querySelector('#close-btn');
 const min_btn = document.querySelector('#min-btn');
 const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
-
-//// ---- Status Flag Variables ---- ////
-
-// Assuming sox is installed initially
-let isSoxInstalled = true;
 
 // Assuming as first-time user
 let isFirstTimeUser = true;
@@ -447,7 +442,7 @@ const startConversation = (conversation) => {
         );
       }
 
-      else if (continueConversation && isSoxInstalled && assistantConfig["enableMicOnContinousConversation"]) {
+      else if (continueConversation && assistantConfig["enableMicOnContinousConversation"]) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
 
@@ -593,10 +588,11 @@ assistant
 
       // Setup mic for recording
 
-      mic = recorder.record({ threshold: 0, device: 'default' });
+      mic.start();
 
-      mic.stream().on('data', (data) => {
-        conversation.write(data);
+      mic.on('data', (data) => {
+        const buffer = Buffer.from(data);
+        conversation.write(buffer);
 
         const amp_threshold = 0.17;
         let amp = webMic.getLevel();
@@ -1848,80 +1844,6 @@ function validatePathInput(inputElement, addShakeAnimationOnError=false) {
 }
 
 /**
- * Check if `SoX` is installed (or is available in the environment).
- * This will update the `isSoxInstalled` variable
- * and show error by invoking `showSoxNotInstalledError()`
- */
-function _checkSoxInstallation() {
-  spawn('sox', ['-v'])
-    .once('error', () => {
-      isSoxInstalled = false;
-      showSoxNotInstalledError();
-    });
-}
-
-/**
- * This will show the sox-not-installed screen
- */
-function showSoxNotInstalledError() {
-  let currentHTML = document.querySelector('body').innerHTML;
-  
-  // This will disable the Assistant Microphone
-  assistant_mic.id = '';
-  assistant_mic.className = 'assistant-mic-disabled';
-
-  displayErrorScreen({
-    errContainerId: "sox-not-installed",
-    icon: {
-      path: '../res/download_package.svg'
-    },
-    title: 'A package has to be installed',
-    details: 'For using microphone feature, "SoX" has to be installed',
-    subdetails: 'Info: sox was not found in environment'
-  });
-
-  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-  let suggestion_parent = document.querySelector('.suggestion-parent');
-
-  suggestion_parent.innerHTML = `
-    <div id="dnld-sox" class="suggestion">
-      <span>
-        <img src="../res/download.svg" style="
-          height: 20px;
-          width: 20px;
-          vertical-align: top;
-          padding-right: 5px;"
-        >
-      </span>
-      Download
-    </div>
-
-    <div id="ignore-sox-dnld" class="suggestion">
-      Ignore
-    </div>
-  `;
-
-  historyHead = history.length;
-
-  document.querySelector('#ignore-sox-dnld').onclick = () => {
-    let currentDOM = parser.parseFromString(currentHTML, "text/html");
-
-    main_area.innerHTML = currentDOM.querySelector('#main-area').innerHTML;
-    suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
-
-    historyHead--;
-  }
-
-  document.querySelector('#dnld-sox').onclick = () => {
-    openLink('https://sourceforge.net/projects/sox/files/sox/');
-
-    document.querySelector('.err-title').innerText = "After installing...";
-    document.querySelector('.err-details').innerText = "Don't forget to close the assistant from tray and restart it again";
-    document.querySelector('.err-subdetails').innerText = "";
-  }
-}
-
-/**
  * Display the "Get Token" screen if no tokens are found.
  * 
  * _(Call is initiated by the Google Assistant auth library)_
@@ -2027,18 +1949,11 @@ function showGetTokenScreen(oauthValidationCallback) {
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
-  if (isSoxInstalled) {
-    if (config.conversation["textQuery"] !== undefined) {
-      delete config.conversation["textQuery"];
-    }
+  if (config.conversation["textQuery"] !== undefined) {
+    delete config.conversation["textQuery"];
+  }
 
-    assistant.start(config.conversation);
-  }
-  else {
-    if (!document.querySelector('#sox-not-installed')) {
-      showSoxNotInstalledError();
-    }
-  }
+  assistant.start(config.conversation);
 }
 
 /**
@@ -2090,8 +2005,6 @@ function map(n, start1, stop1, start2, stop2) {
 function constrain(n, low, high) {
   return (n < low) ? low : (n > high) ? high : n;
 }
-
-_checkSoxInstallation();
 
 assistant_mic.onclick = startMic;
 

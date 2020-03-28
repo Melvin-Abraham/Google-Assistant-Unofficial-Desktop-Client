@@ -57,7 +57,6 @@ If you don't want to build the project for yourself, you can download the Assist
 ## TODO
 
 - [ ] Set `build` for Mac and Linux in _package.json_
-- [x] Prompt user to install 'sox'
 - [x] Create Config File
 - [x] Remove 'auth' from the `app` folder
 - [ ] Respond to "Ok Google" or "Hey Google"
@@ -77,7 +76,7 @@ If you don't want to build the project for yourself, you can download the Assist
 - [ ] Display images from Google Images
 - [x] Option to disable auto-scaling
 - [x] Cleanup CSS
-- [ ] Remove `sox` as a dependency
+- [x] Remove `sox` as a dependency
 
 ## Other Libraries Used
 
