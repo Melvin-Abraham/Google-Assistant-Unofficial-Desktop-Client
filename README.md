@@ -1,6 +1,7 @@
 # Google Assistant Unofficial Desktop Client
 
 [![Build](https://img.shields.io/travis/com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&logo=travis)][build]
+[![Dependencies](https://img.shields.io/david/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client?style=for-the-badge&logo=node.js&logoColor=green)][dependencies]
 [![Downloads](https://img.shields.io/github/downloads/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/total.svg?logo=github&style=for-the-badge)][downloads]
 [![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][issues]
 [![License](https://img.shields.io/github/license/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=blue)][license]
@@ -119,3 +120,4 @@ If you don't want to build the project for yourself, you can download the Assist
 [license]: <https://www.apache.org/licenses/LICENSE-2.0>
 [last-commit]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
+[dependencies]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/package.json>
