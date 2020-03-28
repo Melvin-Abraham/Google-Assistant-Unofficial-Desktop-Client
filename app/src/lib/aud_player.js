@@ -3,7 +3,7 @@ const { EventEmitter } = require('events');
 /**
  * Audio Player for Google Assistant
  */
-class Player extends EventEmitter {
+class AudioPlayer extends EventEmitter {
 	constructor() {
 		super();
 		this.initialize();
