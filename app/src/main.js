@@ -12,7 +12,7 @@ const GoogleAssistant = require('google-assistant');
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-let player = new Player();
+let audPlayer = new AudioPlayer();
 let parser = new DOMParser();
 
 // Assistant config initialization
@@ -55,7 +55,7 @@ let isSoxInstalled = true;
 let isFirstTimeUser = true;
 
 close_btn.onclick = () => {
-  player.stop();
+  audPlayer.stop();
   close();
 
   if (!assistantConfig["alwaysCloseToTray"]) {
@@ -384,7 +384,7 @@ const startConversation = (conversation) => {
       // usually send it to some audio output / file
 
       if (assistantConfig["enableAudioOutput"]) {
-        player.appendBuffer(Buffer.from(data));
+        audPlayer.appendBuffer(Buffer.from(data));
       }
     })
     .on('end-of-utterance', () => {
@@ -412,7 +412,7 @@ const startConversation = (conversation) => {
 
       if (data.done) {
         setQueryTitle(data.transcription);
-        if (assistantConfig["enablePingSound"]) player.playPingSuccess();
+        if (assistantConfig["enablePingSound"]) audPlayer.playPingSuccess();
       }
     })
     .on('response', (text) => {
@@ -433,7 +433,7 @@ const startConversation = (conversation) => {
     .on('ended', (error, continueConversation) => {
       // once the conversation is ended, see if we need to follow up
 
-      player.play();
+      audPlayer.play();
       
       if (error) {
         console.log('Conversation Ended Error:', error);
@@ -448,7 +448,7 @@ const startConversation = (conversation) => {
       }
 
       else if (continueConversation && isSoxInstalled && assistantConfig["enableMicOnContinousConversation"]) {
-        player.audioPlayer.addEventListener('waiting', () => startMic());
+        audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
 
       else {
@@ -560,12 +560,12 @@ assistant
     startConversation(conversation);
 
     // Stop Assistant Response Playback
-    player.stop();
+    audPlayer.stop();
 
     // Mic Setup
     if (config.conversation.textQuery === undefined) {
       console.log('STARTING MIC...');
-      if (assistantConfig["enablePingSound"]) player.playPingStart();
+      if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
       init_headline.innerText = 'Listening...';
 
       // Set `webMic` for visulaization
@@ -588,7 +588,7 @@ assistant
 
       amp_bar_group.onclick = () => {
         stopMic();
-        if (assistantConfig["enablePingSound"]) player.playPingStop();
+        if (assistantConfig["enablePingSound"]) audPlayer.playPingStop();
       };
 
       // Setup mic for recording
@@ -614,7 +614,7 @@ assistant
 
         amp_bar_list[2].setAttribute('style', `
           background-color: #FBBC05;
-          height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;">`
+          height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;`
         );
 
         amp_bar_list[3].setAttribute('style', `
@@ -1389,7 +1389,7 @@ function updateNav() {
  */
 function assistantTextQuery(query) {
   if (query.trim()) {
-    player.stop();
+    audPlayer.stop();
     
     config.conversation["textQuery"] = query;
     assistant.start(config.conversation);
