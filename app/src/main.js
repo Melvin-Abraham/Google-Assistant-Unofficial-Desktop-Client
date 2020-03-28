@@ -6,10 +6,8 @@ const app = electron.remote.app;
 const electronShell = electron.shell;
 const dialog = electron.remote.dialog;
 const ipcRenderer = electron.ipcRenderer;
-const recorder = require('node-record-lpcm16');
 const path = require('path');
 const GoogleAssistant = require('google-assistant');
-const { spawn } = require('child_process');
 const fs = require('fs');
 
 let audPlayer = new AudioPlayer();
