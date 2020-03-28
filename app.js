@@ -31,6 +31,11 @@ app.setLoginItemSettings({
 });
 
 if (!gotInstanceLock) {
+    electron.dialog.showErrorBox(
+        "Preventing launch",
+        "An instance of Google Assistant is already running.\nOperation Aborted"
+    )
+
     app.isQuiting = true;
     app.quit();
 }
