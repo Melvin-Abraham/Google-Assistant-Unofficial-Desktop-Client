@@ -1,5 +1,8 @@
 # Google Assistant Unofficial Desktop Client
 
+[![Downloads](https://img.shields.io/github/downloads/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/total.svg?logo=github&style=for-the-badge)][1]
+[![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][2]
+
 ![G Assist Banner](images/Banner.png)
 
 Google Assistant Unofficial Desktop Client is a cross-platform desktop client for Google Assistant based on **Google Assistant SDK**.
@@ -84,3 +87,6 @@ If you don't want to build the project for yourself, you can download the Assist
 * **player.js:**
   * For playing audio through speakers.
   * Link: https://github.com/ItsWendell/google-assistant-desktop-client/blob/develop/src/renderer/providers/assistant/player.js
+
+[1]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases>
+[2]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
