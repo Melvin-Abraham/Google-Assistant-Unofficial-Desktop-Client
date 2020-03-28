@@ -84,9 +84,13 @@ If you don't want to build the project for yourself, you can download the Assist
   * For visualization purpose when the user speaks through mic.
   * Link: https://p5js.org/
 
-* **player.js:**
+* **aud_player.js:**
   * For playing audio through speakers.
   * Link: https://github.com/ItsWendell/google-assistant-desktop-client/blob/develop/src/renderer/providers/assistant/player.js
+
+* **microphone.js:**
+  * For recording audio using Web API.
+  * Link: https://github.com/ItsWendell/google-assistant-desktop-client/blob/develop/src/renderer/providers/assistant/microphone.js
 
 [1]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases>
 [2]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
