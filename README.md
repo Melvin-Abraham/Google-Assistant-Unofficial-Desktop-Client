@@ -2,6 +2,7 @@
 
 [![Downloads](https://img.shields.io/github/downloads/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/total.svg?logo=github&style=for-the-badge)][1]
 [![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][2]
+[![Build](https://img.shields.io/travis/com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&logo=travis)][3]
 
 ![G Assist Banner](images/Banner.png)
 
@@ -111,3 +112,4 @@ If you don't want to build the project for yourself, you can download the Assist
 
 [1]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases>
 [2]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
+[3]: <https://travis-ci.org/github/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
