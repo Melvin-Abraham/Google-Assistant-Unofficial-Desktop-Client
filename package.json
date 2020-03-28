@@ -43,7 +43,7 @@
         "start": "electron .",
         "dist": "electron-builder",
         "pack": "electron-builder --dir",
-        "postinstall": "npm rebuild --runtime=electron --target=4.2.12"
+        "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
         "google-assistant": "^0.6.0",
@@ -51,7 +51,6 @@
     },
     "devDependencies": {
         "electron": "^4.2.12",
-        "electron-builder": "^21.2.0",
-        "electron-rebuild": "^1.8.8"
+        "electron-builder": "^21.2.0"
     }
 }
