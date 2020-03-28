@@ -77,6 +77,7 @@ If you don't want to build the project for yourself, you can download the Assist
 - [ ] Display images from Google Images
 - [x] Option to disable auto-scaling
 - [x] Cleanup CSS
+- [ ] Remove `sox` as a dependency
 
 ## Other Libraries Used
 
