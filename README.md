@@ -15,7 +15,7 @@ Google Assistant Unofficial Desktop Client is a cross-platform desktop client fo
 > Note:
 > ---
 >
-> The **"Google Assistant Unofficial Desktop Client"** is in `beta` and under development. So, if you find any bugs or have any suggestion, feel free to post an _issue_ or a _pull request_.
+> The **"Google Assistant Unofficial Desktop Client"** is under development. So, if you find any bugs or have any suggestion, feel free to post an _issue_ or a _pull request_.
 
 ## Inspiration
 
@@ -26,12 +26,17 @@ _(Google Assistant Unofficial Desktop Client Screenshot)_
 
 ## Getting Started
 
-In order to use the client, you must have a _"Key File"_ and _"Token"_ for authentication which you can get by going through **Device Registration** process.
+In order to use the client, you must have a _"Key File"_ and _"Token"_ for authentication which you can get by going through **Device Registration** process. You can go through the wiki given below to get started.
 
-If you want a user friendly registration method, use Device Registration UI:
+"*Setup Authentication for Google Assistant Unofficial Desktop Client*" Wiki (For both **Device Registration** & **Authentication** help):
+> https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client
+
+#### Other References
+
+If you want a user friendly registration method, use **Device Registration** UI:
 > https://developers.google.com/assistant/sdk/guides/library/python/embed/config-dev-project-and-account
 
-If you want to use a CLI tool to complete the registration process manually, read the following:
+If you want to use a CLI tool to complete the **Device Registration** and **Authentication** process manually, read the following:
 > https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual
 
 After you have registered your device and downloaded the required authentication files, you can head on to _Settings_ and set the _"Key File Path"_ and _"Saved Tokens Path"_ to the location where the respective files are located.
