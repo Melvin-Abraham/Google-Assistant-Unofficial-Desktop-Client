@@ -8,6 +8,7 @@ const {app, BrowserWindow, Menu, nativeImage} = electron;
 
 let mainWindow;
 let tray;
+global.releases = null;
 
 const gotInstanceLock = app.requestSingleInstanceLock();
 
@@ -163,6 +164,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
         ipcMain.on('relaunch-assistant', () => launchAssistant());
         ipcMain.on('quit-app', () => quitApp());
+        ipcMain.on('update-releases', (event, releases) => global.releases = releases);
     });
 }
 
