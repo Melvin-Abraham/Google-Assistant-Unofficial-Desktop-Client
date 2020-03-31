@@ -2,7 +2,7 @@
     "name": "g-assist",
     "productName": "Google Assistant",
     "description": "Google Assistant Unofficial Desktop Client",
-    "version": "1.0.0-beta",
+    "version": "1.0.0-rc.1",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
     "main": "app.js",
