@@ -35,6 +35,7 @@ let history = [];
 let historyHead = -1;
 let expanded = false;
 let webMic = new p5.AudioIn();  // For Audio Visualization
+let releases = electron.remote.getGlobal('releases');
 let assistant_input = document.querySelector('#assistant-input');
 let assistant_mic = document.querySelector('#assistant-mic');
 let init_headline = document.querySelector('#init-headline');
@@ -106,7 +107,7 @@ else {
       Get Started
     </div>
   `;
-  
+
   suggestion_parent.querySelector("#get-started-btn").onclick = () => {
     main_area.innerHTML = `
       <div class="init">
@@ -152,13 +153,13 @@ else {
         JSON.stringify(assistantConfig),
         () => console.log('Config File was added to userData path')
       );
-  
+
       relaunchAssistant();
     };
   };
 
   // If the user is opening the app for the first time,
-  // throw `Exception` to prevent Assistant initialization 
+  // throw `Exception` to prevent Assistant initialization
 
   if (isFirstTimeUser) throw Error("First Time User: Halting Assistant Initialization")
 }
@@ -311,8 +312,8 @@ if (assistantConfig["keyFilePath"] == "") {
 
           <ol style="padding-left: 30px; color: #ffffff80;">
             <li>You must complete the Device Registration process</li>
-            <li>Download the required Authentication and Token File.</li>
-            <li>Go to "Settings" in the top left corner and set the "Key File Path" and "Saved Tokens Path" to the location where the file is downloaded.</li>
+            <li>Download the required Authentication File - OAuth 2 credentials.</li>
+            <li>Go to "Settings" in the top left corner and set the "Key File Path" to the location where the file is downloaded.</li>
           </ol>
         </div>
       </div>
@@ -320,8 +321,7 @@ if (assistantConfig["keyFilePath"] == "") {
   `;
 
   let suggestion_parent = document.querySelector('.suggestion-parent');
-  let cli_register_link = "https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual";
-  let gui_register_link = "https://developers.google.com/assistant/sdk/guides/library/python/embed/config-dev-project-and-account";
+  let documentationLink = 'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client';
 
   suggestion_parent.innerHTML = `
     <span style="
@@ -334,7 +334,7 @@ if (assistantConfig["keyFilePath"] == "") {
 
     <div
       class="suggestion"
-      onclick="openLink('${gui_register_link}')"
+      onclick="openLink('${documentationLink}')"
     >
       <span>
         <img src="../res/open_link.svg" style="
@@ -345,23 +345,7 @@ if (assistantConfig["keyFilePath"] == "") {
           padding-top: 2px;"
         >
       </span>
-      Using Registration UI
-    </div>
-
-    <div
-      class="suggestion"
-      onclick="openLink('${cli_register_link}')"
-    >
-      <span>
-        <img src="../res/open_link.svg" style="
-          height: 15px;
-          width: 15px;
-          vertical-align: text-top;
-          padding-right: 5px;
-          padding-top: 2px;"
-        >
-      </span>
-      Manually with CLI tool
+      Check out this wiki
     </div>
   `;
 
@@ -427,7 +411,7 @@ const startConversation = (conversation) => {
       // once the conversation is ended, see if we need to follow up
 
       audPlayer.play();
-      
+
       if (error) {
         console.log('Conversation Ended Error:', error);
 
@@ -711,7 +695,7 @@ function escapeQuotes(string) {
  * Classifies the response string provided by the assistant
  * and returns an `Object` containing the type of the
  * response and various parts of the response.
- * 
+ *
  * @param {String} assistantResponseString
  * The response that has to be classified
  */
@@ -751,10 +735,10 @@ function inspectResponseType(assistantResponseString) {
 
 /**
  * Opens a `link` in the default browser.
- * 
+ *
  * @param {String} link
  * Link that is to be opened in the browser.
- * 
+ *
  * @param {Boolean} autoMinimizeAssistantWindow
  * Minimize the Assistant Window after the link is opened
  */
@@ -783,7 +767,7 @@ function seekHistory(historyIndex) {
 
 /**
  * Decrements the `historyHead` and then shows previous result from the `history`
- * 
+ *
  * @returns {Boolean}
  * `true` if successfully jumps to previous result, `false` otherwise.
  */
@@ -800,7 +784,7 @@ function jumpToPrevious() {
 
 /**
  * Increments the `historyHead` and then shows next result from the `history`
- * 
+ *
  * @returns {Boolean}
  * `true` if successfully jumps to next result, `false` otherwise.
  */
@@ -817,18 +801,18 @@ function jumpToNext() {
 
 /**
  * Callback for file selection.
- * 
- * @callback fileDialogCallback 
+ *
+ * @callback fileDialogCallback
  * @param {String[]} filePaths
  * @param {String[]} bookmarks
  */
 
 /**
  * Opens dialog for selecting file (JSON)
- * 
+ *
  * @param {fileDialogCallback} callback
  * The function called after a file is selected.
- * 
+ *
  * @param {String} openDialogTitle
  * The Title for the dialog box.
  */
@@ -845,7 +829,7 @@ function openFileDialog(callback, openDialogTitle=null) {
 /**
  * Saves the `config` in the 'User Data' to retrieve
  * it the next time Assistant is launched.
- * 
+ *
  * @param {*} config
  * Pass config as an object or pass `null` to consider `asssistantConfig`
  */
@@ -892,7 +876,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Your OAuth 2 Credentials.\nFile: 'client_secret_&lt;your_id&gt;.apps.googleusercontent.com.json'"
                 >
@@ -913,7 +897,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="The Token file provided by Google.\nFile: 'tokens.json'"
                 >
@@ -938,7 +922,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Turn it off if you want the assistant to remember the context."
                 >
@@ -959,7 +943,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Mutes/Unmutes Assistant's voice"
                 >
@@ -980,7 +964,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Turns on microphone when the Assistant is expecting immediate response."
                 >
@@ -1005,7 +989,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Maximizes the Assistant Window everytime you start it."
                 >
@@ -1026,7 +1010,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Automatically scales the screen data provided by Google Assistant SDK optimizing it to display in the window.\nSome contents will still be auto scaled for legibility."
                 >
@@ -1051,7 +1035,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Plays a ping sound whenever the Assistant microphone is activated/deactivated."
                 >
@@ -1076,7 +1060,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Controls if the Assistant can launch on system startup."
                 >
@@ -1097,7 +1081,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Keeps the Assistant in background even when it is closed."
                 >
@@ -1136,7 +1120,7 @@ function openConfig() {
                 vertical-align: sub;
                 margin-left: 10px;
               ">
-                <img 
+                <img
                   src="../res/help.svg"
                   title="Completely exit the Assistant (even from background)"
                 >
@@ -1148,32 +1132,59 @@ function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
-            <div class="setting-key">
-              Version
-            </div>
-            <div class="setting-value" style="height: 35px;">
-              <div class="disabled">
-                v${app.getVersion()}
-              </div>
-            </div>
+          <div class="setting-label">
+            ABOUT
+            <hr />
           </div>
-          <div class="setting-item">
-            <div class="setting-key">
-              Source Available in GitHub
+          <div class="setting-item settings-about-section">
+            <div
+              class="setting-key"
+              style="margin-right: 35px; margin-left: auto; margin-top: 5px;"
+            >
+              <img src="../res/Assistant Logo.svg">
             </div>
-            <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client')">
+            <div class="setting-value">
+              <div style="font-size: 23px; font-weight: bold;">
+                Google Assistant
+              </div>
+              <div class="disabled" style="margin-top: 5px;">
+                Version ${app.getVersion()}
+              </div>
+              <div style="margin-top: 20px;" id="check-for-update-section">
                 <span>
-                  <img src="../res/github.svg" style="
+                  <img src="../res/check_update.svg" style="
                     height: 20px;
                     width: 20px;
-                    vertical-align: sub;
+                    vertical-align: -webkit-baseline-middle;
                     padding-right: 5px;"
                   >
                 </span>
-                Fork on GitHub
-              </label>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  Check for new version
+                </span>
+                <label class="button setting-item-button" id="check-for-update-btn">
+                  Check for Updates
+                </label>
+              </div>
+              <div style="margin-top: 40px;">
+                <div class="disabled" style="margin-bottom: 5px;">
+                  Google Assistant Unofficial Desktop Client is an open source project
+                </div>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  Source code available in GitHub
+                </span>
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client')">
+                  <span>
+                    <img src="../res/github.svg" style="
+                      height: 20px;
+                      width: 20px;
+                      vertical-align: sub;
+                      padding-right: 5px;"
+                    >
+                  </span>
+                  Fork on GitHub
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1192,7 +1203,6 @@ function openConfig() {
     let enableAutoScaling = document.querySelector('#auto-scale');
 
     keyFilePathInput.addEventListener('focusout', () => validatePathInput(keyFilePathInput));
-    savedTokensPathInput.addEventListener('focusout', () => validatePathInput(savedTokensPathInput));
 
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
@@ -1224,7 +1234,6 @@ function openConfig() {
     };
 
     validatePathInput(keyFilePathInput);
-    validatePathInput(savedTokensPathInput);
 
     suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
     let suggestion_parent = document.querySelector('.suggestion-parent');
@@ -1262,16 +1271,201 @@ function openConfig() {
       }
     }
 
+    async function checkForUpdates() {
+      const checkForUpdateSection = document.querySelector('#check-for-update-section');
+
+      checkForUpdateSection.innerHTML = `
+        <div style="animation: fade_in_from_right_anim 300ms;">
+          <div class="disabled" style="margin-bottom: 10px; font-size: 16px;">
+            Cheking for updates...
+          </div>
+          <div class="loader"></div>
+        </div>
+      `;
+
+      try {
+        let releases = await getReleases();
+
+        if (releases) {
+          console.log(releases);
+
+          if (releases[0] == 'Error') {
+            throw Error(releases[1]);
+          }
+
+          if (releases[0].tag_name != 'v' + app.getVersion()) {
+            checkForUpdateSection.innerHTML = `
+              <div style="animation: fade_in_from_right_anim 300ms;">
+                <span>
+                  <img src="../res/download.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: bottom;
+                    padding-right: 5px;"
+                  >
+                </span>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  New update available:
+                  <span style="color: #1e90ff;">
+                    ${releases[0].tag_name}
+                  </span>
+                </span>
+                <label class="button setting-item-button" onclick="openLink('${getAssetDownloadUrl(releases[0])}')">
+                  Download update
+                </label>
+                <span
+                  id="check-for-update-btn"
+                  class="hyperlink"
+                  style="margin-left: 10px; color: #999; vertical-align: bottom;"
+                >
+                  Recheck
+                </span>
+              </div>
+            `;
+          }
+
+          else {
+            checkForUpdateSection.innerHTML = `
+              <div style="animation: fade_in_from_right_anim 300ms;">
+                <span>
+                  <img src="../res/checkmark.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: sub;
+                    padding-right: 5px;"
+                  >
+                </span>
+                <span>
+                  You have the latest version installed
+                </span>
+                <span
+                  id="check-for-update-btn"
+                  class="hyperlink"
+                  style="margin-left: 10px; color: #999;"
+                >
+                  Check for Updates
+                </span>
+              </div>
+            `;
+          }
+        }
+      }
+      catch (e) {
+        checkForUpdateSection.innerHTML = `
+          <div style="animation: fade_in_from_right_anim 300ms;">
+            <span>
+              <img src="../res/error.svg" style="
+                height: 20px;
+                width: 20px;
+                vertical-align: sub;
+                padding-right: 5px;"
+              >
+            </span>
+            <span style="color: var(--color-red);">
+              An error occured while cheking for updates
+            </span>
+            <span
+              id="check-for-update-btn"
+              class="hyperlink"
+              style="margin-left: 10px;"
+            >
+              Retry
+            </span>
+          </div>
+        `;
+      }
+
+      let checkForUpdateButton = document.querySelector('#check-for-update-btn');
+
+      if (checkForUpdateButton)
+        checkForUpdateButton.onclick = checkForUpdates;
+    }
+
+    document.querySelector('#check-for-update-btn').onclick = checkForUpdates;
+
     document.querySelector('#cancel-config-changes').onclick = () => {
       closeCurrentScreen();
     }
 
     document.querySelector('#save-config').onclick = () => {
-      if (validatePathInput(keyFilePathInput, true) &&
-          validatePathInput(savedTokensPathInput, true)
+      if (keyFilePathInput.value.trim() != '' &&
+          savedTokensPathInput.value.trim() == ''
       ) {
+        // If `savedTokensPath` is empty
+
+        let res = dialog.showMessageBox(
+          assistantWindow,
+          {
+            type: 'question',
+            title: 'Saved Tokens Path is empty',
+            message: `You have not specified any loaction for "Saved Tokens Path".\nAssistant can set a path automatically according to "Key File Path" and save them.`,
+            buttons: ['Automatically set a path', 'Cancel'],
+            defaultId: 0,
+            cancelId: 1,
+          }
+        );
+
+        if (res == 1) {
+          return;
+        }
+
+        else {
+          savedTokensPathInput.value = path.join(path.dirname(keyFilePathInput.value), 'tokens.json');
+        }
+      }
+
+      else if (fs.existsSync(savedTokensPathInput.value) && fs.statSync(savedTokensPathInput.value).isDirectory()) {
+        // if `savedTokensPath` is a directory
+
+        let res = dialog.showMessageBox(
+          assistantWindow,
+          {
+            type: 'question',
+            title: 'Saved Tokens Path is missing a filename',
+            message: `"Saved Tokens Path" is a directory and does not point to a file.\nAssistant can create a token file for you and save them.`,
+            buttons: ['Create a file "tokens.json"', 'Cancel'],
+            defaultId: 0,
+            cancelId: 1,
+          }
+        );
+
+        if (res == 1) {
+          return;
+        }
+
+        else {
+          savedTokensPathInput.value = path.join(savedTokensPathInput.value, 'tokens.json');
+        }
+      }
+
+      else if (keyFilePathInput.value.trim() != '' && !fs.existsSync(path.dirname(savedTokensPathInput.value))) {
+        // `savedTokensPath` is not a existing path
+
+        let res = dialog.showMessageBox(
+          assistantWindow,
+          {
+            type: 'info',
+            title: 'Saved Tokens Path does not exist',
+            message: `"Saved Tokens Path" is a non-existant path.\nAssistant can recursively create directories for you.`,
+            buttons: ['Recursively create directory', 'Cancel'],
+            defaultId: 0,
+            cancelId: 1,
+          }
+        );
+
+        if (res == 1) {
+          return;
+        }
+
+        else {
+          let savedTokensPathVal = savedTokensPathInput.value
+          fs.mkdirSync(path.dirname(savedTokensPathVal), {recursive: true});
+        }
+      }
+
+      if (validatePathInput(keyFilePathInput, true)) {
         // Determine if relaunch is required
-        
+
         let relaunchRequired = false;
 
         if (keyFilePathInput.value != assistantConfig["keyFilePath"] ||
@@ -1362,7 +1556,7 @@ function updateNav() {
       alt="Next Result"
     >
 
-    <img 
+    <img
       id="settings-btn"
       class="ico-btn"
       type="icon"
@@ -1384,7 +1578,7 @@ function updateNav() {
 function assistantTextQuery(query) {
   if (query.trim()) {
     audPlayer.stop();
-    
+
     config.conversation["textQuery"] = query;
     assistant.start(config.conversation);
     setQueryTitle(query);
@@ -1425,7 +1619,7 @@ function getCurrentQuery() {
 
 /**
  * Retry/Refresh result for the query displayed in the titlebar
- * 
+ *
  * @param {Boolean} popHistory
  * Remove the recent result from history and replace it with the refreshed one.
  */
@@ -1454,28 +1648,28 @@ function deactivateLoader() {
 
 /**
  * Displays Error Screen.
- * 
+ *
  * @param {Object} opts
  * Options to be passed to define and customize the error screen
- * 
+ *
  * @param {String=} opts.errContainerId
  * Set the `id` of error container
- * 
+ *
  * @param {Object} opts.icon
  * The icon object
- * 
+ *
  * @param {String=} opts.icon.path
  * The Path to the icon to be used as Error Icon
- * 
+ *
  * @param {String=} opts.icon.style
  * Additional styles applied to the icon
- * 
+ *
  * @param {String=} opts.title
  * The Title of the error
- * 
+ *
  * @param {String=} opts.details
  * Description of the error
- * 
+ *
  * @param {String=} opts.subdetails
  * Sub-details/Short description of the error
  */
@@ -1500,7 +1694,7 @@ function displayErrorScreen(opts={}) {
 
   Object.assign(iconObj, opts.icon);
   options.icon = iconObj;
-  
+
   main_area.innerHTML = `
     <div id="${options.errContainerId}" class="error-area fade-in-from-bottom">
       <img class="err-icon" style="${options.icon.style}" src="${options.icon.path}">
@@ -1522,10 +1716,10 @@ function displayErrorScreen(opts={}) {
 
 /**
  * Process the *Screen Data* and display the `result` and set `suggestions`.
- * 
+ *
  * @param {*} screen
  * The screen data provided by Assistant SDK
- * 
+ *
  * @param {Boolean} pushToHistory
  * Push the *screen data* to the `history`
  */
@@ -1725,7 +1919,7 @@ function displayScreenData(screen, pushToHistory=false) {
 
 /**
  * Position the `window` in bottom-center of the screen.
- * 
+ *
  * @param {Electron.BrowserWindow} window
  * The Electron Window which has to be positioned.
  */
@@ -1773,15 +1967,23 @@ function quitApp() {
 }
 
 /**
+ * Updates the `releases` in Main process
+ * @param {*} releases
+ */
+function updateReleases(releases) {
+  ipcRenderer.send('update-releases', releases);
+}
+
+/**
  * Displays `message` for short timespan near the `nav region`.
- * 
+ *
  * @param {String} message
  * Message that you want to display
  */
 function displayQuickMessage(message) {
   let elt = document.createElement('div');
   elt.innerHTML = message;
-  
+
   let nav_region = document.querySelector('#nav-region');
   nav_region.appendChild(elt);
   elt.className = 'quick-msg';
@@ -1791,10 +1993,10 @@ function displayQuickMessage(message) {
 /**
  * Adds additional styles to the `inputElement`,
  * giving users visual cue if the input is invalid.
- * 
+ *
  * @param {Element} inputElement
  * The target `input` DOM Element to apply the styles on
- * 
+ *
  * @param {Boolean} addShakeAnimation
  * Whether additional shaking animation should be applied to the `inputElement`
  */
@@ -1810,7 +2012,7 @@ function markInputAsInvalid(inputElement, addShakeAnimation=false) {
 /**
  * Revert the styles of `inputElement` if
  * it is already marked as invalid input.
- * 
+ *
  * @param {Element} inputElement
  * The target `input` DOM Element
  */
@@ -1821,17 +2023,24 @@ function markInputAsValid(inputElement) {
 /**
  * Checks the `inputElement` and returns `true` when the path
  * is valid and exists in the system.
- * 
+ *
  * @param {Element} inputElement
  * The `input` DOM Element to be validated
- * 
+ *
  * @param {Boolean} addShakeAnimationOnError
  * Add animation to let the user know if the path does not exist
+ *
+ * @param {Boolean} trimSpaces
+ * Trims leading and trailing spaces if any are present in the
+ * path entered in `inputElement`
+ *
+ * @returns {Boolean}
+ * Returns boolean value (true/false) based on the validity of path
  */
-function validatePathInput(inputElement, addShakeAnimationOnError=false) {
-  if (inputElement.value != "" &&
-      !fs.existsSync(inputElement.value)
-  ) {
+function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpaces=true) {
+  let val = (trimSpaces) ? inputElement.value.trim() : inputElement.value;
+
+  if (val != "" && !fs.existsSync(val)) {
     markInputAsInvalid(inputElement, addShakeAnimationOnError);
     return false;
   }
@@ -1843,15 +2052,34 @@ function validatePathInput(inputElement, addShakeAnimationOnError=false) {
 
 /**
  * Display the "Get Token" screen if no tokens are found.
- * 
+ *
  * _(Call is initiated by the Google Assistant auth library)_
- * 
+ *
  * @param {Fuction} oauthValidationCallback
  * The callback to process the OAuth Code.
  */
 function showGetTokenScreen(oauthValidationCallback) {
   main_area.innerHTML = `
     <div class="fade-in-from-bottom">
+      <span
+        style="
+          display: none;
+          cursor: default;
+          font-size: 17px;
+          padding: 5px 10px;
+          background: #ffffff22;
+          color: #ffffff80;
+          vertical-align: middle;
+          border-radius: 5px;
+          position: absolute;
+          top: 32px;
+          right: 42%;
+        "
+
+        id="countdown"
+      >
+        Countdown timer
+      </span>
       <div class="no-auth-grid" style="margin-top: 60px;">
         <div class="no-auth-grid-icon">
           <img src="../res/auth.svg" alt="Auth" />
@@ -1859,22 +2087,6 @@ function showGetTokenScreen(oauthValidationCallback) {
         <div class="no-auth-grid-info">
           <div style="font-size: 35px;">
             Get token!
-
-            <span
-              style="
-                cursor: default;
-                font-size: 17px;
-                padding: 5px 10px;
-                background: #ffffff22;
-                color: #ffffff80;
-                vertical-align: middle;
-                border-radius: 5px;
-                margin-left: 12px;
-              "
-              title="This feature might not work"
-            >
-              Experimental
-            </span>
           </div>
 
           <div style="
@@ -1882,7 +2094,7 @@ function showGetTokenScreen(oauthValidationCallback) {
             color: #ffffff80;
           ">
             A new browser window is being opened.
-            Login/Select the Google account which you registered with and paste the authentication code below.
+            Login/Select a Google account, accept the permissions and paste the authentication code below.
           </div>
 
           <input
@@ -1916,8 +2128,13 @@ function showGetTokenScreen(oauthValidationCallback) {
       Open Settings
     </div>
   `;
-  
+
   suggestion_area.querySelector('#submit-btn').onclick = () => {
+    if (document.querySelector('.no-auth-grid').classList.contains('disabled')) {
+      console.log("Can't submit while receiving tokens...")
+      return;
+    }
+
     let oauthInput = main_area.querySelector('#auth-code-input');
     let oauthCode = oauthInput.value;
 
@@ -1928,10 +2145,102 @@ function showGetTokenScreen(oauthValidationCallback) {
       return
     }
 
+    document.querySelector('#loader-area').innerHTML = `
+      <div class="determinate-progress"></div>
+    `;
+
+    document.querySelector('.no-auth-grid').classList.add('disabled');
+    document.querySelector('#countdown').style.display = 'unset';
+    document.querySelector('#countdown').innerHTML = `Please wait for 10s`;
+    let secs = 9;
+
+    let countdownIntervalId = setInterval(() => {
+      if (secs == 0) {
+        document.querySelector('#loader-area').innerHTML = '';
+        document.querySelector('.no-auth-grid').classList.remove('disabled');
+        document.querySelector('#countdown').style.display = 'none';
+
+        let tokensString = fs.readFileSync(config.auth.savedTokensPath);
+
+        if (tokensString.length) {
+          // Tokens were saved
+
+          console.log(tokensString);
+          displayQuickMessage("Tokens saved");
+
+          setTimeout(() => {
+            displayErrorScreen(
+              {
+                icon: {
+                  path: '../res/refresh.svg',
+                  style: 'height: 100px; animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);'
+                },
+                title: 'Relaunch Required',
+                details: 'A relaunch is required for changes to take place',
+                subdetails: 'Info: Tokens saved'
+              }
+            );
+
+            let suggestion_parent = document.querySelector('.suggestion-parent');
+
+            suggestion_parent.innerHTML = `
+              <div class="suggestion" onclick="relaunchAssistant()">
+                <span>
+                  <img src="../res/refresh.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: top;
+                    padding-right: 5px;"
+                  >
+                </span>
+                Relaunch Assistant
+              </div>
+            `;
+          }, 1000);
+        }
+        else {
+          // Failed to save tokens
+
+          displayErrorScreen(
+            {
+              title: "Failed to get Tokens",
+              details: "Assistant failed to fetch the tokens from server.<br>The rate limit might have exceeded. Try a different Google Account.",
+              subdetails: "Error: Error getting tokens"
+            }
+          );
+
+          suggestion_parent.innerHTML = `
+            <div class="suggestion" onclick="openConfig()">
+              <span>
+                <img src="../res/settings.svg" style="
+                  height: 20px;
+                  width: 20px;
+                  vertical-align: top;
+                  padding-right: 10px;"
+                >
+              </span>
+              Open Settings
+            </div>
+            <div class="suggestion" id="oauth-retry-btn">
+              Retry
+            </div>
+          `;
+        }
+
+        document.querySelector('#oauth-retry-btn').onclick = () => {showGetTokenScreen(oauthValidationCallback)};
+        clearInterval(countdownIntervalId);
+      }
+
+      document.querySelector('#countdown').innerHTML = `Please wait for ${secs}s`;
+      secs--;
+    }, 1000);
+
     try {
       oauthValidationCallback(oauthCode);
     }
     catch (e) {
+      console.log(e);
+
       displayErrorScreen(
         {
           title: "Failed to get Tokens",
@@ -1941,6 +2250,88 @@ function showGetTokenScreen(oauthValidationCallback) {
       );
     }
   };
+}
+
+/**
+ * Returns `releases` from GitHub using GitHub API
+ *
+ * @returns {Promise[]}
+ * List of objects containing details about each release
+ */
+async function getReleases() {
+  try {
+      let releasesFetchResult = await window.fetch(
+        'https://api.github.com/repos/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases',
+
+        {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (releasesFetchResult.ok) {
+          releases = await releasesFetchResult.json();
+          updateReleases(releases);
+          return releases;
+      }
+
+      else {
+          throw new Error(response.status);
+      }
+  }
+
+  catch (error) {
+      return ['Error', error.message];
+  }
+}
+
+/**
+ * Returns download URL from where the given
+ * version of application installer can be downloaded
+ *
+ * @param {*} releaseObject
+ * A Release object (JSON) for a particular version
+ *
+ * @returns {String}
+ * The Download URL for downloading the installer
+ * based on the platform (Windows, MacOS, Linux)
+ */
+function getAssetDownloadUrl(releaseObject) {
+  const platform = process.platform;
+  let downloadUrl;
+
+  if (releaseObject) {
+    releaseObject["assets"].forEach((asset) => {
+      switch (platform) {
+        case 'win32':
+          if (asset["name"].endsWith('.exe')) {
+            downloadUrl = asset["browser_download_url"];
+          }
+
+          break;
+
+        case 'darwin':
+          if (asset["name"].endsWith('.dmg')) {
+            downloadUrl = asset["browser_download_url"];
+          }
+
+          break;
+
+        default:
+          if (asset["name"].endsWith('.AppImage')) {
+            downloadUrl = asset["browser_download_url"];
+          }
+
+          break;
+      }
+
+      if (downloadUrl) return;
+    });
+
+    return downloadUrl;
+  }
 }
 
 /**
@@ -1961,7 +2352,7 @@ function stopMic() {
   console.log('STOPPING MIC...');
   (mic) ? mic.stop() : null;
   webMic.stop();
-  
+
   init_headline.innerText = 'Hi! How can I help?';
 
   // Set the `Assistant Mic` icon
@@ -1982,12 +2373,12 @@ function stopMic() {
 /**
  * Maps the value `n` which ranges between `start1` and `stop1`
  * to `start2` and `stop2`.
- * 
- * @param {Number} n 
- * @param {Number} start1 
- * @param {Number} stop1 
- * @param {Number} start2 
- * @param {Number} stop2 
+ *
+ * @param {Number} n
+ * @param {Number} start1
+ * @param {Number} stop1
+ * @param {Number} start2
+ * @param {Number} stop2
  */
 function map(n, start1, stop1, start2, stop2) {
   return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
@@ -1995,10 +2386,10 @@ function map(n, start1, stop1, start2, stop2) {
 
 /**
  * Contrain `n` between `high` and `low`
- * 
- * @param {Number} n 
- * @param {Number} low 
- * @param {Number} high 
+ *
+ * @param {Number} n
+ * @param {Number} low
+ * @param {Number} high
  */
 function constrain(n, low, high) {
   return (n < low) ? low : (n > high) ? high : n;
@@ -2011,3 +2402,37 @@ assistant_input.addEventListener('keyup', (event) => {
     assistantTextQuery(assistant_input.value);
   }
 });
+
+// Check updates
+
+function updateAvailable(releases_data) { return releases_data && releases_data[0]["tag_name"] != 'v' + app.getVersion() };
+function displayUpdateAvailable() { displayQuickMessage('Update Available!'); }
+
+if (!releases) {
+  // API request is only done once to avaoid Error 403 (Rate Limit Exceeded)
+  // when Assistant is launched many times...
+
+  (async() => {
+    let releases_data = await getReleases();
+
+    if (updateAvailable(releases_data)) {
+      displayUpdateAvailable();
+    }
+    else {
+      console.log("No Updates Available!");
+    }
+  })();
+}
+
+else {
+  console.log("RELEASES:", releases);
+
+  if (updateAvailable(releases)) {
+    displayUpdateAvailable();
+    console.log("Updates Available");
+  }
+
+  else {
+    console.log("No updates avaiable");
+  }
+}
