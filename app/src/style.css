@@ -1,6 +1,9 @@
 :root {
     --window-border-radius: 20px;
-    --caret-color: #1e90ff;
+    --color-blue: #1e90ff;
+    --color-red: #ea4335;
+    --color-green: #34a853;
+    --color-yellow: #fbbc05;
 }
 
 body {
@@ -133,6 +136,21 @@ body {
     transition: none;
 }
 
+.hyperlink {
+    cursor: pointer;
+    user-select: none;
+    text-decoration: underline;
+    transition: all 250ms;
+}
+
+.hyperlink:hover {
+    opacity: 0.5;
+}
+
+.hyperlink:active {
+    opacity: 0.25;
+}
+
 /* Styles for pre-loader */
 
 #loader-area {
@@ -169,6 +187,33 @@ body {
     80% { left: 50%;}
     95% {left: 120%;}
     to {left: 100%;}
+}
+
+.determinate-progress {
+    height: 4px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #272727;
+}
+
+.determinate-progress:before{
+    display: block;
+    position: absolute;
+    content: "";
+    height: 4px;
+    background-color: #1e90ff;
+    animation: progress_determinate_anim 10s linear forwards;
+}
+
+@keyframes progress_determinate_anim {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
 }
 
 /********** MAIN AREA SECTION **********/
@@ -407,6 +452,10 @@ body {
     vertical-align: -webkit-baseline-middle;
 }
 
+.settings-about-section {
+    grid-template-columns: 0.5fr 1fr 1fr !important;
+}
+
 .config-input {
     border: #ffffff1a 2px solid;
     border-radius: 5px;
@@ -612,7 +661,7 @@ input {
     outline: none;
     color: #ffffff;
     background: none;
-    caret-color: var(--caret-color);
+    caret-color: var(--color-blue);
 
     font-family: 'Product Sans';
     font-size: 20px;
