@@ -1672,6 +1672,9 @@ function deactivateLoader() {
  *
  * @param {String=} opts.subdetails
  * Sub-details/Short description of the error
+ * 
+ * @param {String=} opts.customStyle
+ * Any custom styles that you want to apply
  */
 function displayErrorScreen(opts={}) {
   let options = {
@@ -1682,7 +1685,8 @@ function displayErrorScreen(opts={}) {
     },
     title: "Error",
     details: "No error description was provided.",
-    subdetails: ""
+    subdetails: "",
+    customStyle: ""
   };
 
   Object.assign(options, opts);
@@ -1696,7 +1700,7 @@ function displayErrorScreen(opts={}) {
   options.icon = iconObj;
 
   main_area.innerHTML = `
-    <div id="${options.errContainerId}" class="error-area fade-in-from-bottom">
+    <div id="${options.errContainerId}" class="error-area fade-in-from-bottom" style="${options.customStyle}">
       <img class="err-icon" style="${options.icon.style}" src="${options.icon.path}">
 
       <div class="err-title">
@@ -2124,7 +2128,7 @@ function showGetTokenScreen(oauthValidationCallback) {
       Submit
     </div>
 
-    <div class="suggestion" onclick="openConfig()">
+    <div id="open-settings-btn" class="suggestion" onclick="openConfig()">
       Open Settings
     </div>
   `;
@@ -2149,7 +2153,14 @@ function showGetTokenScreen(oauthValidationCallback) {
       <div class="determinate-progress"></div>
     `;
 
+    // Disable suggestions
+
     document.querySelector('.no-auth-grid').classList.add('disabled');
+    document.querySelector('#submit-btn').classList.add('disabled');
+    document.querySelector('#open-settings-btn').classList.add('disabled');
+    document.querySelector('#open-settings-btn').onclick = "";
+
+    // Init. Countdown
     document.querySelector('#countdown').style.display = 'unset';
     document.querySelector('#countdown').innerHTML = `Please wait for 10s`;
     let secs = 9;
@@ -2160,7 +2171,17 @@ function showGetTokenScreen(oauthValidationCallback) {
         document.querySelector('.no-auth-grid').classList.remove('disabled');
         document.querySelector('#countdown').style.display = 'none';
 
-        let tokensString = fs.readFileSync(config.auth.savedTokensPath);
+        let tokensString;
+
+        try {
+          tokensString = fs.readFileSync(config.auth.savedTokensPath);
+        }
+        catch (e) {
+          // If file doesn't exist
+
+          console.error(e);
+          tokensString = "";
+        }
 
         if (tokensString.length) {
           // Tokens were saved
@@ -2204,8 +2225,9 @@ function showGetTokenScreen(oauthValidationCallback) {
           displayErrorScreen(
             {
               title: "Failed to get Tokens",
-              details: "Assistant failed to fetch the tokens from server.<br>The rate limit might have exceeded. Try a different Google Account.",
-              subdetails: "Error: Error getting tokens"
+              details: "Assistant failed to fetch the tokens from server. Either the auth code is invalid or the rate limit might have exceeded. Try selecting a different Google Account.",
+              subdetails: "Error: Error getting tokens",
+              customStyle: "top: 80px;"
             }
           );
 
@@ -2248,6 +2270,14 @@ function showGetTokenScreen(oauthValidationCallback) {
           subdetails: "Error: Error getting tokens"
         }
       );
+
+      suggestion_parent.innerHTML = `
+        <div class="suggestion" id="oauth-retry-btn">
+          Retry
+        </div>
+      `;
+
+      document.querySelector('#oauth-retry-btn').onclick = () => {showGetTokenScreen(oauthValidationCallback)};
     }
   };
 }
