@@ -2435,7 +2435,14 @@ assistant_input.addEventListener('keyup', (event) => {
 
 // Check updates
 
-function updateAvailable(releases_data) { return releases_data && releases_data[0]["tag_name"] != 'v' + app.getVersion() };
+function updateAvailable(releases_data) {
+  return (
+    releases_data &&
+    releases_data[0] != 'Error' &&
+    releases_data[0]["tag_name"] != 'v' + app.getVersion()
+  );
+};
+
 function displayUpdateAvailable() { displayQuickMessage('Update Available!'); }
 
 if (!releases) {
