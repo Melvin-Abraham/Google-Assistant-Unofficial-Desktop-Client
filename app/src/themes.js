@@ -1,4 +1,4 @@
-{
+let themes = {
     "dark-theme": {
         "--window-border-radius": "20px",
         "--color-blue": "#1e90ff",

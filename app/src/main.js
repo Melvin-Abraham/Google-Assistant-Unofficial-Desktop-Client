@@ -36,7 +36,6 @@ let history = [];
 let historyHead = -1;
 let expanded = false;
 let initScreenFlag = 1;
-let themesObj;
 let appState = 'active';
 let webMic = new p5.AudioIn();  // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
@@ -48,7 +47,6 @@ let init_headline;
 const close_btn = document.querySelector('#close-btn');
 const min_btn = document.querySelector('#min-btn');
 const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
-const themesPath = './app/src/themes.json';
 
 // Assuming as first-time user
 let isFirstTimeUser = true;
@@ -173,8 +171,7 @@ else {
   if (isFirstTimeUser) throw Error("First Time User: Halting Assistant Initialization")
 }
 
-// Load and set theme
-themesObj = JSON.parse(fs.readFileSync(themesPath));
+// Set Application Theme
 setTheme();
 
 if(assistantConfig["startAsMaximized"]) {
@@ -2589,8 +2586,8 @@ function setTheme(theme=null) {
 
   console.log('THEME:', effectiveTheme, themeLabel);
 
-  Object.keys(themesObj[themeLabel]).forEach(variable => {
-    document.documentElement.style.setProperty(variable, themesObj[themeLabel][variable]);
+  Object.keys(themes[themeLabel]).forEach(variable => {
+    document.documentElement.style.setProperty(variable, themes[themeLabel][variable]);
   });
 }
 
