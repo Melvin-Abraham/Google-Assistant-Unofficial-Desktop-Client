@@ -60,7 +60,8 @@ else {
             transparent: true,
             webPreferences: {
                 nodeIntegration: true,
-                scrollBounce: true
+                scrollBounce: true,
+                devTools: true
             }
         });
 

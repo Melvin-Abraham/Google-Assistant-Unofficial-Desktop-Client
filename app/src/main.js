@@ -1193,6 +1193,23 @@ function openConfig() {
             </div>
           </div>
           <div class="setting-label">
+            DEVELOPER OPTIONS
+            <hr />
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Show Developer Tools
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label
+                class="button setting-item-button"
+                onclick="assistantWindow.webContents.openDevTools({mode: 'undocked'})"
+              >
+                Open DevTools
+              </label>
+            </div>
+          </div>
+          <div class="setting-label">
             ABOUT
             <hr />
           </div>
