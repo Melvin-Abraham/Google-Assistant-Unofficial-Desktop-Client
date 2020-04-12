@@ -1314,12 +1314,7 @@ function openConfig() {
 
     function setCurrentThemeIcon() {
       document.querySelector('#curr-theme-icon').innerHTML = `
-        <span style="
-          background: var(--color-secondary);
-          border-radius: 10px;
-          padding-top: 6px;
-          padding-bottom: 6px;"
-        >
+        <span>
           <img
             src="../res/${(getEffectiveTheme(themeSelector.value) == 'light' ? 'light_mode.svg' : 'dark_mode.svg')}"
             style="height: 35px; width: 38px; vertical-align: bottom;"
