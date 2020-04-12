@@ -542,7 +542,7 @@ body {
     margin-right: 5px;
     font-family: 'Roboto Mono', monospace;
     font-size: 18px;
-    width: 80%;
+    width: 76%;
     color: rgba(var(--color-fg-rgb));
 
     transition: all 200ms ease-out;
