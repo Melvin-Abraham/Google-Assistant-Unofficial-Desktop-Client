@@ -19,10 +19,9 @@ Google Assistant Unofficial Desktop Client is a cross-platform desktop client fo
 
 ## Inspiration
 
-The design is inspired by Google Assistant in Chrome OS except that it's all black 😉.
+The design is inspired by Google Assistant in Chrome OS and comes in both Light Mode _(beta)_ and Dark Mode 😉.
 
-![G Assist Screenshot](images/Screenshot.png)
-_(Google Assistant Unofficial Desktop Client Screenshot)_
+![G Assist Screenshot](images/Assistant_light_dark.jpg)
 
 ## Getting Started
 
