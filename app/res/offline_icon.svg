@@ -1,17 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="135" height="107" viewBox="0 0 135 107">
-  <g id="Offline_Icon" data-name="Offline Icon" transform="translate(-549 -679)">
-    <path id="ic_wb_cloudy_48px" d="M96.775,38.175a37.493,37.493,0,0,0-70.025-10A30,30,0,0,0,30,88H95a24.942,24.942,0,0,0,1.775-49.825Z" transform="translate(549 671)" fill="#fff"/>
-    <g id="Error" transform="translate(13 9)">
-      <circle id="Ellipse_10" data-name="Ellipse 10" cx="25.5" cy="25.5" r="25.5" transform="translate(620 726)" fill="#191919"/>
-      <g id="Warning_Symbol" data-name="Warning Symbol" transform="translate(631.999 736.529)">
-        <g id="Exclamation" transform="translate(13.689 8.107)">
-          <line id="Line_18" data-name="Line 18" y2="9.82" transform="translate(0)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
-          <line id="Line_19" data-name="Line 19" y2="0.701" transform="translate(0 12.868)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="135" height="135" viewBox="0 0 196 196">
+  <defs>
+    <filter id="Ellipse_21" x="0" y="0" width="196" height="196" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fbbc05" stop-opacity="0.349"/>
+      <stop offset="1" stop-color="#fbbc05"/>
+    </linearGradient>
+    <filter id="ic_wb_cloudy_48px" x="25" y="39" width="138" height="98" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_10" x="109" y="95" width="62" height="62" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Offline_Icon" data-name="Offline Icon" transform="translate(-519 -637)">
+    <g transform="matrix(1, 0, 0, 1, 519, 637)" filter="url(#Ellipse_21)">
+      <circle id="Ellipse_21-2" data-name="Ellipse 21" cx="89" cy="89" r="89" transform="translate(9 6)" fill="#f80"/>
+    </g>
+    <path id="Path_39" data-name="Path 39" d="M8497.589,772.248l123.429-117.617a124.383,124.383,0,0,1,14.944,11.031,110.624,110.624,0,0,1,12.288,13.06l-99.411,137.905s-17.893-6.091-30.705-17.186S8497.589,772.248,8497.589,772.248Z" transform="translate(-7960)" fill="url(#linear-gradient)"/>
+    <g transform="matrix(1, 0, 0, 1, 519, 637)" filter="url(#ic_wb_cloudy_48px)">
+      <path id="ic_wb_cloudy_48px-2" data-name="ic_wb_cloudy_48px" d="M96.775,38.175a37.493,37.493,0,0,0-70.025-10A30,30,0,0,0,30,88H95a24.942,24.942,0,0,0,1.775-49.825Z" transform="translate(34 37)" fill="#fff"/>
+    </g>
+    <g id="Group_38" data-name="Group 38" transform="translate(4 3)">
+      <g transform="matrix(1, 0, 0, 1, 515, 634)" filter="url(#Ellipse_10)">
+        <circle id="Ellipse_10-2" data-name="Ellipse 10" cx="22" cy="22" r="22" transform="translate(118 101)" fill="#191919"/>
+      </g>
+      <g id="Warning_Symbol" data-name="Warning Symbol" transform="translate(643.389 744.117)">
+        <g id="Exclamation" transform="translate(11.852 7.019)">
+          <line id="Line_18" data-name="Line 18" y2="8.503" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_19" data-name="Line 19" y2="0.607" transform="translate(0 11.141)" fill="none" stroke="#ea4335" stroke-linecap="round" stroke-width="2"/>
         </g>
         <g id="Triangle" transform="translate(0)">
-          <line id="Line_17" data-name="Line 17" x2="27.378" transform="translate(0 25.332)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="2"/>
-          <line id="Line_15" data-name="Line 15" y1="25.332" x2="13.689" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="2"/>
-          <line id="Line_16" data-name="Line 16" x1="13.689" y1="25.332" transform="translate(13.689)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_17" data-name="Line 17" x2="23.704" transform="translate(0 21.933)" fill="none" stroke="#4285f4" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_15" data-name="Line 15" y1="21.933" x2="11.852" fill="none" stroke="#34a853" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_16" data-name="Line 16" x1="11.852" y1="21.933" transform="translate(11.852)" fill="none" stroke="#fbbc05" stroke-linecap="round" stroke-width="2"/>
         </g>
       </g>
     </g>
