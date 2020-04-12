@@ -62,7 +62,8 @@ else {
                 nodeIntegration: true,
                 scrollBounce: true,
                 devTools: true
-            }
+            },
+            backgroundColor: "#00000000"
         });
 
         // Tray Icon Section
