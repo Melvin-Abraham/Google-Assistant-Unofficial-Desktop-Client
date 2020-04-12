@@ -33,35 +33,17 @@
 
     <div class="container">
         <div id="main-area">
-            <div class="init">
-                <center id="assistant-logo-main-parent">
-                    <img id="assistant-logo-main" src="../res/Google_Assistant_logo.svg" alt="">
-                </center>
-
-                <div id="init-headline-parent">
-                    <div id="init-headline">
-                        Hi! How can I help?
-                    </div>
-                </div>
-            </div>
+            <center id="init-loading">
+                <img
+                    id="assistant-logo-main"
+                    src="../res/Assistant Logo.svg"
+                    alt="Loading"
+                    style="padding-top: 30px; height: 200px; width: 100px;"
+                >
+            </center>
         </div>
 
-        <div id="suggestion-area">
-            <!-- <div style="
-                position: relative;
-                top: -30px;
-                left: 5px;
-                opacity: 0.75;
-            ">
-                Try Saying...
-            </div> -->
-
-            <div class="suggestion-parent">
-                <div class="suggestion" onclick="assistantTextQuery('How\'s the Weather today?')">Weather</div>
-                <div class="suggestion" onclick="assistantTextQuery('Toss a coin')">Toss a coin</div>
-                <div class="suggestion" onclick="assistantTextQuery('What can you do?')">What can you do?</div>
-            </div>
-        </div>
+        <div id="suggestion-area"></div>
 
         <div id="assistant-persistent-bar">
             <input id="assistant-input" autofocus type="text" placeholder="Ask me anything...">

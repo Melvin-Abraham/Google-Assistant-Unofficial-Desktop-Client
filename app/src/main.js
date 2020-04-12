@@ -28,27 +28,34 @@ let assistantConfig = {
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
   "enablePingSound": true,
-  "enableAutoScaling": true
+  "enableAutoScaling": true,
+  "theme": "dark"
 };
 
 let history = [];
 let historyHead = -1;
 let expanded = false;
+let initScreenFlag = 1;
+let themesObj;
+let appState = 'active';
 let webMic = new p5.AudioIn();  // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
 let assistant_input = document.querySelector('#assistant-input');
 let assistant_mic = document.querySelector('#assistant-mic');
-let init_headline = document.querySelector('#init-headline');
 let suggestion_area = document.querySelector('#suggestion-area');
 let main_area = document.querySelector('#main-area');
+let init_headline;
 const close_btn = document.querySelector('#close-btn');
 const min_btn = document.querySelector('#min-btn');
 const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
+const themesPath = './app/src/themes.json';
 
 // Assuming as first-time user
 let isFirstTimeUser = true;
 
 close_btn.onclick = () => {
+  appState = 'stopped';
+  mic.stop();
   audPlayer.stop();
   close();
 
@@ -101,7 +108,8 @@ else {
           height: 19px;
           width: 16px;
           vertical-align: top;
-          padding-right: 10px;"
+          padding-right: 10px;
+          ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
         >
       </span>
       Get Started
@@ -139,7 +147,8 @@ else {
             height: 19px;
             width: 16px;
             vertical-align: top;
-            padding-right: 10px;"
+            padding-right: 10px;
+            ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
           >
         </span>
         Proceed
@@ -163,6 +172,10 @@ else {
 
   if (isFirstTimeUser) throw Error("First Time User: Halting Assistant Initialization")
 }
+
+// Load and set theme
+themesObj = JSON.parse(fs.readFileSync(themesPath));
+setTheme();
 
 if(assistantConfig["startAsMaximized"]) {
   toggleExpandWindow();
@@ -220,7 +233,8 @@ catch (err) {
             height: 20px;
             width: 20px;
             vertical-align: top;
-            padding-right: 10px;"
+            padding-right: 10px;
+            ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
           >
         </span>
         Open Settings
@@ -247,7 +261,8 @@ catch (err) {
             height: 20px;
             width: 20px;
             vertical-align: top;
-            padding-right: 10px;"
+            padding-right: 10px;
+            ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
           >
         </span>
         Open Settings
@@ -273,7 +288,8 @@ catch (err) {
             height: 20px;
             width: 20px;
             vertical-align: top;
-            padding-right: 5px;"
+            padding-right: 5px;
+            ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
           >
         </span>
         Relaunch Assistant
@@ -296,7 +312,7 @@ if (assistantConfig["keyFilePath"] == "") {
         </div>
         <div style="
           font-size: 21px;
-          color: #ffffff80;
+          opacity: 0.502;
         ">
           You don't seem to have an Authentication File...
         </div>
@@ -310,7 +326,7 @@ if (assistantConfig["keyFilePath"] == "") {
             To use this Google Assistant Desktop Client:
           </div>
 
-          <ol style="padding-left: 30px; color: #ffffff80;">
+          <ol style="padding-left: 30px; opacity: 0.502;">
             <li>You must complete the Device Registration process</li>
             <li>Download the required Authentication File - OAuth 2 credentials.</li>
             <li>Go to "Settings" in the top left corner and set the "Key File Path" to the location where the file is downloaded.</li>
@@ -325,7 +341,7 @@ if (assistantConfig["keyFilePath"] == "") {
 
   suggestion_parent.innerHTML = `
     <span style="
-      color: #ffffff80;
+      opacity: 0.502;
       margin-right: 5px;
       font-size: 18px;
     ">
@@ -342,7 +358,8 @@ if (assistantConfig["keyFilePath"] == "") {
           width: 15px;
           vertical-align: text-top;
           padding-right: 5px;
-          padding-top: 2px;"
+          padding-top: 2px;
+          ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
         >
       </span>
       Check out this wiki
@@ -360,7 +377,7 @@ const startConversation = (conversation) => {
       // do stuff with the audio data from the server
       // usually send it to some audio output / file
 
-      if (assistantConfig["enableAudioOutput"]) {
+      if (assistantConfig["enableAudioOutput"] && appState != 'stopped') {
         audPlayer.appendBuffer(Buffer.from(data));
       }
     })
@@ -375,11 +392,12 @@ const startConversation = (conversation) => {
       // do stuff with the words you are saying to the assistant
 
       console.log(">", data, '\r')
+      let color_fg = getComputedStyle(document.documentElement).getPropertyValue('--color-fg');
 
       suggestion_area.innerHTML = `
         <center>
           <span style="
-            color: ${(!data.done) ? "#ffffff80" : "#ffffff"};
+            color: ${color_fg}${(!data.done) ? "80" : ""};
             font-size: 20px"
           >
             ${data.transcription}
@@ -424,7 +442,7 @@ const startConversation = (conversation) => {
         );
       }
 
-      else if (continueConversation && assistantConfig["enableMicOnContinousConversation"]) {
+      else if (continueConversation && assistantConfig["enableMicOnContinousConversation"] && !mic.enabled) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
 
@@ -445,7 +463,8 @@ const startConversation = (conversation) => {
           if (error.details.indexOf('No access or refresh token is set') == -1) {
             displayErrorScreen({
               icon: {
-                path: '../res/offline_icon.svg'
+                path: '../res/offline_icon.svg',
+                style: 'margin-top: -5px;'
               },
               title: 'You are Offline!',
               details: 'Please check your Internet Connection...',
@@ -466,7 +485,8 @@ const startConversation = (conversation) => {
                       height: 20px;
                       width: 20px;
                       vertical-align: top;
-                      padding-right: 5px;"
+                      padding-right: 5px;
+                      ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                     >
                   </span>
                   Network Preferences
@@ -481,7 +501,8 @@ const startConversation = (conversation) => {
                     height: 20px;
                     width: 20px;
                     vertical-align: top;
-                    padding-right: 5px;"
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                   >
                 </span>
                 Retry
@@ -509,7 +530,8 @@ const startConversation = (conversation) => {
                     height: 20px;
                     width: 20px;
                     vertical-align: top;
-                    padding-right: 10px;"
+                    padding-right: 10px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                   >
                 </span>
                 Open Settings
@@ -541,6 +563,11 @@ assistant
 
     // Mic Setup
     if (config.conversation.textQuery === undefined) {
+      if (mic.enabled) {
+        console.log('Mic already enabled...')
+        return;
+      }
+
       console.log('STARTING MIC...');
       if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
       init_headline.innerText = 'Listening...';
@@ -617,8 +644,15 @@ assistant
 
       function closeCurrentScreen() {
         let currentDOM = parser.parseFromString(currentHTML, "text/html");
+        console.log("Current DOM", currentDOM);
 
-        main_area.innerHTML = currentDOM.querySelector('#main-area').innerHTML;
+        if (currentDOM.querySelector('.assistant-markup-response')) {
+          main_area.innerHTML = displayScreenData(history[historyHead - 1]["screen-data"]);
+        }
+        else {
+          main_area.innerHTML = currentDOM.querySelector('#main-area').innerHTML;
+        }
+
         suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
 
         historyHead--;
@@ -637,7 +671,8 @@ assistant
               height: 20px;
               width: 20px;
               vertical-align: top;
-              padding-right: 5px;"
+              padding-right: 5px;
+              ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
             >
           </span>
           Relaunch Assistant
@@ -667,7 +702,8 @@ assistant
               height: 20px;
               width: 20px;
               vertical-align: top;
-              padding-right: 10px;"
+              padding-right: 10px;
+              ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
             >
           </span>
           Open Settings
@@ -1096,6 +1132,29 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Theme
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Changes Application's theme"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="theme-selector">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">Use System Preferences (Beta)</option>
+              </select>
+              <span id="curr-theme-icon"></span>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Relaunch Assistant
             </div>
             <div class="setting-value" style="height: 35px;">
@@ -1105,7 +1164,8 @@ function openConfig() {
                     height: 20px;
                     width: 20px;
                     vertical-align: sub;
-                    padding-right: 5px;"
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                   >
                 </span>
                 Relaunch Assistant
@@ -1179,7 +1239,8 @@ function openConfig() {
                       height: 20px;
                       width: 20px;
                       vertical-align: sub;
-                      padding-right: 5px;"
+                      padding-right: 5px;
+                      ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                     >
                   </span>
                   Fork on GitHub
@@ -1201,6 +1262,7 @@ function openConfig() {
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
     let enablePingSound = document.querySelector('#ping-sound');
     let enableAutoScaling = document.querySelector('#auto-scale');
+    let themeSelector = document.querySelector('#theme-selector');
 
     keyFilePathInput.addEventListener('focusout', () => validatePathInput(keyFilePathInput));
 
@@ -1214,6 +1276,7 @@ function openConfig() {
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
     enablePingSound.checked = assistantConfig["enablePingSound"];
     enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
+    themeSelector.value = assistantConfig["theme"];
 
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
@@ -1234,6 +1297,28 @@ function openConfig() {
     };
 
     validatePathInput(keyFilePathInput);
+
+    function setCurrentThemeIcon() {
+      document.querySelector('#curr-theme-icon').innerHTML = `
+        <span style="
+          background: var(--color-secondary);
+          border-radius: 10px;
+          padding-top: 6px;
+          padding-bottom: 6px;"
+        >
+          <img
+            src="../res/${(getEffectiveTheme(themeSelector.value) == 'light' ? 'light_mode.svg' : 'dark_mode.svg')}"
+            style="height: 35px; width: 38px; vertical-align: bottom;"
+          >
+        </span>
+      `;
+    }
+
+    setCurrentThemeIcon();
+
+    document.querySelector('#theme-selector').onchange = () => {
+      setCurrentThemeIcon();
+    };
 
     suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
     let suggestion_parent = document.querySelector('.suggestion-parent');
@@ -1261,7 +1346,13 @@ function openConfig() {
     function closeCurrentScreen() {
       let currentDOM = parser.parseFromString(currentHTML, "text/html");
 
-      main_area.innerHTML = currentDOM.querySelector('#main-area').innerHTML;
+      if (currentDOM.querySelector('.assistant-markup-response')) {
+        displayScreenData(history[historyHead - 1]["screen-data"]);
+      }
+      else {
+        main_area.innerHTML = currentDOM.querySelector('#main-area').innerHTML;
+      }
+
       suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
 
       historyHead--;
@@ -1485,6 +1576,7 @@ function openConfig() {
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
         assistantConfig["enablePingSound"] = enablePingSound.checked;
         assistantConfig["enableAutoScaling"] = enableAutoScaling.checked;
+        assistantConfig["theme"] = themeSelector.value;
 
         // Apply settings for appropriate options
 
@@ -1498,6 +1590,7 @@ function openConfig() {
 
         saveConfig();
         closeCurrentScreen();
+        setTheme();
 
         // Request user to relaunch assistant if necessary
 
@@ -1506,7 +1599,9 @@ function openConfig() {
             {
               icon: {
                 path: '../res/refresh.svg',
-                style: 'height: 100px; animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);'
+                style: `height: 100px;
+                        animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+                        ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}`
               },
               title: 'Relaunch Required',
               details: 'A relaunch is required for changes to take place',
@@ -1523,7 +1618,8 @@ function openConfig() {
                   height: 20px;
                   width: 20px;
                   vertical-align: top;
-                  padding-right: 5px;"
+                  padding-right: 5px;
+                  ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                 >
               </span>
               Relaunch Assistant
@@ -1726,8 +1822,12 @@ function displayErrorScreen(opts={}) {
  *
  * @param {Boolean} pushToHistory
  * Push the *screen data* to the `history`
+ * 
+ * @param {String} theme
+ * Theme which you want the screen data
+ * to be rendered for
  */
-function displayScreenData(screen, pushToHistory=false) {
+function displayScreenData(screen, pushToHistory=false, theme=null) {
   deactivateLoader();
 
   let htmlString = screen.data.toString();
@@ -1740,6 +1840,26 @@ function displayScreenData(screen, pushToHistory=false) {
     <div class="assistant-markup-response fade-in-from-bottom">
       ${mainContentDOM.innerHTML}
     </div>`;
+
+  if ((theme && theme == 'light') || getEffectiveTheme() == 'light') {
+    let emojiRegex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])*/g;
+    let assistantMarkupResponse = main_area.querySelector('.assistant-markup-response');
+    let emojis = assistantMarkupResponse.innerHTML.match(emojiRegex).filter(x => x);
+
+    console.log(emojis);
+
+    emojis.forEach(emoji => {
+      assistantMarkupResponse.innerHTML = assistantMarkupResponse.innerHTML.replace(
+        emoji,
+        `<span style="filter: invert(1);">${emoji}</span>`
+      );
+    });
+
+    assistantMarkupResponse.classList.add('invert');
+    assistantMarkupResponse.querySelectorAll('img').forEach(el => {
+      el.classList.add('invert');
+    });
+  }
 
   let element = main_area.querySelector('.assistant-markup-response').lastElementChild;
 
@@ -1832,7 +1952,7 @@ function displayScreenData(screen, pushToHistory=false) {
               ${responseType["searchResultParts"][0]}
             </div>
 
-            <div style="color: #ffffff80; padding-top: 5px;">
+            <div style="opacity: 0.502; padding-top: 5px;">
               ${responseType["searchResultParts"][2]}
             </div>
 
@@ -1840,11 +1960,15 @@ function displayScreenData(screen, pushToHistory=false) {
 
             <div style="${(responseType["type"] == 'youtube-result') ? "display: flex;" : ""}">
               ${(responseType["type"] == 'youtube-result')
-                ? `<img src="` + youtube_thumbnail_url + `" style="
-                      height: 131px;
-                      margin-right: 15px;
-                      border-radius: 10px;
-                  ">`
+                ? `<img
+                      class="` + ((getEffectiveTheme() == 'light') ? 'invert' : '') + `"
+                      src="` + youtube_thumbnail_url + `"
+                      style="
+                        height: 131px;
+                        margin-right: 15px;
+                        border-radius: 10px;
+                      "
+                    >`
                 : ``}
               <div style="padding-top: 10px;">
                 ${(responseType["searchResultParts"][3]) ? responseType["searchResultParts"][3].replace(/\\n/g, '<br>') : ""}
@@ -1902,7 +2026,7 @@ function displayScreenData(screen, pushToHistory=false) {
   }
   else {
     suggestion_parent.innerHTML = `
-      <span style="color: #ffffff80;">
+      <span style="opacity: 0.502;">
         No Suggestions.
       </span>
     `;
@@ -2063,6 +2187,8 @@ function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpa
  * The callback to process the OAuth Code.
  */
 function showGetTokenScreen(oauthValidationCallback) {
+  initScreenFlag = 0;
+  
   main_area.innerHTML = `
     <div class="fade-in-from-bottom">
       <span
@@ -2071,8 +2197,8 @@ function showGetTokenScreen(oauthValidationCallback) {
           cursor: default;
           font-size: 17px;
           padding: 5px 10px;
-          background: #ffffff22;
-          color: #ffffff80;
+          background: ${getComputedStyle(document.documentElement).getPropertyValue('--color-fg')}22;
+          opacity: 0.502;
           vertical-align: middle;
           border-radius: 5px;
           position: absolute;
@@ -2095,7 +2221,7 @@ function showGetTokenScreen(oauthValidationCallback) {
 
           <div style="
             margin-top: 12px;
-            color: #ffffff80;
+            opacity: 0.502;
           ">
             A new browser window is being opened.
             Login/Select a Google account, accept the permissions and paste the authentication code below.
@@ -2194,7 +2320,9 @@ function showGetTokenScreen(oauthValidationCallback) {
               {
                 icon: {
                   path: '../res/refresh.svg',
-                  style: 'height: 100px; animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);'
+                  style: `height: 100px;
+                          animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+                          ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}`
                 },
                 title: 'Relaunch Required',
                 details: 'A relaunch is required for changes to take place',
@@ -2211,7 +2339,8 @@ function showGetTokenScreen(oauthValidationCallback) {
                     height: 20px;
                     width: 20px;
                     vertical-align: top;
-                    padding-right: 5px;"
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                   >
                 </span>
                 Relaunch Assistant
@@ -2225,7 +2354,7 @@ function showGetTokenScreen(oauthValidationCallback) {
           displayErrorScreen(
             {
               title: "Failed to get Tokens",
-              details: "Assistant failed to fetch the tokens from server. Either the auth code is invalid or the rate limit might have exceeded. Try selecting a different Google Account.",
+              details: "Assistant failed to fetch the tokens from server. Either the auth code is invalid or the rate limit might have exceeded.<br>Try selecting a different Google Account.",
               subdetails: "Error: Error getting tokens",
               customStyle: "top: 80px;"
             }
@@ -2238,7 +2367,8 @@ function showGetTokenScreen(oauthValidationCallback) {
                   height: 20px;
                   width: 20px;
                   vertical-align: top;
-                  padding-right: 10px;"
+                  padding-right: 10px;
+                  ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
                 >
               </span>
               Open Settings
@@ -2365,9 +2495,94 @@ function getAssetDownloadUrl(releaseObject) {
 }
 
 /**
+ * Sets the initial screen.
+ */
+function setInitScreen() {
+  if (!initScreenFlag) return;
+  
+  main_area.innerHTML = `
+  <div class="init">
+    <center id="assistant-logo-main-parent">
+      <img id="assistant-logo-main" src="../res/Google_Assistant_logo.svg" alt="">
+    </center>
+
+    <div id="init-headline-parent">
+      <div id="init-headline">
+        Hi! How can I help?
+      </div>
+    </div>
+  </div>`;
+
+  suggestion_area.innerHTML = `
+  <div class="suggestion-parent">
+    <div class="suggestion" onclick="assistantTextQuery('How\\'s the Weather today?')">Weather</div>
+    <div class="suggestion" onclick="assistantTextQuery('Toss a coin')">Toss a coin</div>
+    <div class="suggestion" onclick="assistantTextQuery('What can you do?')">What can you do?</div>
+  </div>`;
+
+  init_headline = document.querySelector('#init-headline');
+}
+
+/**
+ * Returns effective theme based on `assistantConfig.theme`.
+ * If the theme is set to `"system"`, it returns
+ * the system theme.
+ * 
+ * @param {String} theme
+ * Get the effective theme for given theme
+ * explicitly. Leave it blank to infer from
+ * `assistantConfig.theme`
+ * 
+ * @returns {String}
+ * Effective theme based on config and system preferences
+ */
+function getEffectiveTheme(theme=null) {
+  theme = (theme) ? theme : assistantConfig.theme;
+
+  if (theme == 'light' || theme == 'dark') {
+    return theme;
+  }
+  else if (theme == 'system') {
+    if (!electron.remote.systemPreferences.isDarkMode()) {
+      return 'light';
+    }
+  }
+
+  return 'dark';
+}
+
+/**
+ * Sets the theme based on the given `theme`.
+ * Ignore this parameter, if you want to set
+ * the theme based on `assistantConfig.theme`
+ * 
+ * @param {String} theme
+ * The theme which you want to switch to.
+ */
+function setTheme(theme=null) {
+  let effectiveTheme = (
+    !theme ||
+    theme == 'system' ||
+    assistantConfig.theme == 'system'
+  )
+    ? getEffectiveTheme()
+    : assistantConfig.theme;
+
+  let themeLabel = (effectiveTheme == 'light') ? 'light-theme' : 'dark-theme';
+
+  console.log('THEME:', effectiveTheme, themeLabel);
+
+  Object.keys(themesObj[themeLabel]).forEach(variable => {
+    document.documentElement.style.setProperty(variable, themesObj[themeLabel][variable]);
+  });
+}
+
+/**
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
+  mic = new Microphone();
+  
   if (config.conversation["textQuery"] !== undefined) {
     delete config.conversation["textQuery"];
   }
@@ -2473,3 +2688,11 @@ else {
     console.log("No updates avaiable");
   }
 }
+
+// Set Initial Screen
+
+document.querySelector('#init-loading').style.opacity = 0;
+
+setTimeout(() => {
+  setInitScreen();
+}, 200);
