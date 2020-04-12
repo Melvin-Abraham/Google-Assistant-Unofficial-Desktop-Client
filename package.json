@@ -46,11 +46,11 @@
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
-        "google-assistant": "^0.6.2",
-        "grpc": "^1.24.2"
+        "google-assistant": "0.6.2",
+        "grpc": "1.24.2"
     },
     "devDependencies": {
-        "electron": "^5.0.13",
-        "electron-builder": "^22.4.1"
+        "electron": "6.0.0",
+        "electron-builder": "22.4.1"
     }
 }
