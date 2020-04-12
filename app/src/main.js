@@ -1145,7 +1145,7 @@ function openConfig() {
               <select id="theme-selector">
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
-                <option value="system">Use System Preferences (Beta)</option>
+                <option value="system">Use System Preferences</option>
               </select>
               <span id="curr-theme-icon"></span>
             </div>
@@ -2557,7 +2557,7 @@ function getEffectiveTheme(theme=null) {
     return theme;
   }
   else if (theme == 'system') {
-    if (!electron.remote.systemPreferences.isDarkMode()) {
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
       return 'light';
     }
   }
@@ -2710,3 +2710,14 @@ document.querySelector('#init-loading').style.opacity = 0;
 setTimeout(() => {
   setInitScreen();
 }, 200);
+
+window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
+  if (assistantConfig.theme == 'system') {
+    if (e.matches) {
+      setTheme('light');
+    }
+    else {
+      setTheme('dark');
+    }
+  }
+}
