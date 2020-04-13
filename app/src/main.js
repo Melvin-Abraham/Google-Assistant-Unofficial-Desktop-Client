@@ -600,27 +600,27 @@ assistant
         const buffer = Buffer.from(data);
         conversation.write(buffer);
 
-        const amp_threshold = 0.17;
+        const amp_threshold = 0.05;
         let amp = webMic.getLevel();
         let amp_bar_list = document.querySelectorAll('.amp-bar');
 
         amp_bar_list[0].setAttribute('style', `
-          background-color: #4285F4;
+          background-color: var(--color-blue);
           height: ${constrain(map(amp, 0, amp_threshold, 6, 25), 6, 25)}px;`
         );
 
         amp_bar_list[1].setAttribute('style', `
-          background-color: #EA4335;
+          background-color: var(--color-red);
           height: ${constrain(map(amp, 0, amp_threshold, 6, 15), 6, 15)}px;`
         );
 
         amp_bar_list[2].setAttribute('style', `
-          background-color: #FBBC05;
+          background-color: var(--color-yellow);
           height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;`
         );
 
         amp_bar_list[3].setAttribute('style', `
-          background-color: #34A853;
+          background-color: var(--color-green);
           height: ${constrain(map(amp, 0, amp_threshold, 6, 20), 6, 20)}px;`
         );
       });
@@ -714,7 +714,7 @@ assistant
 /* User-Defined Functions */
 
 /**
- * Escapes the quotation marks in the `string` for use in HTML.
+ * Escapes the quotation marks in the `string` for use in HTML and URL.
  * @param {String} string
  */
 function escapeQuotes(string) {
@@ -773,7 +773,8 @@ function inspectResponseType(assistantResponseString) {
  * Link that is to be opened in the browser.
  *
  * @param {Boolean} autoMinimizeAssistantWindow
- * Minimize the Assistant Window after the link is opened
+ * Minimize the Assistant Window after the link is opened.
+ * _(Defaults to `true`)_
  */
 function openLink(link, autoMinimizeAssistantWindow=true) {
   electronShell.openExternal(link);
@@ -1727,6 +1728,7 @@ function getCurrentQuery() {
  *
  * @param {Boolean} popHistory
  * Remove the recent result from history and replace it with the refreshed one.
+ * _(Defaults to `true`)_
  */
 function retryRecent(popHistory=true) {
   (popHistory) ? history.pop() : null;
@@ -1830,11 +1832,12 @@ function displayErrorScreen(opts={}) {
  * The screen data provided by Assistant SDK
  *
  * @param {Boolean} pushToHistory
- * Push the *screen data* to the `history`
+ * Push the *screen data* to the `history`.
+ * _(Defaults to `false`)_
  * 
  * @param {String} theme
- * Theme which you want the screen data
- * to be rendered for
+ * Theme to be applied on screen data.
+ * Leave this parameter to infer from `assistantConfig.theme`
  */
 function displayScreenData(screen, pushToHistory=false, theme=null) {
   deactivateLoader();
@@ -2135,7 +2138,8 @@ function displayQuickMessage(message) {
  * The target `input` DOM Element to apply the styles on
  *
  * @param {Boolean} addShakeAnimation
- * Whether additional shaking animation should be applied to the `inputElement`
+ * Whether additional shaking animation should be applied to the `inputElement`.
+ * _(Defaults to `false`)_
  */
 function markInputAsInvalid(inputElement, addShakeAnimation=false) {
   inputElement.classList.add(['input-err']);
@@ -2165,11 +2169,12 @@ function markInputAsValid(inputElement) {
  * The `input` DOM Element to be validated
  *
  * @param {Boolean} addShakeAnimationOnError
- * Add animation to let the user know if the path does not exist
+ * Add animation to let the user know if the path does not exist.
+ * _(Defaults to `false`)_
  *
  * @param {Boolean} trimSpaces
  * Trims leading and trailing spaces if any are present in the
- * path entered in `inputElement`
+ * path entered in `inputElement`. _(Defaults to `true`)_
  *
  * @returns {Boolean}
  * Returns boolean value (true/false) based on the validity of path
@@ -2296,6 +2301,7 @@ function showGetTokenScreen(oauthValidationCallback) {
     document.querySelector('#open-settings-btn').onclick = "";
 
     // Init. Countdown
+
     document.querySelector('#countdown').style.display = 'unset';
     document.querySelector('#countdown').innerHTML = `Please wait for 10s`;
     let secs = 9;
@@ -2567,8 +2573,12 @@ function getEffectiveTheme(theme=null) {
  * 
  * @param {String} theme
  * The theme which you want to switch to.
+ * 
+ * @param {Boolean} forceAssistantResponseThemeChange
+ * Change theme for Assistant Response screen.
+ * _(Defaults to `true`)_
  */
-function setTheme(theme=null) {
+function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
   let effectiveTheme = (
     !theme ||
     theme == 'system' ||
@@ -2584,6 +2594,12 @@ function setTheme(theme=null) {
   Object.keys(themes[themeLabel]).forEach(variable => {
     document.documentElement.style.setProperty(variable, themes[themeLabel][variable]);
   });
+
+  if (forceAssistantResponseThemeChange &&
+      document.querySelector('.assistant-markup-response')
+  ) {
+    displayScreenData(history[historyHead]["screen-data"]);
+  }
 }
 
 /**
@@ -2705,6 +2721,8 @@ document.querySelector('#init-loading').style.opacity = 0;
 setTimeout(() => {
   setInitScreen();
 }, 200);
+
+// Change theme when system theme changes
 
 window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
   if (assistantConfig.theme == 'system') {
