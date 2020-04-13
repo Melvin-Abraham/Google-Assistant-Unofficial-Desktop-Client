@@ -7,6 +7,13 @@ assignees: ''
 
 ---
 
+<!-- 
+NOTE:
+
+Limit this issue to not more than **one feature request** for clarity and discoverability.
+Keep the issue concise and clear as much as possible.
+-->
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 

@@ -7,6 +7,13 @@ assignees: ''
 
 ---
 
+<!-- 
+NOTE:
+
+Limit this issue to not more than **one bug report** for clarity and discoverability.
+Keep the issue concise and clear as much as possible.
+-->
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
