@@ -6,6 +6,9 @@ const ipcMain = electron.ipcMain;
 
 const {app, BrowserWindow, Menu, nativeImage} = electron;
 
+// Disable 'HardwareMediaKeyHandling' flag
+app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
+
 let mainWindow;
 let tray;
 global.releases = null;
