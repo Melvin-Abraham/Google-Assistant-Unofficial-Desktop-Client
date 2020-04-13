@@ -2722,6 +2722,18 @@ setTimeout(() => {
   setInitScreen();
 }, 200);
 
+// Auto-focus Assistant Input box when '/' is pressed
+
+window.onkeypress = (e) => {
+  if (e.key == '/') {
+    if (document.activeElement != assistant_input) {
+      e.preventDefault();
+    }
+
+    assistant_input.focus();
+  }
+}
+
 // Change theme when system theme changes
 
 window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
