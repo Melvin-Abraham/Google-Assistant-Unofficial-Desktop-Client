@@ -2726,11 +2726,10 @@ setTimeout(() => {
 
 window.onkeypress = (e) => {
   if (e.key == '/') {
-    if (document.activeElement != assistant_input) {
+    if (document.activeElement.tagName != 'INPUT') {
       e.preventDefault();
+      assistant_input.focus();
     }
-
-    assistant_input.focus();
   }
 }
 
