@@ -5,6 +5,24 @@
     "version": "1.0.0-rc.1",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
+    "homepage": "https://github.com/Melvin-Abraham",
+    "repository": {
+        "url": "https://github.com/Melvin-Abraham"
+    },
+    "bugs": {
+        "url": "https://github.com/Melvin-Abraham/issues"
+    },
+    "license": "Apache-2.0",
+    "keywords": [
+        "google-assistant",
+        "google-assistant-sdk",
+        "electron-app",
+        "virtual-assistant",
+        "desktop-app",
+        "electron",
+        "assistant",
+        "cross-platform"
+    ],
     "main": "app.js",
     "build": {
         "appId": "com.redvirus.g-assist",
@@ -37,6 +55,15 @@
                 }
             ],
             "icon": "./app/res/icons/favicon.ico"
+        },
+        "linux": {
+            "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
+            "category": "ArtificialIntelligence",
+            "target": [
+                "AppImage",
+                "snap"
+            ],
+            "icon": "./app/res/icons/Installer Icon.png"
         }
     },
     "scripts": {
