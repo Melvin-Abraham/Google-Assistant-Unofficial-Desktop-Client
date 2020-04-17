@@ -29,6 +29,7 @@ let assistantConfig = {
   "alwaysCloseToTray": true,
   "enablePingSound": true,
   "enableAutoScaling": true,
+  "enableMicOnStartup": false,
   "theme": "dark"
 };
 
@@ -1011,6 +1012,27 @@ function openConfig() {
               </label>
             </div>
           </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Enable microphone on application startup
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Turns on microphone as soon as the Assistant is launched."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="enable-mic-startup" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
           <div class="setting-label">
             WINDOW
             <hr />
@@ -1272,6 +1294,7 @@ function openConfig() {
     let forceNewConversationCheckbox = document.querySelector('#new-conversation');
     let enableAudioOutput = document.querySelector('#audio-output');
     let enableMicOnContinousConversation = document.querySelector('#continous-conv-mic');
+    let enableMicOnStartup = document.querySelector('#enable-mic-startup');
     let startAsMaximized = document.querySelector('#start-maximized');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
@@ -1286,6 +1309,7 @@ function openConfig() {
     forceNewConversationCheckbox.checked = assistantConfig["forceNewConversation"];
     enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
     enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
+    enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
@@ -1581,6 +1605,7 @@ function openConfig() {
         assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
         assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
         assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
+        assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
@@ -2699,6 +2724,8 @@ if (!releases) {
       console.log("No Updates Available!");
     }
   })();
+
+  initScreenFlag = 0;
 }
 
 else {
@@ -2720,6 +2747,10 @@ document.querySelector('#init-loading').style.opacity = 0;
 
 setTimeout(() => {
   setInitScreen();
+
+  if (assistantConfig.enableMicOnStartup && initScreenFlag) {
+    startMic();
+  }
 }, 200);
 
 // Auto-focus Assistant Input box when '/' is pressed
