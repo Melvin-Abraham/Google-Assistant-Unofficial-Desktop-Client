@@ -12,6 +12,7 @@ app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
 let mainWindow;
 let tray;
 global.releases = null;
+global.firstLaunch = true;
 
 const gotInstanceLock = app.requestSingleInstanceLock();
 
@@ -170,6 +171,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
         ipcMain.on('relaunch-assistant', () => launchAssistant());
         ipcMain.on('quit-app', () => quitApp());
         ipcMain.on('update-releases', (event, releases) => global.releases = releases);
+        ipcMain.on('update-first-launch', () => global.firstLaunch = false);
     });
 }
 

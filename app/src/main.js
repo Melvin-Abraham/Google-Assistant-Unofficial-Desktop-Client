@@ -36,6 +36,7 @@ let assistantConfig = {
 let history = [];
 let historyHead = -1;
 let expanded = false;
+let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let appState = 'active';
 let webMic = new p5.AudioIn();  // For Audio Visualization
@@ -48,6 +49,9 @@ let init_headline;
 const close_btn = document.querySelector('#close-btn');
 const min_btn = document.querySelector('#min-btn');
 const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
+
+// Notify the main process that first launch is completed
+ipcRenderer.send('update-first-launch');
 
 // Assuming as first-time user
 let isFirstTimeUser = true;
@@ -2724,8 +2728,6 @@ if (!releases) {
       console.log("No Updates Available!");
     }
   })();
-
-  initScreenFlag = 0;
 }
 
 else {
@@ -2748,7 +2750,7 @@ document.querySelector('#init-loading').style.opacity = 0;
 setTimeout(() => {
   setInitScreen();
 
-  if (assistantConfig.enableMicOnStartup && initScreenFlag) {
+  if (assistantConfig.enableMicOnStartup && !firstLaunch) {
     startMic();
   }
 }, 200);
