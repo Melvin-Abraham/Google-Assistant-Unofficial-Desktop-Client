@@ -19,20 +19,15 @@ const gotInstanceLock = app.requestSingleInstanceLock();
 let userDataPath = app.getPath('userData');
 let configFilePath = path.join(userDataPath, 'config.json');
 let assistantConfig = {};
-let launchAtStartup = true;
 
 if (fs.existsSync(configFilePath)) {
     assistantConfig = JSON.parse(fs.readFileSync(configFilePath));
 }
 
-if (assistantConfig["launchAtStartup"] !== undefined) {
-    launchAtStartup = assistantConfig["launchAtStartup"];
-}
-
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: launchAtStartup
+    openAtLogin: assistantConfig['launchAtStartup']
 });
 
 if (!gotInstanceLock) {
@@ -122,7 +117,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
         // SHORTCUT REGISTRATION
 
         electron.globalShortcut.register('Super+Shift+A', () => {
-            launchAssistant();
+            if (assistantConfig['hotkeyBehavior'] == 'launch' || !mainWindow.isVisible()) {
+                launchAssistant();
+            }
+            else {
+                requestMicToggle();
+            }
         });
 
         mainWindow.on('will-quit', () => electron.globalShortcut.unregisterAll());
@@ -172,6 +172,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
         ipcMain.on('quit-app', () => quitApp());
         ipcMain.on('update-releases', (event, releases) => global.releases = releases);
         ipcMain.on('update-first-launch', () => global.firstLaunch = false);
+        ipcMain.on('update-config', (event, config) => assistantConfig = config);
     });
 }
 
@@ -181,6 +182,10 @@ function getSuperKey() {
         : (process.platform == 'darwin')
             ? "Cmd"
             : "Super"
+}
+
+function requestMicToggle() {
+    mainWindow.webContents.send('request-mic-toggle');
 }
 
 function launchAssistant() {

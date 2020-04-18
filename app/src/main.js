@@ -30,6 +30,7 @@ let assistantConfig = {
   "enablePingSound": true,
   "enableAutoScaling": true,
   "enableMicOnStartup": false,
+  "hotkeyBehavior": "launch+mic",
   "theme": "dark"
 };
 
@@ -38,7 +39,6 @@ let historyHead = -1;
 let expanded = false;
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
-let appState = 'active';
 let webMic = new p5.AudioIn();  // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
 let assistant_input = document.querySelector('#assistant-input');
@@ -57,7 +57,6 @@ ipcRenderer.send('update-first-launch');
 let isFirstTimeUser = true;
 
 close_btn.onclick = () => {
-  appState = 'stopped';
   mic.stop();
   audPlayer.stop();
   close();
@@ -379,7 +378,7 @@ const startConversation = (conversation) => {
       // do stuff with the audio data from the server
       // usually send it to some audio output / file
 
-      if (assistantConfig["enableAudioOutput"] && appState != 'stopped') {
+      if (assistantConfig["enableAudioOutput"] && assistantWindow.isVisible()) {
         audPlayer.appendBuffer(Buffer.from(data));
       }
     })
@@ -1179,6 +1178,27 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Configure Hotkey Behavior
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Configure what happens when '${getSuperKey()} + Shift + A' is triggered"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="hotkey-behavior-selector">
+                <option value="launch">Launch Application</option>
+                <option value="launch+mic">Launch Application / Start Mic</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Relaunch Assistant
             </div>
             <div class="setting-value" style="height: 35px;">
@@ -1305,6 +1325,7 @@ function openConfig() {
     let enablePingSound = document.querySelector('#ping-sound');
     let enableAutoScaling = document.querySelector('#auto-scale');
     let themeSelector = document.querySelector('#theme-selector');
+    let hotkeyBehaviorSelector = document.querySelector('#hotkey-behavior-selector');
 
     keyFilePathInput.addEventListener('focusout', () => validatePathInput(keyFilePathInput));
 
@@ -1320,6 +1341,7 @@ function openConfig() {
     enablePingSound.checked = assistantConfig["enablePingSound"];
     enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
     themeSelector.value = assistantConfig["theme"];
+    hotkeyBehaviorSelector.value = assistantConfig["hotkeyBehavior"];
 
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
@@ -1616,6 +1638,7 @@ function openConfig() {
         assistantConfig["enablePingSound"] = enablePingSound.checked;
         assistantConfig["enableAutoScaling"] = enableAutoScaling.checked;
         assistantConfig["theme"] = themeSelector.value;
+        assistantConfig["hotkeyBehavior"] = hotkeyBehaviorSelector.value;
 
         // Apply settings for appropriate options
 
@@ -1624,6 +1647,9 @@ function openConfig() {
         app.setLoginItemSettings({
           openAtLogin: assistantConfig["launchAtStartup"]
         });
+
+        // Notify about config changes to main process
+        ipcRenderer.send('update-config', assistantConfig);
 
         // Save and exit screen
 
@@ -2670,6 +2696,23 @@ function stopMic() {
 }
 
 /**
+ * Returns the name for `super` key based on platform:
+ * - **Windows**: `Win`
+ * - **MacOS**: `Cmd`
+ * - **Linux**: `Super`
+ * 
+ * @returns {String}
+ * Platform-specific key name for `super`
+ */
+function getSuperKey() {
+  return (process.platform == 'win32')
+      ? "Win"
+      : (process.platform == 'darwin')
+          ? "Cmd"
+          : "Super"
+}
+
+/**
  * Maps the value `n` which ranges between `start1` and `stop1`
  * to `start2` and `stop2`.
  *
@@ -2778,3 +2821,14 @@ window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
     }
   }
 }
+
+// Listen for 'mic start' request from main process
+ipcRenderer.on('request-mic-toggle', () => {
+  if (mic.enabled) {
+    audPlayer.playPingStop()
+    stopMic();
+  }
+  else {
+    startMic();
+  }
+});
