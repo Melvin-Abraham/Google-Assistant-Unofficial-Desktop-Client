@@ -1192,8 +1192,9 @@ function openConfig() {
             </div>
             <div class="setting-value" style="height: 35px;">
               <select id="hotkey-behavior-selector">
-                <option value="launch">Launch Application</option>
-                <option value="launch+mic">Launch Application / Start Mic</option>
+                <option value="launch">Launch App</option>
+                <option value="launch+mic">Launch App / Toggle Microphone</option>
+                <option value="launch+close">Launch App / Close App</option>
               </select>
             </div>
           </div>

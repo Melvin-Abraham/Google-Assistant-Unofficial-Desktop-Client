@@ -27,7 +27,7 @@ if (fs.existsSync(configFilePath)) {
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: assistantConfig['launchAtStartup']
+    openAtLogin: (assistantConfig['launchAtStartup'] !== undefined) ? assistantConfig['launchAtStartup'] : true
 });
 
 if (!gotInstanceLock) {
@@ -117,12 +117,25 @@ Press ${getSuperKey()}+Shift+A to launch`,
         // SHORTCUT REGISTRATION
 
         electron.globalShortcut.register('Super+Shift+A', () => {
-            if (assistantConfig['hotkeyBehavior'] == 'launch' || !mainWindow.isVisible()) {
-                launchAssistant();
-            }
-            else {
-                requestMicToggle();
-            }
+            mainWindow.webContents.executeJavaScript(
+                'document.querySelector("body").innerHTML'
+            ).then((isContentsVisible) => {
+                isContentsVisible = isContentsVisible && mainWindow.isVisible();
+
+                let hotkeyBehavior = (assistantConfig['hotkeyBehavior'] !== undefined)
+                                        ? assistantConfig['hotkeyBehavior']
+                                        : "launch+mic";
+
+                if (hotkeyBehavior == 'launch' || !isContentsVisible) {
+                    launchAssistant();
+                }
+                else if (hotkeyBehavior == 'launch+close' && isContentsVisible) {
+                    mainWindow.close();
+                }
+                else {
+                    requestMicToggle();
+                }
+            });
         });
 
         mainWindow.on('will-quit', () => electron.globalShortcut.unregisterAll());
