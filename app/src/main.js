@@ -1552,7 +1552,7 @@ function openConfig() {
       ) {
         // If `savedTokensPath` is empty
 
-        let res = dialog.showMessageBox(
+        let res = dialog.showMessageBoxSync(
           assistantWindow,
           {
             type: 'question',
@@ -1576,7 +1576,7 @@ function openConfig() {
       else if (fs.existsSync(savedTokensPathInput.value) && fs.statSync(savedTokensPathInput.value).isDirectory()) {
         // if `savedTokensPath` is a directory
 
-        let res = dialog.showMessageBox(
+        let res = dialog.showMessageBoxSync(
           assistantWindow,
           {
             type: 'question',
@@ -1600,7 +1600,7 @@ function openConfig() {
       else if (keyFilePathInput.value.trim() != '' && !fs.existsSync(path.dirname(savedTokensPathInput.value))) {
         // `savedTokensPath` is not a existing path
 
-        let res = dialog.showMessageBox(
+        let res = dialog.showMessageBoxSync(
           assistantWindow,
           {
             type: 'info',
