@@ -33,7 +33,7 @@
             "app.js"
         ],
         "directories": {
-            "buildResources": "app/res"
+            "buildResources": "app/res/misc/*"
         },
         "publish": null,
         "nsis": {
