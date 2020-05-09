@@ -172,7 +172,14 @@ else {
   // If the user is opening the app for the first time,
   // throw `Exception` to prevent Assistant initialization
 
-  if (isFirstTimeUser) throw Error("First Time User: Halting Assistant Initialization")
+  if (isFirstTimeUser) {
+    // Disable settings button
+    let settings_btn = document.querySelector('#settings-btn')
+    settings_btn.onclick = "";
+    settings_btn.classList.add('disabled');
+
+    throw Error("First Time User: Halting Assistant Initialization");
+  }
 }
 
 // Set Application Theme
