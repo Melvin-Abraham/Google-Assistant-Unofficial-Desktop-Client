@@ -130,6 +130,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
                     launchAssistant();
                 }
                 else if (hotkeyBehavior == 'launch+close' && isContentsVisible) {
+                    mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
                     mainWindow.close();
                 }
                 else {

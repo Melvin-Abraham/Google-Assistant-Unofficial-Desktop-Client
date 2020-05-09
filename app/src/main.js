@@ -1354,7 +1354,8 @@ function openConfig() {
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
         (filePaths) => {
-          keyFilePathInput.value = filePaths[0];
+          if (filePaths[0])
+            keyFilePathInput.value = filePaths[0];
         },
         "Select Key File"
       );
@@ -1363,7 +1364,8 @@ function openConfig() {
     main_area.querySelector('#saved-tokens-path-browse-btn').onclick = () => {
       openFileDialog(
         (filePaths) => {
-          savedTokensPathInput.value = filePaths[0];
+          if (filePaths[0])
+            savedTokensPathInput.value = filePaths[0];
         },
         "Select Saved Token File"
       );
@@ -1617,8 +1619,31 @@ function openConfig() {
         }
 
         else {
-          let savedTokensPathVal = savedTokensPathInput.value
-          fs.mkdirSync(path.dirname(savedTokensPathVal), {recursive: true});
+          let savedTokensPathVal = savedTokensPathInput.value;
+
+          try {
+            fs.mkdirSync(path.dirname(savedTokensPathVal), {recursive: true});
+          }
+          catch (e) {
+            console.log("EPERM Exception: mkdir failed");
+            console.error(e);
+
+            let errMsgContent =
+              `Assistant failed to create the following path:\n"${savedTokensPathVal}"` +
+              `\n\nEither the path is invalid or Assistant does not have enough permissions to create one.`;
+
+            dialog.showMessageBoxSync(
+              assistantWindow,
+              {
+                type: 'error',
+                title: 'Path Creation Failure',
+                message: 'Path Creation Failure',
+                detail: errMsgContent,
+              }
+            );
+
+            return;
+          }
         }
       }
 
