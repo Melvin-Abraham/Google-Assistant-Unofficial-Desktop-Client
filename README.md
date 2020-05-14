@@ -82,7 +82,7 @@ If you don't want to build the project for yourself, you can download the Assist
 
 ## TODO
 
-- [ ] Set `build` for Mac and Linux in _package.json_
+- [x] Set `build` for Mac and Linux in _package.json_
 - [x] Create Config File
 - [x] Remove 'auth' from the `app` folder
 - [ ] Respond to "Ok Google" or "Hey Google"

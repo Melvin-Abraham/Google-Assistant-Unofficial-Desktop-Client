@@ -36,14 +36,6 @@
             "buildResources": "app/res/misc/*"
         },
         "publish": null,
-        "nsis": {
-            "oneClick": "false",
-            "artifactName": "${productName}-Setup-${version}.${ext}",
-            "allowToChangeInstallationDirectory": "true",
-            "installerIcon": "./app/res/icons/Installer.ico",
-            "installerSidebar": "./app/res/misc/InstallerSidebar.bmp",
-            "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp"
-        },
         "win": {
             "target": [
                 {
@@ -56,6 +48,44 @@
             ],
             "icon": "./app/res/icons/favicon.ico"
         },
+        "nsis": {
+            "oneClick": "false",
+            "artifactName": "${productName}-Setup-${version}.${ext}",
+            "allowToChangeInstallationDirectory": "true",
+            "installerIcon": "./app/res/icons/Installer.ico",
+            "installerSidebar": "./app/res/misc/InstallerSidebar.bmp",
+            "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp"
+        },
+
+        "mac": {
+            "icon": "./app/res/icons/icon.icns",
+            "category": "public.app-category.productivity",
+            "target": [
+                "dmg"
+            ]
+        },
+        "dmg": {
+            "background": "./app/res/misc/DMG Background.png",
+            "icon": "./app/res/icons/icon.icns",
+            "iconSize": 100,
+            "contents": [{
+                    "x": 350,
+                    "y": 280,
+                    "type": "link",
+                    "path": "/Applications"
+                },
+                {
+                    "x": 80,
+                    "y": 280,
+                    "type": "file"
+                }
+            ],
+            "window": {
+                "width": 600,
+                "height": 410
+            }
+        },
+
         "linux": {
             "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
             "category": "ArtificialIntelligence",
