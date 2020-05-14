@@ -971,6 +971,7 @@ select {
     font-size: 17px;
     border-radius: 5px;
     padding: 5px 2px;
+    height: 34px;
     
     transition: all 250ms ease-in;
 }
