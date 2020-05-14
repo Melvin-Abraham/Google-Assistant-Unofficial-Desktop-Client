@@ -8,6 +8,8 @@ cache:
 
 os:
   - windows
+  - osx
+  - linux
 
 install:
   - npm install
