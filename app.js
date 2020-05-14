@@ -54,7 +54,6 @@ else {
             resizable: true,
             icon: "./app/res/icons/icon.png",
             frame: false,
-            vibrancy: "dark",
             title: "Google Assistant Unofficial Desktop Client",
             transparent: true,
             webPreferences: {
@@ -67,11 +66,19 @@ else {
 
         // Tray Icon Section
 
-        tray = new electron.Tray(nativeImage.createFromPath(
+        let trayIcon = nativeImage.createFromPath(
             path.join(__dirname, "app", "res", "icons", "icon.png")
-        ));
+        );
 
-        tray.setTitle("Google Assistant Unofficial Desktop Client");
+        if (process.platform == 'darwin') {
+            trayIcon = trayIcon.resize({
+                height: 16.0,
+                width: 16.0,
+                quality: 'best'
+            })
+        }
+
+        tray = new electron.Tray(trayIcon);
         tray.setToolTip("Google Assistant Unofficial Desktop Client");
         tray.on('double-click', () => launchAssistant());
 
@@ -80,7 +87,8 @@ else {
                 label: 'Launch Assistant',
                 click: function () {
                     launchAssistant();
-                }
+                },
+                accelerator: `Super+Shift+A`
             },
             {
                 label: 'Close to Tray',
@@ -105,7 +113,7 @@ else {
         tray.displayBalloon({
             "title": 'Google Assistant',
 
-            "content": 
+            "content":
 `Google Assistant is running in background!\n
 Press ${getSuperKey()}+Shift+A to launch`,
 
@@ -175,8 +183,16 @@ Press ${getSuperKey()}+Shift+A to launch`,
             slashes: true
         }));
 
-        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-        mainWindow.hide();
+        if (process.platform != 'darwin') {
+            mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+            mainWindow.hide();
+        }
+        else {
+            let argv = process.argv;
+
+            if (argv.indexOf('--relaunch') == -1)
+                mainWindow.hide()
+        }
 
         // FLOATING WINDOW
 
@@ -203,9 +219,17 @@ function requestMicToggle() {
 }
 
 function launchAssistant() {
-    mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-    mainWindow.reload();
-    mainWindow.show();
+    if (process.platform != 'darwin') {
+        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+        mainWindow.reload();
+        mainWindow.show();
+    }
+
+    else {
+        let args = [__filename, '--relaunch'];
+        app.relaunch({args: args});
+        app.exit();
+    }
 }
 
 function quitApp() {
