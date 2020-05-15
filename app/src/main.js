@@ -2083,6 +2083,15 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
     responseType = inspectResponseType("");
   }
 
+  if (hasPhotoCarousel) {
+    let imgs = element.querySelectorAll('img[data-src]');
+
+    for (let i = 0; i < imgs.length; i++) {
+      let img = imgs[i];
+      img.setAttribute('src', img.getAttribute('data-src'));
+    }
+  }
+
   let externalLinks = main_area.querySelectorAll('[data-url]');
 
   for (let i = 0; i < externalLinks.length; i++) {
@@ -2111,6 +2120,34 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
             >
           </span>
           Search
+        </div>
+      `;
+    }
+
+    if (hasPhotoCarousel) {
+      let currentQuery = getCurrentQuery();
+      let seperatorIndex = Math.min(
+        (currentQuery.indexOf('of') != -1) ? currentQuery.indexOf('of') : Infinity,
+        (currentQuery.indexOf('from') != -1) ? currentQuery.indexOf('from') : Infinity
+      );
+      let subject = currentQuery.slice(seperatorIndex).replace(/(^of|^from)\s/, '');
+      let photosUrl = 'https://photos.google.com/'
+
+      if (subject) {
+        photosUrl += `search/${subject}`
+      }
+
+      suggestion_parent.innerHTML += `
+        <div class="suggestion" onclick="openLink('${photosUrl}')">
+          <span>
+            <img src="../res/google-photos.svg" style="
+              height: 20px;
+              width: 20px;
+              vertical-align: top;
+              padding-right: 5px;"
+            >
+          </span>
+          Google Photos
         </div>
       `;
     }
