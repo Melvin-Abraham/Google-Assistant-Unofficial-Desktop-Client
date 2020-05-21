@@ -318,6 +318,15 @@ body {
     background: rgba(255, 255, 255, 0.05);
 }
 
+#google-images-carousel {
+    display: flex;
+    overflow-x: auto;
+}
+
+#google-images-carousel::-webkit-scrollbar {
+    display: none;
+}
+
 /* Styles for 'Init' Screen */
 
 #init-loading {

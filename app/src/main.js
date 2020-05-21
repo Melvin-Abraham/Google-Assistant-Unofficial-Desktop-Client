@@ -1927,7 +1927,7 @@ function displayErrorScreen(opts={}) {
  * Theme to be applied on screen data.
  * Leave this parameter to infer from `assistantConfig.theme`
  */
-function displayScreenData(screen, pushToHistory=false, theme=null) {
+async function displayScreenData(screen, pushToHistory=false, theme=null) {
   deactivateLoader();
 
   let htmlString = screen.data.toString();
@@ -1969,6 +1969,7 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
   let hasPhotoCarousel = main_area.querySelector('#photo-carousel-tv');
   let hasPlainText = element.classList.contains('show_text_container');
   let hasDefinition = main_area.querySelector('#flex_text_audio_icon_chunk');
+  let isGoogleImagesContent;
 
   if (hasCarousel && !hasPhotoCarousel) {
     // Only when there is carousel other than "Photo Carousel"
@@ -2030,9 +2031,9 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
     let innerText = document.querySelector(".show_text_content").innerText;
     responseType = inspectResponseType(innerText);
 
-    if (responseType["type"]) {
-      let textContainer = document.querySelector(".show_text_container");
+    let textContainer = document.querySelector(".show_text_container");
 
+    if (responseType["type"]) {
       if (responseType["type"] == "google-search-result" ||
           responseType["type"] == "youtube-result") {
 
@@ -2078,6 +2079,41 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
         `;
       }
     }
+
+    if (innerText.indexOf('Find images here') != -1) {
+      // Google Images
+      isGoogleImagesContent = true;
+  
+      let innerHTML = textContainer.innerHTML;
+      textContainer.innerHTML = `<div id="google-images-carousel"></div>`;
+
+      let imageSubject = encodeURIComponent(getCurrentQuery());
+      let googleImagesUrl = `https://images.google.com/search?tbm=isch&q=${imageSubject}&sfr=gws&gbv=1&sei=n37GXpmUFviwz7sP4KmZuA0`;
+      let googleImagesResponse = await window.fetch(googleImagesUrl);
+      let googleImagesCarousel = main_area.querySelector('#google-images-carousel');
+
+      if (googleImagesResponse.ok) {
+        // Page loaded
+        let googleImagesPage = parser.parseFromString(await googleImagesResponse.text(), 'text/html');
+        let allImages = googleImagesPage.querySelectorAll('table img');
+  
+        for (let i = 0; i < 20; i++) {
+          let currentImage = allImages[i];
+
+          googleImagesCarousel.innerHTML += `
+            <span>
+              <img
+                style="height: 40vh; margin-right: 5px;"
+                src="${currentImage.getAttribute('src')}"
+              />
+            </span>
+          `;
+        }
+      }
+    }
+    else {
+      isGoogleImagesContent = false;
+    }
   }
   else {
     responseType = inspectResponseType("");
@@ -2120,6 +2156,22 @@ function displayScreenData(screen, pushToHistory=false, theme=null) {
             >
           </span>
           Search
+        </div>
+      `;
+    }
+
+    if (isGoogleImagesContent) {
+      suggestion_parent.innerHTML += `
+        <div class="suggestion" onclick="openLink('https://www.google.com/search?tbm=isch&q=${encodeURIComponent(getCurrentQuery())}')">
+          <span>
+            <img src="../res/google-logo.png" style="
+              height: 20px;
+              width: 20px;
+              vertical-align: top;
+              padding-right: 5px;"
+            >
+          </span>
+          Google Images
         </div>
       `;
     }

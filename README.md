@@ -99,7 +99,7 @@ If you don't want to build the project for yourself, you can download the Assist
 - [x] Animation while talking
 - [x] Ping when activating mic
 - [x] Welcome screen for first-time users
-- [ ] Display images from Google Images
+- [x] Display images from Google Images
 - [x] Option to disable auto-scaling
 - [x] Cleanup CSS
 - [x] Remove `sox` as a dependency
