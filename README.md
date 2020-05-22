@@ -6,7 +6,8 @@
 [![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][issues]
 [![License](https://img.shields.io/github/license/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=blue)][license]
 [![Top Language](https://img.shields.io/github/languages/top/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=yellow)][top-lang]
-[![Last Commit](https://img.shields.io/github/last-commit/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge)][last-commit]
+[![Last Commit](https://img.shields.io/github/last-commit/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge)][commits]
+[![Commits since last release](https://img.shields.io/github/commits-since/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/v1.0.0-rc.1.svg?style=for-the-badge)][commits]
 
 ![G Assist Banner](images/Banner.png)
 
@@ -122,6 +123,6 @@ If you don't want to build the project for yourself, you can download the Assist
 [issues]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
 [build]: <https://travis-ci.org/github/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
 [license]: <https://www.apache.org/licenses/LICENSE-2.0>
-[last-commit]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
+[commits]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
 [dependencies]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/package.json>
