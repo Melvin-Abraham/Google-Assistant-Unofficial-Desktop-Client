@@ -1867,7 +1867,7 @@ function deactivateLoader() {
  *
  * @param {String=} opts.subdetails
  * Sub-details/Short description of the error
- * 
+ *
  * @param {String=} opts.customStyle
  * Any custom styles that you want to apply
  */
@@ -1922,7 +1922,7 @@ function displayErrorScreen(opts={}) {
  * @param {Boolean} pushToHistory
  * Push the *screen data* to the `history`.
  * _(Defaults to `false`)_
- * 
+ *
  * @param {String} theme
  * Theme to be applied on screen data.
  * Leave this parameter to infer from `assistantConfig.theme`
@@ -1932,6 +1932,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 
   let htmlString = screen.data.toString();
   let htmlDocument = parser.parseFromString(htmlString, "text/html");
+  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+
+  console.log('Screen Data HTML Document');
   console.log(htmlDocument);
 
   let mainContentDOM = htmlDocument.querySelector("#assistant-card-content");
@@ -1946,7 +1949,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     let assistantMarkupResponse = main_area.querySelector('.assistant-markup-response');
     let emojis = assistantMarkupResponse.innerHTML.match(emojiRegex).filter(x => x);
 
-    console.log(emojis);
+    console.log('Emojis:', emojis);
 
     emojis.forEach(emoji => {
       assistantMarkupResponse.innerHTML = assistantMarkupResponse.innerHTML.replace(
@@ -1967,8 +1970,10 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
   let hasKnowledgePanel = main_area.querySelector('#tv_knowledge_panel_source');
   let hasCarousel = main_area.querySelector('#selection-carousel-tv');
   let hasPhotoCarousel = main_area.querySelector('#photo-carousel-tv');
-  let hasPlainText = element.classList.contains('show_text_container');
+  let hasTextContainer = element.classList.contains('show_text_container');
+  let hasPlainText = hasTextContainer && element.querySelector('.show_text_content');
   let hasDefinition = main_area.querySelector('#flex_text_audio_icon_chunk');
+  let elementFlag = element.getAttribute('data-flag');
   let isGoogleImagesContent;
 
   if (hasCarousel && !hasPhotoCarousel) {
@@ -1976,28 +1981,30 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     document.querySelector('.assistant-markup-response').lastElementChild.innerHTML = hasCarousel.outerHTML;
   }
 
-  if (!hasPlainText) {
-    if (assistantConfig["enableAutoScaling"]) {
+  if (elementFlag == null || elementFlag != 'prevent-auto-scale') {
+    if (!hasPlainText) {
+      if (assistantConfig["enableAutoScaling"]) {
+        element.setAttribute('style', `
+          transform: ${(hasKnowledgePanel || hasWebAnswer) ? "scale(0.65)" : "scale(0.75)"};
+          position: relative;
+          left: ${(hasKnowledgePanel || hasWebAnswer) ? "-15%" : (hasCarousel && !hasPhotoCarousel) ? "-91%" : (hasPhotoCarousel) ? "-26%" : "-10%"};
+          top: ${(hasKnowledgePanel) ? "-40px" : (hasWebAnswer) ? "-35px" : (hasDefinition) ? "-70px" : (hasCarousel && !hasPhotoCarousel) ? "-45px" : "-20px"};
+          ${(hasCarousel || hasPhotoCarousel)
+            ? `overflow-x: scroll; width: 217%;`
+            : ``
+          }
+          ${(hasPhotoCarousel) ? "padding: 2em 0 0 0;" : ""}
+        `);
+      }
+    }
+    else {
       element.setAttribute('style', `
-        transform: ${(hasKnowledgePanel || hasWebAnswer) ? "scale(0.65)" : "scale(0.75)"};
+        transform: scale(1.2);
         position: relative;
-        left: ${(hasKnowledgePanel || hasWebAnswer) ? "-15%" : (hasCarousel && !hasPhotoCarousel) ? "-91%" : (hasPhotoCarousel) ? "-26%" : "-10%"};
-        top: ${(hasKnowledgePanel) ? "-40px" : (hasWebAnswer) ? "-35px" : (hasDefinition) ? "-70px" : (hasCarousel && !hasPhotoCarousel) ? "-45px" : "-20px"};
-        ${(hasCarousel || hasPhotoCarousel)
-          ? `overflow-x: scroll; width: 217%;`
-          : ``
-        }
-        ${(hasPhotoCarousel) ? "padding: 2em 0 0 0;" : ""}
+        left: 13%;
+        top: 60px;
       `);
     }
-  }
-  else {
-    element.setAttribute('style', `
-      transform: scale(1.2);
-      position: relative;
-      left: 13%;
-      top: 60px;
-    `);
   }
 
   if (assistantConfig["enableAutoScaling"] || hasPlainText) main_area.querySelector('.assistant-markup-response').classList.add('no-x-scroll');
@@ -2019,7 +2026,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 
   let responseType;
 
-  if (hasPlainText) {
+  if (hasTextContainer) {
+    // Includes Text Response and Google Images Response
+
     main_area.innerHTML = `
     <img src="../res/Google_Assistant_logo.svg" style="
       height: 25px;
@@ -2027,7 +2036,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
       top: 20px;
       left: 20px;
     ">` + main_area.innerHTML;
+  }
 
+  if (hasPlainText) {
     let innerText = document.querySelector(".show_text_content").innerText;
     responseType = inspectResponseType(innerText);
 
@@ -2083,30 +2094,91 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     if (innerText.indexOf('Find images here') != -1) {
       // Google Images
       isGoogleImagesContent = true;
-  
+
       let innerHTML = textContainer.innerHTML;
       textContainer.innerHTML = `<div id="google-images-carousel"></div>`;
 
       let imageSubject = encodeURIComponent(getCurrentQuery());
       let googleImagesUrl = `https://images.google.com/search?tbm=isch&q=${imageSubject}&sfr=gws&gbv=1&sei=n37GXpmUFviwz7sP4KmZuA0`;
-      let googleImagesResponse = await window.fetch(googleImagesUrl);
       let googleImagesCarousel = main_area.querySelector('#google-images-carousel');
 
-      if (googleImagesResponse.ok) {
-        // Page loaded
-        let googleImagesPage = parser.parseFromString(await googleImagesResponse.text(), 'text/html');
-        let allImages = googleImagesPage.querySelectorAll('table img');
-  
-        for (let i = 0; i < 20; i++) {
-          let currentImage = allImages[i];
+      try{
+        let googleImagesResponse = await window.fetch(googleImagesUrl);
 
-          googleImagesCarousel.innerHTML += `
+        if (googleImagesResponse.ok) {
+          // Page loaded
+          let googleImagesPage = parser.parseFromString(await googleImagesResponse.text(), 'text/html');
+          let allImages = googleImagesPage.querySelectorAll('table img');
+
+          for (let i = 0; i < 20; i++) {
+            let currentImage = allImages[i];
+
+            googleImagesCarousel.innerHTML += `
+              <span>
+                <img
+                  style="height: 40vh; margin-right: 5px;"
+                  src="${currentImage.getAttribute('src')}"
+                />
+              </span>
+            `;
+          }
+        }
+        else {
+          console.log('Error: Response Object', googleImagesResponse)
+          let errorDetails = 'Assistant cannot fetch images due to malformed request';
+          let subdetails = `Error: HTTP status code ${googleImagesResponse.status}`;
+
+          if (googleImagesResponse.status == 429) {
+            // Rate limit exceeded
+            errorDetails = 'Too many requests sent in given time. Rate limit exceeded.';
+            subdetails = `Error: 429 Too Many Requests`
+          }
+          else {
+            suggestion_area.querySelector('.suggestion-parent').innerHTML += `
+            <div class="suggestion" onclick="retryRecent(false)">
+              <span>
+                <img src="../res/refresh.svg" style="
+                  height: 20px;
+                  width: 20px;
+                  vertical-align: top;
+                  padding-right: 5px;
+                  ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+                >
+              </span>
+              Retry
+            </div>
+            `;
+          }
+
+          displayErrorScreen({
+            title: 'Failed to fetch images',
+            details: errorDetails,
+            subdetails: subdetails
+          });
+        }
+      }
+
+      catch(e) {
+        if (e.name == TypeError.name) {
+          displayErrorScreen({
+            title: 'Failed to fetch images',
+            details: 'Assistant cannot fetch images due to internet issues.',
+            subdetails: 'Error: Internet not available'
+          });
+
+          suggestion_area.querySelector('.suggestion-parent').innerHTML += `
+          <div class="suggestion" onclick="retryRecent(false)">
             <span>
-              <img
-                style="height: 40vh; margin-right: 5px;"
-                src="${currentImage.getAttribute('src')}"
-              />
+              <img src="../res/refresh.svg" style="
+                height: 20px;
+                width: 20px;
+                vertical-align: top;
+                padding-right: 5px;
+                ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+              >
             </span>
+            Retry
+          </div>
           `;
         }
       }
@@ -2139,14 +2211,14 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
   // Set Suggestion Area
 
   let suggestionsDOM = htmlDocument.querySelector('#assistant-scroll-bar');
+  console.log(suggestionsDOM)
 
-  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
   let suggestion_parent = document.querySelector('.suggestion-parent');
 
   if (suggestionsDOM != null) {
     if (responseType["type"] || hasWebAnswer || hasKnowledgePanel) {
       suggestion_parent.innerHTML += `
-        <div class="suggestion" onclick="openLink('https://google.com/search?q=${getCurrentQuery()}')">
+        <div class="suggestion" onclick="openLink('https://google.com/search?q=${getCurrentQuery()}')" data-flag="action-btn">
           <span>
             <img src="../res/google-logo.png" style="
               height: 20px;
@@ -2162,7 +2234,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 
     if (isGoogleImagesContent) {
       suggestion_parent.innerHTML += `
-        <div class="suggestion" onclick="openLink('https://www.google.com/search?tbm=isch&q=${encodeURIComponent(getCurrentQuery())}')">
+        <div class="suggestion" onclick="openLink('https://www.google.com/search?tbm=isch&q=${encodeURIComponent(getCurrentQuery())}')" data-flag="action-btn">
           <span>
             <img src="../res/google-logo.png" style="
               height: 20px;
@@ -2190,7 +2262,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
       }
 
       suggestion_parent.innerHTML += `
-        <div class="suggestion" onclick="openLink('${photosUrl}')">
+        <div class="suggestion" onclick="openLink('${photosUrl}')" data-flag="action-btn">
           <span>
             <img src="../res/google-photos.svg" style="
               height: 20px;
@@ -2205,11 +2277,16 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     }
 
     for (let i = 0; i < suggestionsDOM.children.length; i++) {
-      let label = suggestionsDOM.children[i].innerText;
+      let label = suggestionsDOM.children[i].innerHTML.trim();
       let query = suggestionsDOM.children[i].getAttribute('data-follow-up-query');
+      let action = query;
+
+      if (suggestionsDOM.children[i].getAttribute('data-flag') != 'action-btn') {
+        action = `assistantTextQuery(\`${escapeQuotes(query)}\`)`;
+      }
 
       suggestion_parent.innerHTML += `
-        <div class="suggestion" onclick="assistantTextQuery(\`${escapeQuotes(query)}\`)">${label}</div>
+        <div class="suggestion" onclick="${action}">${label}</div>
       `;
     }
   }
@@ -2223,15 +2300,76 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 
   // Push to History
 
-  if (pushToHistory) {
+  if (pushToHistory && main_area.querySelector('.error-area') == null) {
+    let screenData;
+
+    if (isGoogleImagesContent) {
+      screenData = generateScreenData(true);
+    }
+    else {
+      screenData = screen;
+    }
+
     history.push({
       "query": getCurrentQuery(),
-      "screen-data": screen
+      "screen-data": screenData
     });
 
     historyHead = history.length - 1;
     updateNav();
   }
+}
+
+/**
+ * Generates a screen data object from current screen.
+ *
+ * @param {Boolean} includePreventAutoScaleFlag
+ * Include "prevent-auto-scale" flag to the last element
+ * of main content. _(Defaults to `false`)_
+ *
+ * @returns Generated screen data
+ */
+function generateScreenData(includePreventAutoScaleFlag=false) {
+  let screenData;
+  let assistantMarkupResponse = document.querySelector('.assistant-markup-response');
+
+  if (includePreventAutoScaleFlag) {
+    assistantMarkupResponse.lastElementChild.setAttribute('data-flag', 'prevent-auto-scale');
+  }
+
+  let screenDataMainContent = `
+    <div id="assistant-card-content">
+      ${assistantMarkupResponse.innerHTML}
+    </div>
+  `;
+
+  let suggestions = document.querySelector('.suggestion-parent').children;
+  let suggestionsDOM = '';
+
+  for (let i = 0; i < suggestions.length; i++) {
+    let flag = suggestions[i].getAttribute('data-flag');
+    let flagAttrib = (flag) ? `data-flag="${flag}"` : '';
+    let label = suggestions[i].innerHTML.trim();
+
+    let followUpQuery = suggestions[i].getAttribute('onclick').replace(/assistantTextQuery\(`(.*)`\)/, '$1');
+
+    suggestionsDOM += `
+    <button data-follow-up-query="${followUpQuery}" ${flagAttrib}>
+      ${label}
+    </button>
+    `;
+  }
+
+  let screenDataSuggestionsHTML = `
+    <div id="assistant-scroll-bar">
+      ${suggestionsDOM}
+    </div>
+  `;
+
+  let finalMarkup = '<html><body>' + screenDataMainContent + screenDataSuggestionsHTML + '</body></html>';
+
+  screenData = {format: 'HTML', data: Buffer.from(finalMarkup, 'utf-8')};
+  return screenData;
 }
 
 /**
@@ -2379,7 +2517,7 @@ function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpa
  */
 function showGetTokenScreen(oauthValidationCallback) {
   initScreenFlag = 0;
-  
+
   main_area.innerHTML = `
     <div class="fade-in-from-bottom">
       <span
@@ -2691,7 +2829,7 @@ function getAssetDownloadUrl(releaseObject) {
  */
 function setInitScreen() {
   if (!initScreenFlag) return;
-  
+
   main_area.innerHTML = `
   <div class="init">
     <center id="assistant-logo-main-parent">
@@ -2719,12 +2857,12 @@ function setInitScreen() {
  * Returns effective theme based on `assistantConfig.theme`.
  * If the theme is set to `"system"`, it returns
  * the system theme.
- * 
+ *
  * @param {String} theme
  * Get the effective theme for given theme
  * explicitly. Leave it blank to infer from
  * `assistantConfig.theme`
- * 
+ *
  * @returns {String}
  * Effective theme based on config and system preferences
  */
@@ -2747,10 +2885,10 @@ function getEffectiveTheme(theme=null) {
  * Sets the theme based on the given `theme`.
  * Ignore this parameter, if you want to set
  * the theme based on `assistantConfig.theme`
- * 
+ *
  * @param {String} theme
  * The theme which you want to switch to.
- * 
+ *
  * @param {Boolean} forceAssistantResponseThemeChange
  * Change theme for Assistant Response screen.
  * _(Defaults to `true`)_
@@ -2784,7 +2922,7 @@ function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
  */
 function startMic() {
   mic = new Microphone();
-  
+
   if (config.conversation["textQuery"] !== undefined) {
     delete config.conversation["textQuery"];
   }
@@ -2822,7 +2960,7 @@ function stopMic() {
  * - **Windows**: `Win`
  * - **MacOS**: `Cmd`
  * - **Linux**: `Super`
- * 
+ *
  * @returns {String}
  * Platform-specific key name for `super`
  */
