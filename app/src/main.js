@@ -2298,6 +2298,22 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     `;
   }
 
+  // Register horizontal scrolling for suggestion area
+  registerHorizontalScroll(suggestion_area);
+
+  // Apply horizontal scrolling behavior for carousels
+
+  let carouselDOM;
+
+  if (hasCarousel || hasPhotoCarousel) {
+    carouselDOM = document.querySelector('.assistant-markup-response').lastElementChild;
+  }
+  else if (document.querySelector('#google-images-carousel')) {
+    carouselDOM = document.querySelector('.assistant-markup-response').lastElementChild.lastElementChild;
+  }
+
+  registerHorizontalScroll(carouselDOM, false);
+
   // Push to History
 
   if (pushToHistory && main_area.querySelector('.error-area') == null) {
@@ -2370,6 +2386,45 @@ function generateScreenData(includePreventAutoScaleFlag=false) {
 
   screenData = {format: 'HTML', data: Buffer.from(finalMarkup, 'utf-8')};
   return screenData;
+}
+
+/**
+ * Horizontally scrolls given element, `el`
+ *
+ * @param {Event} e
+ * Scroll Event
+ *
+ * @param {HTMLElement} el
+ * Element to be scrolled horizontally
+ * 
+ * @param {Boolean} smoothScroll
+ * Whether to set `scrollBehavior` to "smooth"
+ */
+function _scrollHorizontally(e, el, smoothScroll) {
+  // Does not accept trackpad horizontal scroll
+  if (e.wheelDeltaX == 0) {
+    let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    let scrollBehavior = (smoothScroll) ? 'smooth' : 'auto';
+    let scrollOffset = 125;
+
+    el.scrollBy({left: -(delta * scrollOffset), behavior: scrollBehavior});
+    e.preventDefault();
+  }
+}
+
+/**
+ * Registers horizontal scroll to given element
+ * when mouse wheel event is triggered
+ *
+ * @param {HTMLElement} element
+ * Element to be applied upon
+ * 
+ * @param {Boolean} smoothScroll
+ * Whether to set `scrollBehavior` to "smooth"
+ */
+function registerHorizontalScroll(element, smoothScroll=true) {
+  if (element)
+    element.onmousewheel = (e) => _scrollHorizontally(e, element, smoothScroll);
 }
 
 /**
