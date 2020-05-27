@@ -2211,8 +2211,6 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
   // Set Suggestion Area
 
   let suggestionsDOM = htmlDocument.querySelector('#assistant-scroll-bar');
-  console.log(suggestionsDOM)
-
   let suggestion_parent = document.querySelector('.suggestion-parent');
 
   if (suggestionsDOM != null) {
@@ -2333,6 +2331,10 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 
     historyHead = history.length - 1;
     updateNav();
+  }
+
+  if (isGoogleImagesContent && getEffectiveTheme() == 'light') {
+    seekHistory(historyHead);
   }
 }
 
