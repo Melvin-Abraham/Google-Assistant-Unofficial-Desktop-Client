@@ -62,13 +62,15 @@
             "category": "public.app-category.productivity",
             "target": [
                 "dmg"
-            ]
+            ],
+            "darkModeSupport": true
         },
         "dmg": {
             "background": "./app/res/misc/DMG Background.png",
             "icon": "./app/res/icons/icon.icns",
             "iconSize": 100,
-            "contents": [{
+            "contents": [
+                {
                     "x": 350,
                     "y": 280,
                     "type": "link",
