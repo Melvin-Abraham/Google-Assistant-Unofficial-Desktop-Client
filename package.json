@@ -107,7 +107,7 @@
         "grpc": "1.24.2"
     },
     "devDependencies": {
-        "electron": "6.0.12",
+        "electron": "9.1.0",
         "electron-builder": "22.4.1"
     }
 }
