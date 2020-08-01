@@ -2867,7 +2867,13 @@ function getAssetDownloadUrl(releaseObject) {
           break;
 
         default:
-          if (asset["name"].endsWith('.AppImage')) {
+          if (process.argv0.startsWith('/snap')) {
+            if (asset["name"].endsWith('.snap')) {
+              downloadUrl = asset["browser_download_url"];
+            }
+          }
+
+          else if (asset["name"].endsWith('.AppImage')) {
             downloadUrl = asset["browser_download_url"];
           }
 
