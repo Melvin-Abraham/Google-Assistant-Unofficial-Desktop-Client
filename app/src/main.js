@@ -9,6 +9,8 @@ const ipcRenderer = electron.ipcRenderer;
 const path = require('path');
 const GoogleAssistant = require('google-assistant');
 const fs = require('fs');
+const themes = require('./themes.js');
+const supportedLanguages = require('./lang.js');
 
 let audPlayer = new AudioPlayer();
 let mic = new Microphone();
@@ -31,6 +33,7 @@ let assistantConfig = {
   "enableAutoScaling": true,
   "enableMicOnStartup": false,
   "hotkeyBehavior": "launch+mic",
+  "language": "en-US",
   "theme": "dark"
 };
 
@@ -205,7 +208,7 @@ const config = {
       encodingOut: 'MP3', // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
       sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
     },
-    lang: 'en-US', // language code for input/output (defaults to en-US)
+    lang: assistantConfig["language"], // language code for input/output (defaults to en-US)
     deviceModelId: '', // use if you've gone through the Device Registration process
     deviceId: '', // use if you've gone through the Device Registration process
     // textQuery: "", // if this is set, audio input is ignored
@@ -458,7 +461,7 @@ const startConversation = (conversation) => {
         console.log('Conversation Complete')
       };
 
-      init_headline.innerText = 'Hi! How can I help?';
+      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
     })
     .on('error', error => {
       console.error(error);
@@ -578,7 +581,7 @@ assistant
 
       console.log('STARTING MIC...');
       if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
-      init_headline.innerText = 'Listening...';
+      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].listeningMessage;
 
       // Set `webMic` for visulaization
       webMic.start();
@@ -961,6 +964,30 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Language
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Language to converse with the Assistant"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="lang-selector" style="padding-right: 10px;">
+                ${Object.keys(supportedLanguages).map(langCode => {
+                  return `<option value="${langCode}">
+                    ${supportedLanguages[langCode]["langName"]}
+                  </option>`
+                }).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Force New Conversation
 
               <span style="
@@ -1323,6 +1350,7 @@ function openConfig() {
 
     let keyFilePathInput = main_area.querySelector('#key-file-path');
     let savedTokensPathInput = main_area.querySelector('#saved-tokens-path');
+    let languageSelector = document.querySelector('#lang-selector');
     let forceNewConversationCheckbox = document.querySelector('#new-conversation');
     let enableAudioOutput = document.querySelector('#audio-output');
     let enableMicOnContinousConversation = document.querySelector('#continous-conv-mic');
@@ -1339,6 +1367,7 @@ function openConfig() {
 
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
+    languageSelector.value = assistantConfig["language"];
     forceNewConversationCheckbox.checked = assistantConfig["forceNewConversation"];
     enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
     enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
@@ -1429,6 +1458,29 @@ function openConfig() {
 
       if (historyHead == -1) {
         document.querySelector('.app-title').innerText = "";
+      }
+
+      // If the user is in welcome screen, show updated welcome message
+      init_headline = document.querySelector('#init-headline');
+
+      if (init_headline) {
+        const welcomeMsg = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+        init_headline.innerText = welcomeMsg;
+
+        suggestion_area.innerHTML = `
+          <div class="suggestion-parent">
+            ${supportedLanguages[assistantConfig["language"]].initSuggestions.map(suggestionObj => {
+              return (`
+                <div
+                  class="suggestion"
+                  onclick="assistantTextQuery('${suggestionObj.query}')"
+                >
+                    ${suggestionObj.label}
+                </div>
+              `);
+            }).join('')}
+          </div>
+        `;
       }
     }
 
@@ -1661,6 +1713,7 @@ function openConfig() {
 
         assistantConfig["keyFilePath"] = keyFilePathInput.value;
         assistantConfig["savedTokensPath"] = savedTokensPathInput.value;
+        assistantConfig["language"] = languageSelector.value;
         assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
         assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
         assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
@@ -1676,6 +1729,7 @@ function openConfig() {
         // Apply settings for appropriate options
 
         config.conversation.isNew = assistantConfig["forceNewConversation"];
+        config.conversation.lang = assistantConfig["language"];
 
         app.setLoginItemSettings({
           openAtLogin: assistantConfig["launchAtStartup"]
@@ -2102,7 +2156,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
       let googleImagesUrl = `https://images.google.com/search?tbm=isch&q=${imageSubject}&sfr=gws&gbv=1&sei=n37GXpmUFviwz7sP4KmZuA0`;
       let googleImagesCarousel = main_area.querySelector('#google-images-carousel');
 
-      try{
+      try {
         let googleImagesResponse = await window.fetch(googleImagesUrl);
 
         if (googleImagesResponse.ok) {
@@ -2308,6 +2362,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
   }
   else if (document.querySelector('#google-images-carousel')) {
     carouselDOM = document.querySelector('.assistant-markup-response').lastElementChild.lastElementChild;
+  }
+  else if (document.querySelector('#tv-item-container')) {
+    carouselDOM = document.querySelector('.assistant-markup-response #tv-item-container');
   }
 
   registerHorizontalScroll(carouselDOM, false);
@@ -2901,16 +2958,23 @@ function setInitScreen() {
 
     <div id="init-headline-parent">
       <div id="init-headline">
-        Hi! How can I help?
+        ${supportedLanguages[assistantConfig["language"]].welcomeMessage}
       </div>
     </div>
   </div>`;
 
   suggestion_area.innerHTML = `
   <div class="suggestion-parent">
-    <div class="suggestion" onclick="assistantTextQuery('How\\'s the Weather today?')">Weather</div>
-    <div class="suggestion" onclick="assistantTextQuery('Toss a coin')">Toss a coin</div>
-    <div class="suggestion" onclick="assistantTextQuery('What can you do?')">What can you do?</div>
+    ${supportedLanguages[assistantConfig["language"]].initSuggestions.map(suggestionObj => {
+      return (`
+        <div
+          class="suggestion"
+          onclick="assistantTextQuery('${suggestionObj.query}')"
+        >
+            ${suggestionObj.label}
+        </div>
+      `);
+    }).join('')}
   </div>`;
 
   init_headline = document.querySelector('#init-headline');
@@ -3001,7 +3065,7 @@ function stopMic() {
   (mic) ? mic.stop() : null;
   webMic.stop();
 
-  init_headline.innerText = 'Hi! How can I help?';
+  if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
 
   // Set the `Assistant Mic` icon
 
