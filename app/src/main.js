@@ -9,6 +9,8 @@ const ipcRenderer = electron.ipcRenderer;
 const path = require('path');
 const GoogleAssistant = require('google-assistant');
 const fs = require('fs');
+const os = require('os');
+const { execSync } = require('child_process');
 const themes = require('./themes.js');
 const supportedLanguages = require('./lang.js');
 
@@ -979,9 +981,11 @@ function openConfig() {
             <div class="setting-value" style="height: 35px;">
               <select id="lang-selector" style="padding-right: 10px;">
                 ${Object.keys(supportedLanguages).map(langCode => {
-                  return `<option value="${langCode}">
-                    ${supportedLanguages[langCode]["langName"]}
-                  </option>`
+                  return (`
+                    <option value="${langCode}">
+                      ${supportedLanguages[langCode]["langName"]}
+                    </option>
+                  `)
                 }).join('')}
               </select>
             </div>
@@ -1285,6 +1289,19 @@ function openConfig() {
                 onclick="assistantWindow.webContents.openDevTools({mode: 'undocked'})"
               >
                 Open DevTools
+              </label>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              About Assistant
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label
+                class="button setting-item-button"
+                onclick="showAboutBox()"
+              >
+                About
               </label>
             </div>
           </div>
@@ -2924,7 +2941,7 @@ function getAssetDownloadUrl(releaseObject) {
           break;
 
         default:
-          if (process.argv0.startsWith('/snap')) {
+          if (_isSnap()) {
             if (asset["name"].endsWith('.snap')) {
               downloadUrl = asset["browser_download_url"];
             }
@@ -3045,6 +3062,40 @@ function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
 }
 
 /**
+ * Display "About" Dialog Box.
+ */
+function showAboutBox() {
+  const { commitHash, commitDate } = _getCommitInfo();
+  const appVersion = app.getVersion();
+  const appDir = app.getAppPath();
+  const nodeVersion = process.versions.node;
+  const v8Version = process.versions.v8;
+  const electronVersion = process.versions.electron;
+  const chromeVersion = process.versions.chrome;
+  const osInfo = `${os.type()} ${os.arch()} ${os.release()}${_isSnap() ? ' snap' : ''}`;
+  const info = `Version: ${appVersion}\nCommit ID: ${commitHash}\nCommit Date: ${commitDate}\nElectron: ${electronVersion}\nChrome: ${chromeVersion}\nNode.js: ${nodeVersion}\nV8: ${v8Version}\nOS: ${osInfo}\nCurrent App Directory: ${appDir}`;
+
+  dialog.showMessageBox(
+    assistantWindow,
+    {
+      type: 'info',
+      title: 'Google Assistant Unofficial Desktop Client',
+      message: 'Google Assistant Unofficial Desktop Client',
+      detail: info,
+      buttons: [
+        "OK",
+        "Copy"
+      ]
+    }
+  ).then((result) => {
+    if (result.response === 1) {
+      // If "Copy" is pressed
+      electron.clipboard.writeText(info);
+    }
+  });
+}
+
+/**
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
@@ -3080,6 +3131,30 @@ function stopMic() {
 
   assistant_mic = document.querySelector('#assistant-mic');
   assistant_mic.onclick = startMic;
+}
+
+/**
+ * Returns `true` if the assistant is running as a
+ * snap application (linux).
+ */
+function _isSnap() {
+  return process.argv0.startsWith('/snap');
+}
+
+/**
+ * Returns an object comtaining `commitHash` and `commitDate`
+ * of the latest commit.
+ * 
+ * (**Requires GIT**)
+ */
+function _getCommitInfo() {
+  let commitHash = execSync('git rev-parse HEAD').toString().trim();
+  let commitDate = execSync('git log -1 --format=%cd').toString().trim();
+
+  return {
+    commitHash,
+    commitDate
+  };
 }
 
 /**
