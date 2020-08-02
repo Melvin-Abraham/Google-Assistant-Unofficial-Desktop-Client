@@ -2162,11 +2162,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
       }
     }
 
-    if (innerText.indexOf('Find images here') != -1) {
+    if (innerText.indexOf('https://www.google.com/search?tbm=isch') != -1) {
       // Google Images
       isGoogleImagesContent = true;
-
-      let innerHTML = textContainer.innerHTML;
       textContainer.innerHTML = `<div id="google-images-carousel"></div>`;
 
       let imageSubject = encodeURIComponent(getCurrentQuery());
