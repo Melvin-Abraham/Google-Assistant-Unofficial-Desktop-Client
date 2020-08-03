@@ -3065,13 +3065,14 @@ function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
 function showAboutBox() {
   const { commitHash, commitDate } = _getCommitInfo();
   const appVersion = app.getVersion();
-  const appDir = app.getAppPath();
   const nodeVersion = process.versions.node;
   const v8Version = process.versions.v8;
   const electronVersion = process.versions.electron;
   const chromeVersion = process.versions.chrome;
   const osInfo = `${os.type()} ${os.arch()} ${os.release()}${_isSnap() ? ' snap' : ''}`;
-  const info = `Version: ${appVersion}\nCommit ID: ${commitHash}\nCommit Date: ${commitDate}\nElectron: ${electronVersion}\nChrome: ${chromeVersion}\nNode.js: ${nodeVersion}\nV8: ${v8Version}\nOS: ${osInfo}\nCurrent App Directory: ${appDir}`;
+
+  const commitInfo = (commitHash != null) ? `Commit ID: ${commitHash}\nCommit Date: ${commitDate}\n` : '';
+  const info = `Version: ${appVersion}\n${commitInfo}Electron: ${electronVersion}\nChrome: ${chromeVersion}\nNode.js: ${nodeVersion}\nV8: ${v8Version}\nOS: ${osInfo}`;
 
   dialog.showMessageBox(
     assistantWindow,
@@ -3146,8 +3147,28 @@ function _isSnap() {
  * (**Requires GIT**)
  */
 function _getCommitInfo() {
-  let commitHash = execSync('git rev-parse HEAD').toString().trim();
-  let commitDate = execSync('git log -1 --format=%cd').toString().trim();
+  let commitHash;
+  let commitDate;
+
+  try {
+    commitHash = execSync('git rev-parse HEAD').toString().trim();
+    commitDate = execSync('git log -1 --format=%cd').toString().trim();
+  }
+  catch (err) {
+    console.error(err);
+
+    if (app.getAppPath().endsWith('.asar')) {
+      // User is running the release version
+      commitHash = null;
+      commitDate = null;
+    }
+
+    else {
+      // Either git is not installed or is not found in the path
+      commitHash = '[Git not found in the path]';
+      commitDate = 'Unknown';
+    }
+  }
 
   return {
     commitHash,
