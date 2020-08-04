@@ -56,7 +56,6 @@
             "installerSidebar": "./app/res/misc/InstallerSidebar.bmp",
             "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp"
         },
-
         "mac": {
             "icon": "./app/res/icons/icon.icns",
             "category": "public.app-category.productivity",
@@ -87,7 +86,6 @@
                 "height": 410
             }
         },
-
         "linux": {
             "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
             "category": "ArtificialIntelligence",
@@ -105,11 +103,11 @@
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
-        "google-assistant": "0.6.2",
-        "grpc": "1.24.2"
+        "google-assistant": "0.6.4",
+        "grpc": "1.24.3"
     },
     "devDependencies": {
-        "electron": "6.0.12",
-        "electron-builder": "22.4.1"
+        "electron": "8.3.4",
+        "electron-builder": "22.8.0"
     }
 }
