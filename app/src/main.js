@@ -873,7 +873,8 @@ function openFileDialog(callback, openDialogTitle=null) {
       { name: 'JSON File', extensions: ['json'] }
     ],
     properties: ['openFile']
-  }, (filePaths, bookmarks) => callback(filePaths, bookmarks));
+  })
+    .then((result, bookmarks) => callback(result, bookmarks));
 }
 
 /**
@@ -1399,9 +1400,9 @@ function openConfig() {
 
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
-        (filePaths) => {
-          if (filePaths[0])
-            keyFilePathInput.value = filePaths[0];
+        (result) => {
+          if (!result.canceled)
+            keyFilePathInput.value = result.filePaths[0];
         },
         "Select Key File"
       );
@@ -1409,9 +1410,9 @@ function openConfig() {
 
     main_area.querySelector('#saved-tokens-path-browse-btn').onclick = () => {
       openFileDialog(
-        (filePaths) => {
-          if (filePaths[0])
-            savedTokensPathInput.value = filePaths[0];
+        (result) => {
+          if (!result.canceled)
+            savedTokensPathInput.value = result.filePaths[0];
         },
         "Select Saved Token File"
       );
