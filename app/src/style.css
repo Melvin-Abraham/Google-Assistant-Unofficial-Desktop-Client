@@ -186,30 +186,6 @@ body {
     transition: color 150ms ease-in;
 }
 
-.disabled {
-    opacity: 0.5 !important;
-    padding: 2px;
-    -webkit-user-select: none;
-    -webkit-user-drag: none;
-
-    transition: none;
-}
-
-.hyperlink {
-    cursor: pointer;
-    user-select: none;
-    text-decoration: underline;
-    transition: all 250ms;
-}
-
-.hyperlink:hover {
-    opacity: 0.5;
-}
-
-.hyperlink:active {
-    opacity: 0.25;
-}
-
 /* Styles for pre-loader */
 
 #loader-area {
@@ -730,6 +706,72 @@ body {
     font-family: 'Roboto Mono';
 }
 
+code {
+    font-family: 'Roboto Mono';
+    background: rgba(var(--color-fg-rgb), 0.1);
+    padding: 1px 8px;
+    border-radius: 3px;
+}
+
+a, .link {
+    color: var(--color-blue);
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: all 150ms ease;
+}
+
+a:hover, .link:hover {
+    opacity: 0.5;
+}
+
+a:active, .link:active {
+    opacity: 0.7;
+}
+
+blockquote {
+    border-left: 4px var(--color-blue) solid;
+    margin-left: 0;
+    padding-left: 20px;
+}
+
+.markdown-list-checkbox {
+    list-style: none;
+    margin-top: 5px;
+}
+
+.markdown-list-checkbox > input[type="checkbox"] {
+    vertical-align: middle;
+    height: 0.95rem;
+    width: 0.95rem;
+    margin-left: 0;
+    margin-right: 15px;
+}
+
+.disabled {
+    opacity: 0.5 !important;
+    padding: 2px;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+
+    transition: none;
+}
+
+.hyperlink {
+    cursor: pointer;
+    user-select: none;
+    text-decoration: underline;
+    transition: all 250ms;
+}
+
+.hyperlink:hover {
+    opacity: 0.5;
+}
+
+.hyperlink:active {
+    opacity: 0.25;
+}
+
 .no-x-scroll {
     overflow-x: hidden !important;
 }
@@ -906,6 +948,51 @@ img[type="icon"] {
 /* Handle on click */
 .assistant-markup-response::-webkit-scrollbar-thumb:active {
     background: rgba(var(--color-scrollbar-response-screen-fg-rgb), .1) !important;
+}
+
+/********** ACCORDION **********/
+
+.accordion {
+    position: relative;
+}
+
+.accordion > input[type="checkbox"] {
+    display: none;
+    box-sizing: border-box;
+}
+
+.accordion-tile {
+    vertical-align: -webkit-baseline-middle;
+    margin-right: 15px;
+    user-select: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.accordion .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 30px;
+
+    transition: all 300ms ease-in-out;
+}
+
+.accordion input:checked ~ .accordion-content {
+    max-height: 500px;
+}
+
+.accordion-chevron {
+    position: absolute;
+    right: 24px;
+    top: 18px;
+    transform: rotateZ(0);
+    transform-origin: 50% 40%;
+
+    transition: all 300ms ease;
+}
+
+.accordion input:checked ~ .accordion-tile .accordion-chevron {
+    transform: rotateZ(180deg);
 }
 
 /********** SLIDER-SWITCH **********/

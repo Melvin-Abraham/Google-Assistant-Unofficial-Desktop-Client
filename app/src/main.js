@@ -904,6 +904,10 @@ function openConfig() {
   if (!document.querySelector('#config-screen')) {
     let currentHTML = document.querySelector('body').innerHTML;
 
+    if (!releases) {
+      getReleases();
+    }
+
     main_area.innerHTML = `
       <div id="config-screen" class="fade-in-from-bottom">
         <div style="
@@ -1295,7 +1299,40 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Application Data Directory
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Opens the directory where Assistant's application data is stored"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label
+                class="button setting-item-button"
+                onclick="electronShell.openItem(userDataPath)"
+              >
+                Open App Data Folder
+              </label>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               About Assistant
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Nerdy information for developers"
+                >
+              </span>
             </div>
             <div class="setting-value" style="height: 35px;">
               <label
@@ -1339,6 +1376,87 @@ function openConfig() {
                 <label class="button setting-item-button" id="check-for-update-btn">
                   Check for Updates
                 </label>
+              </div>
+              <div class="accordion" style="margin-top: 40px; background: #1e90ff30; padding: 10px 30px 18px 30px; border-radius: 10px;">
+                <input type="checkbox" id="whats-new" />
+                <label for="whats-new" class="accordion-tile">
+                  <div style="width: 100%; display: inline-block;">
+                    <span>
+                      <img src="../res/light_bulb.svg" style="
+                        height: 20px;
+                        width: 20px;
+                        vertical-align: sub;
+                        padding-right: 5px;
+                        ${getEffectiveTheme() == 'light' ? '' : 'filter: invert(1);'}"
+                      >
+                    </span>
+
+                    <span style="width: 100%;">
+                      What's new in this version
+                    </span>
+
+                    <span
+                      class="accordion-chevron"
+                      style="${getEffectiveTheme() == 'light' ? '' : 'filter: invert(1);'}"
+                    >
+                      <img src="../res/chevron_down.svg" />
+                    </span>
+                  </div>
+                </label>
+
+                <!-- <label class="button setting-item-button" onclick="showChangelogDialog()">
+                  View Changelog
+                </label> -->
+
+                <div class="accordion-content">
+                  <div style="margin-top: 30px;">
+                    ${(releases)
+                      ? _markdownToHtml(
+                        getChangelog()
+                      )
+
+                      : `
+                        <span>
+                          <img src="../res/error.svg" style="
+                            height: 20px;
+                            width: 20px;
+                            vertical-align: sub;
+                            padding-right: 5px;"
+                          >
+                        </span>
+                        <span style="color: var(--color-red);">
+                          An error occured while fetching releases
+                        </span>
+
+                        <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
+                          <i>
+                            Please check your internet
+                          </i>
+                        </div>
+                      `
+                    }
+
+                    ${(releases) ?
+                      `<div style="padding-top: 25px; padding-bottom: 10px;">
+                        <div class="button setting-item-button" onclick="openLink(getReleaseObject().html_url)">
+                          <span>
+                            <img src="../res/proceed.svg" style="
+                              height: 19px;
+                              width: 16px;
+                              vertical-align: sub;
+                              padding-right: 10px;
+                              ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+                            >
+                          </span>
+
+                          Show in GitHub
+                        </div>
+                      </div>`
+
+                      : ''
+                    }
+                  </div>
+                </div>
               </div>
               <div style="margin-top: 40px;">
                 <div class="disabled" style="margin-bottom: 5px;">
@@ -3096,6 +3214,44 @@ function showAboutBox() {
 }
 
 /**
+ * Returns a release object for given version
+ * 
+ * @param {string} version
+ * Version of assistant to get release object of.
+ * 
+ * If this parameter is left out, the version will
+ * be defaulted to currently installed version.
+ */
+function getReleaseObject(version) {
+  const ver = _getVersion(version);
+
+  const releaseObject = releases.filter(releaseObject => releaseObject.name == ver)[0];
+  return releaseObject;
+}
+
+/**
+ * Returns changelog info from releases array for a given version
+ * 
+ * @param {string} version
+ * Version of assistant to get changelog of.
+ * 
+ * If this parameter is left out, the version will
+ * be defaulted to currently installed version.
+ * 
+ * @returns {string}
+ * Changelog as a string of Markdown.
+ */
+function getChangelog(version) {
+  const ver = _getVersion(version);
+  console.log(`Getting Changelog for "${ver}"`);
+
+  const releaseObject = getReleaseObject(ver);
+  const content = releaseObject.body.trim();
+
+  return content;
+}
+
+/**
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
@@ -3178,6 +3334,56 @@ function _getCommitInfo() {
 }
 
 /**
+ * Converts a string of Markdown to a string
+ * of HTML. This implements minimal parsing of the
+ * markdown as per the requirements.
+ * 
+ * @param {string} markdownString
+ * String containing Markdown
+ */
+function _markdownToHtml(markdownString) {
+  const htmlString = markdownString
+    .replace(/href=['"](.*?)['"]/gm, 'onclick="openLink(\'$1\')"')
+    .replace(/^\s*>\s*(.+)/gm, '<blockquote>$1</blockquote>')
+    .replace(/(\W*?)- \[ \] (.+)/gm, '$1<li class="markdown-list-checkbox"><input type="checkbox" disabled /> $2</li>')
+    .replace(/(\W*?)- \[x\] (.+)/gm, '$1<li class="markdown-list-checkbox"><input type="checkbox" checked disabled /> $2</li>')
+    .replace(/^-{3,}/gm, '<hr />')
+    .replace(/^={3,}/gm, '<hr />')
+    .replace(/^- (.+)/gm, '<li style="margin-top: 5px;">$1</li>')
+    .replace(/^# (.+)/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)/gm, '<h3>$1</h3>')
+    .replace(/^#### (.+)/gm, '<h4>$1</h4>')
+    .replace(/^##### (.+)/gm, '<h5>$1</h5>')
+    .replace(/^###### (.+)/gm, '<h6>$1</h6>')
+    .replace(/^\[(.+?)\]\((.+?)\)/gm, '<a onclick="openLink(\'$2\')">$1</a>')
+    .replace(/__(.+?)__/gm, '<strong>$1</strong>')
+    .replace(/_(.+?)_/gm, '<i>$1</i>')
+    .replace(/\*\*(.+?)\*\*/gm, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/gm, '<i>$1</i>')
+    .replace(/\`(.+?)\`/gm, '<code>$1</code>')
+    .replace(/\n\n/g, '<br />');
+
+  return htmlString;
+}
+
+/**
+ * Returns a version string with a `v` prefixed.
+ * 
+ * If the `version` provided is empty, current version
+ * of the application is returned.
+ * 
+ * @param {string} version
+ * Version
+ */
+function _getVersion(version) {
+  if (version == null) version = app.getVersion();
+  const ver = 'v' + version.replace(/^v*/, '');
+
+  return ver;
+}
+
+/**
  * Returns the name for `super` key based on platform:
  * - **Windows**: `Win`
  * - **MacOS**: `Cmd`
@@ -3239,34 +3445,39 @@ function updateAvailable(releases_data) {
 
 function displayUpdateAvailable() { displayQuickMessage('Update Available!'); }
 
-if (!releases) {
-  // API request is only done once to avaoid Error 403 (Rate Limit Exceeded)
-  // when Assistant is launched many times...
+function fetchReleasesAndCheckUpdates() {
+  if (!releases) {
+    // API request is only done once to avaoid Error 403 (Rate Limit Exceeded)
+    // when Assistant is launched many times...
 
-  (async() => {
-    let releases_data = await getReleases();
+    (async() => {
+      let releases_data = await getReleases();
 
-    if (updateAvailable(releases_data)) {
-      displayUpdateAvailable();
-    }
-    else {
-      console.log("No Updates Available!");
-    }
-  })();
-}
-
-else {
-  console.log("RELEASES:", releases);
-
-  if (updateAvailable(releases)) {
-    displayUpdateAvailable();
-    console.log("Updates Available");
+      if (updateAvailable(releases_data)) {
+        displayUpdateAvailable();
+      }
+      else {
+        console.log("No Updates Available!");
+      }
+    })();
   }
 
   else {
-    console.log("No updates avaiable");
+    console.log("RELEASES:", releases);
+
+    if (updateAvailable(releases)) {
+      displayUpdateAvailable();
+      console.log("Updates Available");
+    }
+
+    else {
+      console.log("No updates avaiable");
+    }
   }
 }
+
+// Fetch releases and check for updates initially
+fetchReleasesAndCheckUpdates();
 
 // Set Initial Screen
 
