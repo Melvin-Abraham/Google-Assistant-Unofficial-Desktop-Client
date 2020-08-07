@@ -129,26 +129,22 @@ Press ${getSuperKey()}+Shift+A to launch`,
     // SHORTCUT REGISTRATION
 
     electron.globalShortcut.register('Super+Shift+A', () => {
-        mainWindow.webContents.executeJavaScript(
-            'document.querySelector("body").innerHTML'
-        ).then((isContentsVisible) => {
-            isContentsVisible = isContentsVisible && mainWindow.isVisible();
+        const isContentsVisible = mainWindow.isVisible();
 
-            let hotkeyBehavior = (assistantConfig['hotkeyBehavior'] !== undefined)
-                                    ? assistantConfig['hotkeyBehavior']
-                                    : "launch+mic";
+        let hotkeyBehavior = (assistantConfig['hotkeyBehavior'] !== undefined)
+                                ? assistantConfig['hotkeyBehavior']
+                                : "launch+mic";
 
-            if (hotkeyBehavior === 'launch' || !isContentsVisible) {
-                launchAssistant();
-            }
-            else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
-                mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
-                mainWindow.close();
-            }
-            else {
-                requestMicToggle();
-            }
-        });
+        if (hotkeyBehavior === 'launch' || !isContentsVisible) {
+            launchAssistant();
+        }
+        else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
+            mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
+            mainWindow.close();
+        }
+        else {
+            requestMicToggle();
+        }
     });
 
     mainWindow.on('will-quit', () => electron.globalShortcut.unregisterAll());
