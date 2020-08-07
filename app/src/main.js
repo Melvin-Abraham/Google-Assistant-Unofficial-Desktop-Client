@@ -1322,6 +1322,29 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Show Command Line Arguments
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Display command line arguments supplied to the process"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label
+                class="button setting-item-button"
+                onclick="showArgsDialog()"
+              >
+                Show Command Line Args
+              </label>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               About Assistant
 
               <span style="
@@ -3209,6 +3232,32 @@ function showAboutBox() {
     if (result.response === 1) {
       // If "Copy" is pressed
       electron.clipboard.writeText(info);
+    }
+  });
+}
+
+/**
+ * Display "Command Line Arguments" Dialog Box.
+ */
+function showArgsDialog() {
+  const content = process.argv.join('\n    ');
+
+  dialog.showMessageBox(
+    assistantWindow,
+    {
+      type: 'info',
+      title: 'Google Assistant Unofficial Desktop Client',
+      message: 'Command Line Arguments',
+      detail: content,
+      buttons: [
+        "OK",
+        "Copy"
+      ]
+    }
+  ).then((result) => {
+    if (result.response === 1) {
+      // If "Copy" is pressed
+      electron.clipboard.writeText(content);
     }
   });
 }
