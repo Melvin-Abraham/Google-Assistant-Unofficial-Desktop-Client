@@ -93,7 +93,11 @@
                 "AppImage",
                 "snap"
             ],
-            "icon": "./app/res/icons/Installer Icon.png"
+            "icon": "./app/res/icons/icon.png"
+        },
+        "snap": {
+            "confinement": "classic",
+            "grade": "stable"
         }
     },
     "scripts": {
