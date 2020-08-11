@@ -21,6 +21,12 @@ if (fs.existsSync(configFilePath)) {
     assistantConfig = JSON.parse(fs.readFileSync(configFilePath));
 }
 
+// Set TMPDIR environment variable for linux snap
+
+if (_isLinux() && _isSnap()) {
+    process.env["TMPDIR"] = process.env["XDG_RUNTIME_DIR"];
+}
+
 // Launch at Startup
 
 app.setLoginItemSettings({
@@ -56,7 +62,7 @@ function onAppReady() {
         width: 1000,
         height: 420,
         resizable: true,
-        icon: "./app/res/icons/icon.png",
+        icon: path.join(__dirname, "app", "res", "icons", "icon.png"),
         frame: false,
         title: "Google Assistant Unofficial Desktop Client",
         transparent: true,
@@ -234,4 +240,12 @@ function launchAssistant() {
 function quitApp() {
     app.isQuiting = true;
     app.quit();
+}
+
+function _isSnap() {
+    return app.getAppPath().startsWith('/snap');
+}
+
+function _isLinux() {
+    return ['win32', 'darwin'].indexOf(process.platform) === -1;
 }
