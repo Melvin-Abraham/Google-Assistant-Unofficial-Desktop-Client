@@ -97,7 +97,8 @@
         },
         "snap": {
             "confinement": "classic",
-            "grade": "stable"
+            "grade": "stable",
+            "plugs": ["default", "audio-record"]
         }
     },
     "scripts": {
@@ -111,7 +112,7 @@
         "grpc": "1.24.3"
     },
     "devDependencies": {
-        "electron": "8.3.4",
+        "electron": "9.0.3",
         "electron-builder": "22.8.0"
     }
 }
