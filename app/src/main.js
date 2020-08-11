@@ -1,5 +1,27 @@
 'use strict';
 
+// Initialize "close", "expand" and "minimize" buttons
+
+const close_btn = document.querySelector('#close-btn');
+const min_btn = document.querySelector('#min-btn');
+const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
+let expanded = false;
+
+close_btn.onclick = () => {
+  close();
+  mic.stop();
+  audPlayer.stop();
+
+  if (!assistantConfig["alwaysCloseToTray"]) {
+    quitApp();
+  }
+};
+
+min_btn.onclick = () => assistantWindow.minimize();
+expand_collapse_btn.onclick = () => toggleExpandWindow();
+
+// Library Imports
+
 const electron = require('electron');
 const assistantWindow = electron.remote.getCurrentWindow();
 const app = electron.remote.app;
@@ -10,7 +32,7 @@ const path = require('path');
 const GoogleAssistant = require('google-assistant');
 const fs = require('fs');
 const os = require('os');
-const { execSync } = require('child_process');
+const { execSync, exec } = require('child_process');
 const themes = require('./themes.js');
 const supportedLanguages = require('./lang.js');
 
@@ -41,7 +63,6 @@ let assistantConfig = {
 
 let history = [];
 let historyHead = -1;
-let expanded = false;
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let webMic = new p5.AudioIn();  // For Audio Visualization
@@ -51,9 +72,9 @@ let assistant_mic = document.querySelector('#assistant-mic');
 let suggestion_area = document.querySelector('#suggestion-area');
 let main_area = document.querySelector('#main-area');
 let init_headline;
-const close_btn = document.querySelector('#close-btn');
-const min_btn = document.querySelector('#min-btn');
-const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
+
+// Add click listener for "Settings" button
+document.querySelector('#settings-btn').onclick = openConfig;
 
 // Notify the main process that first launch is completed
 ipcRenderer.send('update-first-launch');
@@ -61,19 +82,14 @@ ipcRenderer.send('update-first-launch');
 // Assuming as first-time user
 let isFirstTimeUser = true;
 
-close_btn.onclick = () => {
-  mic.stop();
-  audPlayer.stop();
-  close();
+// Check Microphone Access
+let _canAccessMicrophone = true;
 
-  if (!assistantConfig["alwaysCloseToTray"]) {
-    quitApp();
-  }
-};
-
-min_btn.onclick = () => assistantWindow.minimize();
-expand_collapse_btn.onclick = () => toggleExpandWindow();
-document.querySelector('#settings-btn').onclick = openConfig;
+navigator.mediaDevices.getUserMedia({audio: true}).catch(e => {
+  console.error(e);
+  _canAccessMicrophone = false;
+  displayQuickMessage("Microphone is not accessible");
+})
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
@@ -793,6 +809,7 @@ function inspectResponseType(assistantResponseString) {
  * _(Defaults to `true`)_
  */
 function openLink(link, autoMinimizeAssistantWindow=true) {
+  if (link === '') return;
   electronShell.openExternal(link);
 
   if (autoMinimizeAssistantWindow) {
@@ -917,6 +934,67 @@ function openConfig() {
         ">
           Settings
         </div>
+
+        ${!_canAccessMicrophone ? `
+          <div
+            class="setting-key accordion"
+            style="
+              margin-top: 40px;
+              margin-right: 30px;
+              background: #ea433530;
+              padding: 10px 30px 18px 30px;
+              border-radius: 10px;
+            "
+          >
+            <input type="checkbox" id="alert-accordion" />
+            <label for="alert-accordion" class="accordion-tile">
+              <div style="width: 100%; display: inline-block;">
+                <span>
+                  <img src="../res/mic_off.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? '' : 'filter: invert(1);'}"
+                  >
+                </span>
+
+                <span style="width: 100%;">
+                  Assistant cannot access microphone
+                </span>
+
+                <span
+                  class="accordion-chevron"
+                  style="${getEffectiveTheme() == 'light' ? '' : 'filter: invert(1);'}"
+                >
+                  <img src="../res/chevron_down.svg" />
+                </span>
+              </div>
+            </label>
+
+            <div class="accordion-content">
+              <div style="margin-top: 30px;">
+                This could happen in the following cases:
+
+                <ul>
+                  <li>When your device does not have a microphone</li>
+                  <li>Permission to device's microphone is not granted</li>
+                </ul>
+
+                If you do have a working microphone in your device, you might need to
+                <strong>grant permission</strong> to the microphone.
+
+                ${_getMicPermEnableHelp()}
+
+                <i style="display: block; margin-top: 30px;">
+                  You must relaunch Google Assistant for the changes to take effect.
+                </i>
+              </div>
+            </div>
+          </div>`
+
+          : ''
+        }
 
         <div style="padding: 30px 0">
           <div class="setting-label">
@@ -1314,7 +1392,7 @@ function openConfig() {
             <div class="setting-value" style="height: 35px;">
               <label
                 class="button setting-item-button"
-                onclick="electronShell.openItem(userDataPath)"
+                onclick="electronShell.openPath(userDataPath)"
               >
                 Open App Data Folder
               </label>
@@ -1426,10 +1504,6 @@ function openConfig() {
                     </span>
                   </div>
                 </label>
-
-                <!-- <label class="button setting-item-button" onclick="showChangelogDialog()">
-                  View Changelog
-                </label> -->
 
                 <div class="accordion-content">
                   <div style="margin-top: 30px;">
@@ -1682,7 +1756,7 @@ function openConfig() {
                     ${releases[0].tag_name}
                   </span>
                 </span>
-                <label class="button setting-item-button" onclick="openLink('${getAssetDownloadUrl(releases[0])}')">
+                <label id="download-update-btn" class="button setting-item-button" onclick="downloadAssistant()">
                   Download update
                 </label>
                 <span
@@ -2705,12 +2779,20 @@ function updateReleases(releases) {
  *
  * @param {String} message
  * Message that you want to display
+ * 
+ * @param {boolean} allowOlyOneMessage
+ * Show the message only when no other quick message is showing up.
  */
-function displayQuickMessage(message) {
+function displayQuickMessage(message, allowOlyOneMessage=false) {
+  let nav_region = document.querySelector('#nav-region');
+
+  // Show the message only when no other message is showing up.
+  // If `allowOlyOneMessage` is `true`
+  if (allowOlyOneMessage && nav_region.querySelector('.quick-msg')) return;
+  
   let elt = document.createElement('div');
   elt.innerHTML = message;
 
-  let nav_region = document.querySelector('#nav-region');
   nav_region.appendChild(elt);
   elt.className = 'quick-msg';
   setTimeout(() => nav_region.removeChild(elt), 5000);
@@ -2914,7 +2996,7 @@ function showGetTokenScreen(oauthValidationCallback) {
           // Tokens were saved
 
           console.log(tokensString);
-          displayQuickMessage("Tokens saved");
+          displayQuickMessage("Tokens saved", true);
 
           setTimeout(() => {
             displayErrorScreen(
@@ -3098,6 +3180,137 @@ function getAssetDownloadUrl(releaseObject) {
     });
 
     return downloadUrl;
+  }
+}
+
+/**
+ * Performs necessary action(s) to update the assistant.
+ */
+function downloadAssistant() {
+  let downloadUrl = getAssetDownloadUrl(releases[0]);
+
+  if (!_isSnap()) {
+    openLink(downloadUrl);
+  }
+  else {
+    let optIndex = dialog.showMessageBoxSync(
+      assistantWindow,
+      {
+        title: 'Snap Download',
+        message: 'Snap Download',
+        detail: 'Snap package can be updated via terminal with the following command:\nsudo snap refresh g-assist\n\nDo you want to update using the shell command?',
+        buttons: [
+          "Run snap refresh (Recommended)",
+          "Download file from repo",
+          "Cancel"
+        ],
+        cancelId: 2
+      }
+    );
+
+    if (optIndex === 0) {
+      // Add a throbber inside download button and update button text
+
+      let updateDownloadBtn = document.querySelector('#download-update-btn');
+
+      if (updateDownloadBtn) {
+        updateDownloadBtn.innerHTML =
+          `<img src="../res/throbber.svg" style="vertical-align: text-top; margin-right: 10px;" /> Updating...`;
+
+        updateDownloadBtn.classList.add('disabled');
+        updateDownloadBtn.onclick = '';
+      }
+
+      // snap refresh g-assist
+
+      let childProcess = exec('/usr/bin/pkexec --disable-internal-agent snap refresh g-assist', (err, stdout, stderr) => {
+        if (stderr) console.log("[STDERR]:", stderr);
+        if (stdout) console.log("[STDOUT]:", stdout);
+
+        if (err) {
+          console.log("ERROR:");
+          console.log(err);
+
+          let updateDownloadBtn = document.querySelector('#download-update-btn');
+
+          if (updateDownloadBtn) {
+            updateDownloadBtn.innerHTML = 'Download update';
+            updateDownloadBtn.classList.remove('disabled');
+            updateDownloadBtn.onclick = downloadAssistant;
+          }
+
+          dialog.showMessageBoxSync(
+            assistantWindow,
+            {
+              title: 'Error while running update command',
+              message: 'Error while running update command',
+              detail: err.toString(),
+              type: 'error',
+              buttons: ["OK"],
+              cancelId: 0
+            }
+          );
+
+          dialog.showMessageBox(
+            assistantWindow,
+            {
+              title: 'Snap Update',
+              message: 'Copy Update Command',
+              detail: 'You can paste the following command on your terminal to update this application:\n\nsudo snap refresh g-assist',
+              type: 'info',
+              buttons: [
+                "Copy command",
+                "OK"
+              ],
+              cancelId: 1
+            }
+          ).then((result) => {
+            if (result.response === 0) {
+              electron.clipboard.writeText('sudo snap refresh g-assist');
+            }
+          });
+        }
+      });
+
+      childProcess.on('exit', (exitCode) => {
+        // Successful update
+        if (exitCode === 0) {
+          let updateDownloadBtn = document.querySelector('#download-update-btn');
+
+          if (updateDownloadBtn) {
+            updateDownloadBtn.innerHTML = 'Relaunch';
+            updateDownloadBtn.classList.remove('disabled');
+            updateDownloadBtn.onclick = () => {
+              dialog.showMessageBox(
+                assistantWindow,
+                {
+                  title: 'Hard Relaunch Required',
+                  message: 'Hard Relaunch Required',
+                  detail: 'Assistant has to perform hard relaunch to finish updating. Press Relaunch to continue.',
+                  type: 'info',
+                  buttons: [
+                    "Relaunch",
+                    "Not Now"
+                  ],
+                  cancelId: 1
+                }
+              ).then((result) => {
+                console.log("DIALOG OPTION:", result);
+
+                if (result.response === 0) {
+                  app.relaunch();
+                  quitApp();
+                }
+              })
+            };
+          }
+        }
+      })
+    }
+
+    else if (optIndex === 1) {
+      openLink(downloadUrl);
+    }
   }
 }
 
@@ -3304,7 +3517,15 @@ function getChangelog(version) {
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
-  mic = new Microphone();
+  if (_canAccessMicrophone) {
+    mic = new Microphone();
+  }
+  else {
+    audPlayer.playPingStop();
+    stopMic();
+    displayQuickMessage("Microphone is not accessible", true);
+    return;
+  }
 
   if (config.conversation["textQuery"] !== undefined) {
     delete config.conversation["textQuery"];
@@ -3343,7 +3564,7 @@ function stopMic() {
  * snap application (linux).
  */
 function _isSnap() {
-  return process.argv0.startsWith('/snap');
+  return app.getAppPath().startsWith('/snap');
 }
 
 /**
@@ -3391,6 +3612,21 @@ function _getCommitInfo() {
  * String containing Markdown
  */
 function _markdownToHtml(markdownString) {
+  // Put sibling blockquotes as a single blockquote element
+  const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm)
+
+  if (multiBlockquotes) {
+    multiBlockquotes.map(str => {
+      const newSubStr = str
+        .replace(/^> /gm, '')
+        .replace(/\n/gm, ' ')
+        .replace(/\s$/, '\n');
+        
+        markdownString = markdownString.replace(str, '> ' + newSubStr);
+    });
+  }
+
+  // Parse markdown and replace them with HTML
   const htmlString = markdownString
     .replace(/href=['"](.*?)['"]/gm, 'onclick="openLink(\'$1\')"')
     .replace(/^\s*>\s*(.+)/gm, '<blockquote>$1</blockquote>')
@@ -3430,6 +3666,60 @@ function _getVersion(version) {
   const ver = 'v' + version.replace(/^v*/, '');
 
   return ver;
+}
+
+/**
+ * Returns help for granting microphone permission as an
+ * HTML string.
+ */
+function _getMicPermEnableHelp() {
+  let defaultMsg = 'Manually enable the microphone permissions for "Google Assistant" in the system settings'
+
+  if (process.platform === 'darwin') {
+    // If platform is "MacOS"
+
+    return `
+      You can follow either of the steps:
+      <br />
+
+      <ul>
+        <li>${defaultMsg}</li>
+        <li>
+          Click this button
+
+          <button
+            style="margin-left: 10px;"
+            onclick="electron.remote.systemPreferences.askForMediaAccess('microphone')"
+          >
+            Request microphone permission
+          </button>
+        </li>
+      </ul>
+    `;
+  }
+  else if (process.platform !== 'win32' && _isSnap()) {
+    // If platform is any type of linux distro and application is a snap package.
+
+    return `
+      You can follow either of the steps:
+      <br />
+
+      <ul>
+        <li>${defaultMsg}</li>
+        <li>
+          Type the following command in the <strong>terminal</strong>:
+          <code class="codeblock">sudo snap connect g-assist:audio-record</code>
+        </li>
+      </ul>
+    `;
+  }
+  else {
+    // If platform is "Windows" or any linux distro (application not a snap package)
+
+    return `
+      You can ${defaultMsg.replace(/^M/, 'm')}
+    `;
+  }
 }
 
 /**
