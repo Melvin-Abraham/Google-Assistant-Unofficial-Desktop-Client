@@ -735,6 +735,17 @@ blockquote {
     padding-left: 20px;
 }
 
+ul li {
+    margin-top: 5px;
+}
+
+.codeblock {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 10px;
+}
+
 .markdown-list-checkbox {
     list-style: none;
     margin-top: 5px;
