@@ -8,6 +8,7 @@ const {app, BrowserWindow, Menu, nativeImage} = electron;
 
 let mainWindow;
 let tray;
+let readyForLaunch = false;
 global.releases = null;
 global.firstLaunch = true;
 
@@ -189,16 +190,25 @@ Press ${getSuperKey()}+Shift+A to launch`,
         slashes: true
     }));
 
+    // HIDE ON START
+
     if (process.platform !== 'darwin') {
-        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-        mainWindow.hide();
+        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
+            .then(() => {
+                // After the assistant has been initialized
+                // set `readyForLaunch` to `true`
+                readyForLaunch = true;
+            });
     }
     else {
         let argv = process.argv;
 
-        if (argv.indexOf('--relaunch') === -1)
-            mainWindow.hide()
+        if (argv.indexOf('--relaunch') === -1) {
+            readyForLaunch = true;
+        }
     }
+
+    mainWindow.hide();
 
     // FLOATING WINDOW
 
@@ -224,6 +234,8 @@ function requestMicToggle() {
 }
 
 function launchAssistant() {
+    if (!readyForLaunch) return;
+
     if (process.platform !== 'darwin') {
         mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
         mainWindow.reload();
