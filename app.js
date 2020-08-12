@@ -72,7 +72,8 @@ function onAppReady() {
             scrollBounce: true,
             devTools: true
         },
-        backgroundColor: "#00000000"
+        backgroundColor: "#00000000",
+        alwaysOnTop: true
     });
 
     // Tray Icon Section
