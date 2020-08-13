@@ -78,8 +78,10 @@ function onAppReady() {
 
     // Tray Icon Section
 
+    // Set grayscale icon letting the user know
+    // that the application is not ready to be launched
     let trayIcon = nativeImage.createFromPath(
-        path.join(__dirname, "app", "res", "icons", "icon.png")
+        path.join(__dirname, "app", "res", "icons", "icon_grayscale.png")
     );
 
     if (process.platform !== 'win32') {
@@ -205,6 +207,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
             // After the assistant has been initialized
             // set `readyForLaunch` to `true`
             readyForLaunch = true;
+
+            // Reset tray icon to let the user know that
+            // application is ready to be launched
+            tray.setImage(
+                path.join(__dirname, "app", "res", "icons", "icon.png")
+            );
         });
 
     mainWindow.hide();
