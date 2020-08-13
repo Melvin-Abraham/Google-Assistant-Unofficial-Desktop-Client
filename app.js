@@ -72,7 +72,7 @@ function onAppReady() {
             scrollBounce: true,
             devTools: true
         },
-        backgroundColor: "#00000000",
+        backgroundColor: process.platform !== 'darwin' ? "#00000000" : "#00000001",
         alwaysOnTop: true
     });
 
@@ -148,7 +148,14 @@ Press ${getSuperKey()}+Shift+A to launch`,
         }
         else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
             mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
-            mainWindow.close();
+            
+            if (process.platform !== 'darwin') {
+                mainWindow.close();
+            }
+            else {
+                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+                setTimeout(() => mainWindow.hide(), 100);
+            }
         }
         else {
             requestMicToggle();
@@ -193,21 +200,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // HIDE ON START
 
-    if (process.platform !== 'darwin') {
-        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
-            .then(() => {
-                // After the assistant has been initialized
-                // set `readyForLaunch` to `true`
-                readyForLaunch = true;
-            });
-    }
-    else {
-        let argv = process.argv;
-
-        if (argv.indexOf('--relaunch') === -1) {
+    mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
+        .then(() => {
+            // After the assistant has been initialized
+            // set `readyForLaunch` to `true`
             readyForLaunch = true;
-        }
-    }
+        });
 
     mainWindow.hide();
 
@@ -237,17 +235,9 @@ function requestMicToggle() {
 function launchAssistant() {
     if (!readyForLaunch) return;
 
-    if (process.platform !== 'darwin') {
-        mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-        mainWindow.reload();
-        mainWindow.show();
-    }
-
-    else {
-        let args = [__filename, '--relaunch'];
-        app.relaunch({args: args});
-        app.exit();
-    }
+    mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+    mainWindow.reload();
+    mainWindow.show();
 }
 
 function quitApp() {
