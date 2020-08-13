@@ -210,9 +210,19 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
             // Reset tray icon to let the user know that
             // application is ready to be launched
-            tray.setImage(
+            trayIcon = nativeImage.createFromPath(
                 path.join(__dirname, "app", "res", "icons", "icon.png")
             );
+
+            if (process.platform !== 'win32') {
+                trayIcon = trayIcon.resize({
+                    height: 16.0,
+                    width: 16.0,
+                    quality: 'best'
+                })
+            }
+
+            tray.setImage(trayIcon);
         });
 
     mainWindow.hide();
