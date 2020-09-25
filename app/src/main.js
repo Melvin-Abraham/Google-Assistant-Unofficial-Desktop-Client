@@ -20,6 +20,16 @@ close_btn.onclick = () => {
 min_btn.onclick = () => assistantWindow.minimize();
 expand_collapse_btn.onclick = () => toggleExpandWindow();
 
+// Enable hide when window loses focus (if enabled)
+
+window.onblur = () => {
+  if (assistantConfig["hideOnLoseFocus"]) {
+	  close();
+	  mic.stop();
+	  audPlayer.stop();
+  }
+};
+
 // Library Imports
 
 const electron = require('electron');
@@ -53,6 +63,7 @@ let assistantConfig = {
   "startAsMaximized": false,
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
+  "hideOnLoseFocus": false,
   "enablePingSound": true,
   "enableAutoScaling": true,
   "enableMicOnStartup": false,
@@ -1276,6 +1287,27 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Hide On Lose Focus
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Hides the Assistant window when it loses focus."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="hide-on-lose-focus" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Theme
 
               <span style="
@@ -1591,6 +1623,7 @@ function openConfig() {
     let startAsMaximized = document.querySelector('#start-maximized');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
+    let hideOnLoseFocus = document.querySelector('#hide-on-lose-focus');
     let enablePingSound = document.querySelector('#ping-sound');
     let enableAutoScaling = document.querySelector('#auto-scale');
     let themeSelector = document.querySelector('#theme-selector');
@@ -1608,6 +1641,7 @@ function openConfig() {
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
+    hideOnLoseFocus.checked = assistantConfig["hideOnLoseFocus"];
     enablePingSound.checked = assistantConfig["enablePingSound"];
     enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
     themeSelector.value = assistantConfig["theme"];
@@ -1954,6 +1988,7 @@ function openConfig() {
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
+        assistantConfig["hideOnLoseFocus"] = hideOnLoseFocus.checked;
         assistantConfig["enablePingSound"] = enablePingSound.checked;
         assistantConfig["enableAutoScaling"] = enableAutoScaling.checked;
         assistantConfig["theme"] = themeSelector.value;
@@ -2063,6 +2098,7 @@ function assistantTextQuery(query) {
     config.conversation["textQuery"] = query;
     assistant.start(config.conversation);
     setQueryTitle(query);
+    assistant_input.value = "";
 
     stopMic();
   }
