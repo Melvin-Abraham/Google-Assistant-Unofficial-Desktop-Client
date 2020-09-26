@@ -150,7 +150,8 @@ Press ${getSuperKey()}+Shift+A to launch`,
         }
         else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
             mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
-            
+            mainWindow.webContents.send('window-will-close');
+
             if (process.platform !== 'darwin') {
                 mainWindow.close();
             }

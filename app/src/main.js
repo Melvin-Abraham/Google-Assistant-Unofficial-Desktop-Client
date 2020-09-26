@@ -8,9 +8,8 @@ const expand_collapse_btn = document.querySelector('#expand-collapse-btn');
 let expanded = false;
 
 close_btn.onclick = () => {
+  _stopAudioAndMic();
   close();
-  mic.stop();
-  audPlayer.stop();
 
   if (!assistantConfig["alwaysCloseToTray"]) {
     quitApp();
@@ -3351,6 +3350,15 @@ function setInitScreen() {
 }
 
 /**
+ * Turns off mic and stops output stream of the audio player.
+ * Typically called before the window is closed.
+ */
+function _stopAudioAndMic() {
+  mic.stop();
+  audPlayer.stop();
+}
+
+/**
  * Returns effective theme based on `assistantConfig.theme`.
  * If the theme is set to `"system"`, it returns
  * the system theme.
@@ -3863,4 +3871,10 @@ ipcRenderer.on('request-mic-toggle', () => {
   else {
     startMic();
   }
+});
+
+// Stop mic and audio before closing window from main
+// process.
+ipcRenderer.on('window-will-close', () => {
+  _stopAudioAndMic();
 });
