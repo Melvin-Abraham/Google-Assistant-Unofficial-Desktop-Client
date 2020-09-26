@@ -88,7 +88,7 @@
         },
         "linux": {
             "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
-            "category": "ArtificialIntelligence",
+            "category": "Productivity",
             "target": [
                 "AppImage",
                 "snap"
