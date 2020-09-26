@@ -2062,6 +2062,7 @@ function assistantTextQuery(query) {
     config.conversation["textQuery"] = query;
     assistant.start(config.conversation);
     setQueryTitle(query);
+    assistant_input.value = "";
 
     stopMic();
   }
