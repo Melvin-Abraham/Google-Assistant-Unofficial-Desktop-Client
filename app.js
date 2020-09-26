@@ -70,7 +70,8 @@ function onAppReady() {
         webPreferences: {
             nodeIntegration: true,
             scrollBounce: true,
-            devTools: true
+            devTools: true,
+            enableRemoteModule: true
         },
         backgroundColor: process.platform !== 'darwin' ? "#00000000" : "#00000001",
         alwaysOnTop: true
