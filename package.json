@@ -96,7 +96,7 @@
             "icon": "./app/res/icons/icon.png"
         },
         "snap": {
-            "confinement": "classic",
+            "confinement": "strict",
             "grade": "stable",
             "plugs": [
                 "default",
