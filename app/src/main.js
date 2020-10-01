@@ -50,6 +50,7 @@ let assistantConfig = {
   "enableAudioOutput": true,
   "enableMicOnContinousConversation": true,
   "startAsMaximized": false,
+  "windowFloatBehavior": "always-on-top",
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
   "enablePingSound": true,
@@ -207,6 +208,13 @@ setTheme();
 
 if(assistantConfig["startAsMaximized"]) {
   toggleExpandWindow();
+}
+
+if (assistantConfig["windowFloatBehavior"] === 'close-on-blur') {
+  window.onblur = () => {
+    _stopAudioAndMic();
+    close();
+  }
 }
 
 const config = {
@@ -1202,6 +1210,28 @@ function openConfig() {
               </label>
             </div>
           </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Window Float Behavior
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Configure window float behavior\n\nNormal: Window will not float\nAlways On Top: Window will float (appear on top of other apps)\nClose On Blur: Window will close when not in focus"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="win-float-behavior-selector" style="padding-right: 50px;">
+                <option value="normal">Normal</option>
+                <option value="always-on-top">Always On Top</option>
+                <option value="close-on-blur">Close on Blur</option>
+              </select>
+            </div>
+          </div>
           <div class="setting-label">
             ACCESSIBILTY
             <hr />
@@ -1588,6 +1618,7 @@ function openConfig() {
     let enableMicOnContinousConversation = document.querySelector('#continous-conv-mic');
     let enableMicOnStartup = document.querySelector('#enable-mic-startup');
     let startAsMaximized = document.querySelector('#start-maximized');
+    let winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
     let enablePingSound = document.querySelector('#ping-sound');
@@ -1605,6 +1636,7 @@ function openConfig() {
     enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
     enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
+    winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
     enablePingSound.checked = assistantConfig["enablePingSound"];
@@ -1951,6 +1983,7 @@ function openConfig() {
         assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
+        assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
         assistantConfig["enablePingSound"] = enablePingSound.checked;
@@ -1966,6 +1999,20 @@ function openConfig() {
         app.setLoginItemSettings({
           openAtLogin: assistantConfig["launchAtStartup"]
         });
+
+        if (assistantConfig["windowFloatBehavior"] !== 'close-on-blur') {
+          (assistantConfig["windowFloatBehavior"] === 'always-on-top')
+            ? assistantWindow.setAlwaysOnTop(true, 'floating')
+            : assistantWindow.setAlwaysOnTop(false, 'normal');
+
+          window.onblur = null;
+        }
+        else {
+          window.onblur = () => {
+            _stopAudioAndMic();
+            close();
+          }
+        }
 
         // Notify about config changes to main process
         ipcRenderer.send('update-config', assistantConfig);
@@ -3622,16 +3669,15 @@ function _getCommitInfo() {
  */
 function _markdownToHtml(markdownString) {
   // Put sibling blockquotes as a single blockquote element
-  const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm)
+  const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm);
 
   if (multiBlockquotes) {
     multiBlockquotes.map(str => {
       const newSubStr = str
-        .replace(/^> /gm, '')
-        .replace(/\n/gm, ' ')
-        .replace(/\s$/, '\n');
-        
-        markdownString = markdownString.replace(str, '> ' + newSubStr);
+        .replace(/^>[ \t]*/gm, '')
+        .replace(/\n/gm, '<br />');
+
+      markdownString = markdownString.replace(str, '> ' + newSubStr + '\n');
     });
   }
 

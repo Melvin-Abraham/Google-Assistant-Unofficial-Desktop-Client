@@ -231,7 +231,9 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // FLOATING WINDOW
 
-    mainWindow.setAlwaysOnTop(true, 'floating');
+    if (assistantConfig['windowFloatBehavior'] === 'always-on-top') {
+        mainWindow.setAlwaysOnTop(true, 'floating');
+    }
 
     ipcMain.on('relaunch-assistant', () => launchAssistant());
     ipcMain.on('quit-app', () => quitApp());
