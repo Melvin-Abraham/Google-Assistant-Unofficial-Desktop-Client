@@ -1536,7 +1536,7 @@ function openConfig() {
 
                 <div class="accordion-content">
                   <div style="margin-top: 30px;">
-                    ${(releases)
+                    ${(releases && getReleaseObject(_getVersion()))
                       ? _markdownToHtml(
                         getChangelog()
                       )
