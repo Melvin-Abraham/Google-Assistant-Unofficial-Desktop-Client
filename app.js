@@ -113,6 +113,12 @@ function onAppReady() {
             }
         },
         {
+            label: 'Open DevTools',
+            click: function () {
+                mainWindow.webContents.openDevTools({mode: 'undocked'})
+            }
+        },
+        {
             label: 'Quit',
             click: function () {
                 quitApp();
