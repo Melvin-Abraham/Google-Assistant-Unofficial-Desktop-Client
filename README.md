@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=blue)][license]
 [![Top Language](https://img.shields.io/github/languages/top/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=yellow)][top-lang]
 [![Last Commit](https://img.shields.io/github/last-commit/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge)][commits]
-[![Commits since last release](https://img.shields.io/github/commits-since/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/v1.0.0-rc.1.svg?style=for-the-badge)][commits]
+[![Commits since last release](https://img.shields.io/github/commits-since/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/latest.svg?style=for-the-badge)][commits]
 
 ![G Assist Banner](images/Banner.png)
 
@@ -74,6 +74,12 @@ yarn dist
 ## Download
 
 If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
+
+### Linux Build
+
+If you are a linux user, `Snap` build is recommended over `AppImage`. You can download the snap from snapstore.
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/g-assist)
 
 ## Keyboard Shortcut
 
