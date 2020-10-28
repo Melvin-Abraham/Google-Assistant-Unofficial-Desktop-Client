@@ -12,7 +12,9 @@ os:
   - linux
 
 install:
-  - npm install
+  - npm ci
 
 script:
   - npm run dist
+
+if: tag IS blank
