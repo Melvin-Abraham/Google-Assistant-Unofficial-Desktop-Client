@@ -51,11 +51,10 @@ else {
     app.on('ready', () => setTimeout(onAppReady, 800));
 }
 
+/**
+ * Function invoked when the application is ready to start.
+ */
 function onAppReady() {
-    const {screen} = electron;
-    const {width, height} = screen.getPrimaryDisplay().workAreaSize;
-    let windowSize;
-
     // Create new window
     mainWindow = new BrowserWindow({
         minWidth: 790,
@@ -193,12 +192,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // WINDOW SIZING AND POSITIONING
 
-    windowSize = mainWindow.getSize();
-
-    mainWindow.setPosition(
-        (width / 2) - (windowSize[0] / 2),
-        (height) - (windowSize[1]) - 10
-    );
+    setAssistantWindowPosition();
 
     // Load HTML
 
@@ -246,8 +240,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
     ipcMain.on('update-releases', (event, releases) => global.releases = releases);
     ipcMain.on('update-first-launch', () => global.firstLaunch = false);
     ipcMain.on('update-config', (event, config) => assistantConfig = config);
+    ipcMain.on('set-assistant-window-position', (event) => setAssistantWindowPosition());
 }
 
+/**
+ * Returns the `Super` key equivalent for different platforms.
+ */
 function getSuperKey() {
     return (process.platform === 'win32')
         ? "Win"
@@ -256,10 +254,16 @@ function getSuperKey() {
             : "Super"
 }
 
+/**
+ * Toggles the assistant microphone in the renderer process.
+ */
 function requestMicToggle() {
     mainWindow.webContents.send('request-mic-toggle');
 }
 
+/**
+ * Launches the assistant renderer process.
+ */
 function launchAssistant() {
     if (!readyForLaunch) return;
 
@@ -268,15 +272,69 @@ function launchAssistant() {
     mainWindow.show();
 }
 
+/**
+ * Quits the assistant application.
+ */
 function quitApp() {
     app.isQuiting = true;
     app.quit();
 }
 
+/**
+ * Sets the assistant window position at the bottom-center position
+ * of the given display.
+ */
+function setAssistantWindowPosition() {
+    let displayList = electron.screen.getAllDisplays();
+    let displayIndex = _getDisplayIndex(displayList);
+    let { x, width, height } = displayList[displayIndex].workArea;
+    let windowSize = mainWindow.getSize();
+
+    mainWindow.setPosition(
+        (width / 2) - (windowSize[0] / 2) + x,
+        (height) - (windowSize[1]) - 10
+    );
+}
+
+/**
+ * Returns display index based on `assistantConfig.displayPreference`.
+ * If the value of `displayPreference` is invalid or is unavailable,
+ * a default value is returned.
+ *
+ * @param {Electron.Display[]} displayList
+ * The list of all available displays.
+ */
+function _getDisplayIndex(displayList) {
+    let displayIndex = 0;
+
+    try {
+        displayIndex = parseInt(assistantConfig["displayPreference"]) - 1;
+
+        if (displayIndex > displayList.length - 1 || displayIndex < 0) {
+            console.log(`Resetting Display Preference: ${displayIndex + 1} -> 1`);
+            displayIndex = 0;
+        }
+        else {
+            displayIndex = 0;
+        }
+    }
+    catch {
+        displayIndex = 0;
+    }
+
+    return displayIndex;
+}
+
+/**
+ * Checks if the user is currently using the `snap` build.
+ */
 function _isSnap() {
     return app.getAppPath().startsWith('/snap');
 }
 
+/**
+ * Checks if the assistant is running in any linux platform.
+ */
 function _isLinux() {
     return ['win32', 'darwin'].indexOf(process.platform) === -1;
 }

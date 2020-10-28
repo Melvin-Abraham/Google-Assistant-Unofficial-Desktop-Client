@@ -51,6 +51,7 @@ let assistantConfig = {
   "enableMicOnContinousConversation": true,
   "startAsMaximized": false,
   "windowFloatBehavior": "always-on-top",
+  "displayPreference": "1",
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
   "enablePingSound": true,
@@ -89,7 +90,7 @@ navigator.mediaDevices.getUserMedia({audio: true}).catch(e => {
   console.error(e);
   _canAccessMicrophone = false;
   displayQuickMessage("Microphone is not accessible");
-})
+});
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
@@ -187,8 +188,8 @@ else {
       );
 
       relaunchAssistant();
-    };
-  };
+    }
+  }
 
   // If the user is opening the app for the first time,
   // throw `Exception` to prevent Assistant initialization
@@ -1232,6 +1233,32 @@ function openConfig() {
               </select>
             </div>
           </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Display Preference
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Allows selection of screen for displaying the window."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="display-selector" style="padding-right: 50px;">
+                ${electron.remote.screen.getAllDisplays().map((display, index) => {
+                  const { bounds, scaleFactor } = display;
+
+                  return `<option value="${index + 1}">
+                    Display ${index + 1} - (${bounds.width * scaleFactor} x ${bounds.height * scaleFactor})
+                  </option>`
+                })}
+              </select>
+            </div>
+          </div>
           <div class="setting-label">
             ACCESSIBILTY
             <hr />
@@ -1619,6 +1646,7 @@ function openConfig() {
     let enableMicOnStartup = document.querySelector('#enable-mic-startup');
     let startAsMaximized = document.querySelector('#start-maximized');
     let winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
+    let displayPreferenceSelector = document.querySelector('#display-selector');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
     let enablePingSound = document.querySelector('#ping-sound');
@@ -1637,6 +1665,7 @@ function openConfig() {
     enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
+    displayPreferenceSelector.value = assistantConfig["displayPreference"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
     enablePingSound.checked = assistantConfig["enablePingSound"];
@@ -1973,6 +2002,14 @@ function openConfig() {
           relaunchRequired = true;
         }
 
+        // Set display preference update flag before saving config
+
+        let shouldUpdateDisplayPref = true;
+
+        if (assistantConfig["displayPreference"] === displayPreferenceSelector.value) {
+          shouldUpdateDisplayPref = false;
+        }
+
         // Set the `assistantConfig` as per the settings
 
         assistantConfig["keyFilePath"] = keyFilePathInput.value;
@@ -1984,6 +2021,7 @@ function openConfig() {
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
+        assistantConfig["displayPreference"] = displayPreferenceSelector.value;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
         assistantConfig["enablePingSound"] = enablePingSound.checked;
@@ -2022,6 +2060,13 @@ function openConfig() {
         saveConfig();
         closeCurrentScreen();
         setTheme();
+
+        // Collapses and properly positions the window (if the display preferences change)
+
+        if (shouldUpdateDisplayPref) {
+          console.log(`Switching to \"Display ${assistantConfig["displayPreference"]}\"`);
+          toggleExpandWindow(false);
+        }
 
         // Request user to relaunch assistant if necessary
 
@@ -2733,7 +2778,7 @@ function generateScreenData(includePreventAutoScaleFlag=false) {
  *
  * @param {HTMLElement} el
  * Element to be scrolled horizontally
- * 
+ *
  * @param {Boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
@@ -2755,7 +2800,7 @@ function _scrollHorizontally(e, el, smoothScroll) {
  *
  * @param {HTMLElement} element
  * Element to be applied upon
- * 
+ *
  * @param {Boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
@@ -2765,26 +2810,23 @@ function registerHorizontalScroll(element, smoothScroll=true) {
 }
 
 /**
- * Position the `window` in bottom-center of the screen.
- *
- * @param {Electron.BrowserWindow} window
- * The Electron Window which has to be positioned.
+ * Position the Assistant Window in bottom-center of the screen.
  */
-function autoSetAssistantWindowPosition(window) {
-  let width = screen.availWidth;
-  let height = screen.availHeight;
-  let windowSize = window.getSize();
-
-  window.setPosition(
-    (width / 2) - (windowSize[0] / 2),
-    (height) - (windowSize[1]) - 10
-  );
+function setAssistantWindowPosition() {
+  ipcRenderer.send('set-assistant-window-position');
 }
 
 /**
  * Toggle Expand/Collapse Assistant Window.
+ *
+ * @param {boolean?} shouldExpandWindow
+ * Specify whether the window should be expanded.
+ * Leave the parameter if the window should toggle
+ * the size automatically.
  */
-function toggleExpandWindow() {
+function toggleExpandWindow(shouldExpandWindow) {
+  if (shouldExpandWindow != null) expanded = !shouldExpandWindow;
+
   if (!expanded) {
     assistantWindow.setSize(screen.availWidth - 20, 450);
     expand_collapse_btn.setAttribute('src', '../res/collapse_btn.svg'); // Change to 'collapse' icon after expanding
@@ -2794,7 +2836,7 @@ function toggleExpandWindow() {
     expand_collapse_btn.setAttribute('src', '../res/expand_btn.svg');   // Change to 'expand' icon after collapsing
   }
 
-  autoSetAssistantWindowPosition(assistantWindow);
+  setAssistantWindowPosition();
   expanded = !expanded;
 }
 
@@ -2826,7 +2868,7 @@ function updateReleases(releases) {
  *
  * @param {String} message
  * Message that you want to display
- * 
+ *
  * @param {boolean} allowOlyOneMessage
  * Show the message only when no other quick message is showing up.
  */
@@ -2836,7 +2878,7 @@ function displayQuickMessage(message, allowOlyOneMessage=false) {
   // Show the message only when no other message is showing up.
   // If `allowOlyOneMessage` is `true`
   if (allowOlyOneMessage && nav_region.querySelector('.quick-msg')) return;
-  
+
   let elt = document.createElement('div');
   elt.innerHTML = message;
 
@@ -3533,10 +3575,10 @@ function showArgsDialog() {
 
 /**
  * Returns a release object for given version
- * 
+ *
  * @param {string} version
  * Version of assistant to get release object of.
- * 
+ *
  * If this parameter is left out, the version will
  * be defaulted to currently installed version.
  */
@@ -3549,13 +3591,13 @@ function getReleaseObject(version) {
 
 /**
  * Returns changelog info from releases array for a given version
- * 
+ *
  * @param {string} version
  * Version of assistant to get changelog of.
- * 
+ *
  * If this parameter is left out, the version will
  * be defaulted to currently installed version.
- * 
+ *
  * @returns {string}
  * Changelog as a string of Markdown.
  */
@@ -3626,7 +3668,7 @@ function _isSnap() {
 /**
  * Returns an object comtaining `commitHash` and `commitDate`
  * of the latest commit.
- * 
+ *
  * (**Requires GIT**)
  */
 function _getCommitInfo() {
@@ -3663,7 +3705,7 @@ function _getCommitInfo() {
  * Converts a string of Markdown to a string
  * of HTML. This implements minimal parsing of the
  * markdown as per the requirements.
- * 
+ *
  * @param {string} markdownString
  * String containing Markdown
  */
@@ -3709,10 +3751,10 @@ function _markdownToHtml(markdownString) {
 
 /**
  * Returns a version string with a `v` prefixed.
- * 
+ *
  * If the `version` provided is empty, current version
  * of the application is returned.
- * 
+ *
  * @param {string} version
  * Version
  */
