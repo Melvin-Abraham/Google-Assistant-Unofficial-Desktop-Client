@@ -86,11 +86,13 @@ let isFirstTimeUser = true;
 // Check Microphone Access
 let _canAccessMicrophone = true;
 
-navigator.mediaDevices.getUserMedia({audio: true}).catch(e => {
-  console.error(e);
-  _canAccessMicrophone = false;
-  displayQuickMessage("Microphone is not accessible");
-});
+navigator.mediaDevices.getUserMedia({audio: true})
+  .then((rawStream) => rawStream.getTracks().forEach(track => track.stop()))
+  .catch(e => {
+    console.error(e);
+    _canAccessMicrophone = false;
+    displayQuickMessage("Microphone is not accessible");
+  });
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
@@ -479,7 +481,7 @@ const startConversation = (conversation) => {
         );
       }
 
-      else if (continueConversation && assistantConfig["enableMicOnContinousConversation"] && !mic.enabled) {
+      else if (continueConversation && assistantConfig["enableMicOnContinousConversation"] && !mic.isActive) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
 
@@ -600,12 +602,12 @@ assistant
 
     // Mic Setup
     if (config.conversation.textQuery === undefined) {
-      if (mic.enabled) {
+      if (mic.isActive) {
         console.log('Mic already enabled...')
         return;
       }
 
-      console.log('STARTING MIC...');
+      console.log('STARTING MICROPHONE...');
       if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
       if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].listeningMessage;
 
@@ -633,8 +635,6 @@ assistant
       };
 
       // Setup mic for recording
-
-      mic.start();
 
       mic.on('data', (data) => {
         const buffer = Buffer.from(data);
@@ -3616,7 +3616,7 @@ function getChangelog(version) {
  */
 function startMic() {
   if (_canAccessMicrophone) {
-    mic = new Microphone();
+    if (!mic) mic = new Microphone();
   }
   else {
     audPlayer.playPingStop();
@@ -3629,6 +3629,7 @@ function startMic() {
     delete config.conversation["textQuery"];
   }
 
+  mic.start();
   assistant.start(config.conversation);
 }
 
@@ -3636,7 +3637,7 @@ function startMic() {
  * Stops the microphone for transcription and visualization.
  */
 function stopMic() {
-  console.log('STOPPING MIC...');
+  console.log('STOPPING MICROPHONE...');
   (mic) ? mic.stop() : null;
   webMic.stop();
 
@@ -3953,7 +3954,7 @@ window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
 
 // Listen for 'mic start' request from main process
 ipcRenderer.on('request-mic-toggle', () => {
-  if (mic.enabled) {
+  if (mic.isActive) {
     audPlayer.playPingStop()
     stopMic();
   }

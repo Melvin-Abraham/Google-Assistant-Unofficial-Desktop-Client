@@ -13,14 +13,12 @@ class Microphone extends EventEmitter {
 		this.bufferSize = 4096;
 
 		this.sampleRate = sampleRate;
-
-		this.open();
 	}
 
 	/**
-	 * Opens & initializes the Microphone stream from the browser
+	 * Opens & initializes the Microphone stream from the browser.
 	 */
-	open() {
+	start() {
 		navigator.mediaDevices.getUserMedia({
 			audio: true,
 			video: false,
@@ -38,17 +36,24 @@ class Microphone extends EventEmitter {
 	}
 
 	/**
-	 * Enables the microphone for streaming
+	 * Closes the Microphone stream from the browser.
 	 */
-	start() {
-		this.enabled = true;
+	stop() {
+		if (!this.isActive) return;
+
+		this.stream.disconnect();
+		this.rawStream.getTracks().forEach(track => track.stop());
+
+		this.audioProcessor.disconnect();
+		this.audioProcessor.onaudioprocess = null;
+		this.audioProcessor = null;
 	}
 
 	/**
-	 * Disables the microphone from streaming
+	 * Getter function for checking if the microphone is active.
 	 */
-	stop() {
-		this.enabled = false;
+	get isActive() {
+		return this.audioProcessor !== null;
 	}
 
 	/**
@@ -57,8 +62,6 @@ class Microphone extends EventEmitter {
 	 * @param event event
 	 */
 	onAudioProcess(event) {
-		if (!this.enabled) return;
-
 		let data = event.inputBuffer.getChannelData(0);
 		data = this.downsampleBuffer(data);
 		// [TODO]: Implement piping?
