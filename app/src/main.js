@@ -34,6 +34,8 @@ const os = require('os');
 const { execSync, exec } = require('child_process');
 const themes = require('./themes.js');
 const supportedLanguages = require('./lang.js');
+const Microphone = require('./lib/microphone.js');
+const AudioPlayer = require('./lib/audio_player.js');
 
 let audPlayer = new AudioPlayer();
 let mic = new Microphone();

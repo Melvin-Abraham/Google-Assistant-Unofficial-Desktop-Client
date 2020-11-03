@@ -1,5 +1,4 @@
-// const { EventEmitter } = require('events');
-/* Uncomment the previous line if `aud_player.js` is not imported before importing this module */
+const { EventEmitter } = require('events');
 
 class Microphone extends EventEmitter {
     constructor(audioInDeviceId = 'default', sampleRate = 16000) {
@@ -108,3 +107,5 @@ class Microphone extends EventEmitter {
         return result.buffer;
     }
 }
+
+module.exports = Microphone;

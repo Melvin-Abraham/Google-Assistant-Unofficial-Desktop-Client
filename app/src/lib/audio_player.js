@@ -135,3 +135,5 @@ class AudioPlayer extends EventEmitter {
         this.emit('ping-success');
     }
 }
+
+module.exports = AudioPlayer;
