@@ -51,6 +51,8 @@ let assistantConfig = {
   "enableMicOnContinousConversation": true,
   "startAsMaximized": false,
   "windowFloatBehavior": "always-on-top",
+  "microphoneSource": "default",
+  "speakerSource": "default",
   "displayPreference": "1",
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
@@ -66,7 +68,7 @@ let history = [];
 let historyHead = -1;
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
-let webMic = new p5.AudioIn();  // For Audio Visualization
+let p5jsMic = new p5.AudioIn();  // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
 let assistant_input = document.querySelector('#assistant-input');
 let assistant_mic = document.querySelector('#assistant-mic');
@@ -219,6 +221,35 @@ if (assistantConfig["windowFloatBehavior"] === 'close-on-blur') {
     close();
   }
 }
+
+// Set microphone and speaker source
+
+(async () => {
+  // Initialize p5.js source list for `setSource` to work
+  await p5jsMic.getSources();
+
+  let deviceList = await navigator.mediaDevices.enumerateDevices();
+  let audioInDeviceIndex = deviceList
+                            .filter(device => device.kind === 'audioinput')
+                            .map(device => device.deviceId)
+                            .indexOf(assistantConfig.microphoneSource);
+
+  let audioOutDeviceIndex = deviceList
+                            .filter(device => device.kind === 'audiooutput')
+                            .map(device => device.deviceId)
+                            .indexOf(assistantConfig.speakerSource);
+
+  if (audioInDeviceIndex !== -1) {
+    // If the audio-in Device ID exists
+    mic.setDeviceId(assistantConfig.microphoneSource);
+    p5jsMic.setSource(audioInDeviceIndex);
+  }
+
+  if (audioOutDeviceIndex !== -1) {
+    // If the audio-out Device ID exists
+    audPlayer.setDeviceId(assistantConfig.speakerSource);
+  }
+})();
 
 const config = {
   auth: {
@@ -611,8 +642,8 @@ assistant
       if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
       if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].listeningMessage;
 
-      // Set `webMic` for visulaization
-      webMic.start();
+      // Set `p5jsMic` for visulaization
+      p5jsMic.start();
       let assistant_mic_parent = document.querySelector('#assistant-mic-parent');
 
       assistant_mic_parent.outerHTML = `
@@ -641,7 +672,7 @@ assistant
         conversation.write(buffer);
 
         const amp_threshold = 0.05;
-        let amp = webMic.getLevel();
+        let amp = p5jsMic.getLevel();
         let amp_bar_list = document.querySelectorAll('.amp-bar');
 
         amp_bar_list[0].setAttribute('style', `
@@ -925,7 +956,7 @@ function saveConfig(config=null) {
 /**
  * Opens the 'Settings' screen
  */
-function openConfig() {
+async function openConfig() {
   if (!document.querySelector('#config-screen')) {
     let currentHTML = document.querySelector('body').innerHTML;
 
@@ -1377,6 +1408,48 @@ function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Microphone Source
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Select microphone source for audio input"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select
+                id="mic-source-selector"
+                style="width: -webkit-fill-available;"
+              ></select>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Speaker Source
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Select speaker source for audio output"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select
+                id="speaker-source-selector"
+                style="width: -webkit-fill-available;"
+              ></select>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Relaunch Assistant
             </div>
             <div class="setting-value" style="height: 35px;">
@@ -1646,6 +1719,8 @@ function openConfig() {
     let enableMicOnStartup = document.querySelector('#enable-mic-startup');
     let startAsMaximized = document.querySelector('#start-maximized');
     let winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
+    let microphoneSourceSelector = document.querySelector('#mic-source-selector');
+    let speakerSourceSelector = document.querySelector('#speaker-source-selector');
     let displayPreferenceSelector = document.querySelector('#display-selector');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
@@ -1656,6 +1731,22 @@ function openConfig() {
 
     keyFilePathInput.addEventListener('focusout', () => validatePathInput(keyFilePathInput));
 
+    // Populate microphone and speaker source selectors
+    let deviceList = await navigator.mediaDevices.enumerateDevices();
+
+    deviceList.forEach(device => {
+      let selectItem = document.createElement('option');
+      selectItem.value = device.deviceId;
+      selectItem.text = device.label;
+
+      if (device.kind === 'audioinput') {
+        microphoneSourceSelector.appendChild(selectItem);
+      }
+      else if (device.kind === 'audiooutput') {
+        speakerSourceSelector.appendChild(selectItem);
+      }
+    });
+
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
     languageSelector.value = assistantConfig["language"];
@@ -1665,6 +1756,8 @@ function openConfig() {
     enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
+    microphoneSourceSelector.value = assistantConfig["microphoneSource"];
+    speakerSourceSelector.value = assistantConfig["speakerSource"];
     displayPreferenceSelector.value = assistantConfig["displayPreference"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
@@ -2021,6 +2114,8 @@ function openConfig() {
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
+        assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
+        assistantConfig["speakerSource"] = speakerSourceSelector.value;
         assistantConfig["displayPreference"] = displayPreferenceSelector.value;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
@@ -2051,6 +2146,18 @@ function openConfig() {
             close();
           }
         }
+
+        mic.setDeviceId(assistantConfig["microphoneSource"]);
+
+        p5jsMic.getSources((sources) => {
+          p5jsMic.setSource(sources
+            .filter(source => source.kind === 'audioinput')
+            .map(source => source.deviceId)
+            .indexOf(assistantConfig["microphoneSource"])
+          );
+        });
+
+        audPlayer.setDeviceId(assistantConfig["speakerSource"]);
 
         // Notify about config changes to main process
         ipcRenderer.send('update-config', assistantConfig);
@@ -3639,7 +3746,7 @@ function startMic() {
 function stopMic() {
   console.log('STOPPING MICROPHONE...');
   (mic) ? mic.stop() : null;
-  webMic.stop();
+  p5jsMic.stop();
 
   if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
 
