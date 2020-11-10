@@ -522,7 +522,11 @@ const startConversation = (conversation) => {
         console.log('Conversation Complete')
       };
 
-      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+      if (init_headline) {
+        init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+        //change input to placeholder to user language
+        assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
+      }
     })
     .on('error', error => {
       console.error(error);
