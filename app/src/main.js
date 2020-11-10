@@ -522,11 +522,7 @@ const startConversation = (conversation) => {
         console.log('Conversation Complete')
       };
 
-      if (init_headline) {
-        init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
-        //change input to placeholder to user language
-        assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
-      }
+      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
     })
     .on('error', error => {
       console.error(error);
@@ -2134,6 +2130,7 @@ async function openConfig() {
 
         config.conversation.isNew = assistantConfig["forceNewConversation"];
         config.conversation.lang = assistantConfig["language"];
+        assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
 
         app.setLoginItemSettings({
           openAtLogin: assistantConfig["launchAtStartup"]
@@ -3550,6 +3547,7 @@ function setInitScreen() {
   </div>`;
 
   init_headline = document.querySelector('#init-headline');
+  assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
 }
 
 /**
