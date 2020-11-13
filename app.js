@@ -368,8 +368,8 @@ function setAssistantWindowPosition() {
     let windowSize = mainWindow.getSize();
 
     mainWindow.setPosition(
-        (width / 2) - (windowSize[0] / 2) + x,
-        (height) - (windowSize[1]) - 10
+        Math.floor((width / 2) - (windowSize[0] / 2) + x),
+        Math.floor((height) - (windowSize[1]) - 10)
     );
 }
 
