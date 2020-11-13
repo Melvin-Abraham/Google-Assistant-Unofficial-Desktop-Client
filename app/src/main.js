@@ -797,7 +797,7 @@ assistant
 
 /**
  * Escapes the quotation marks in the `string` for use in HTML and URL.
- * @param {String} string
+ * @param {string} string
  */
 function escapeQuotes(string) {
   string = string.replace(/["]/g, '&quot;');
@@ -811,7 +811,7 @@ function escapeQuotes(string) {
  * and returns an `Object` containing the type of the
  * response and various parts of the response.
  *
- * @param {String} assistantResponseString
+ * @param {string} assistantResponseString
  * The response that has to be classified
  */
 function inspectResponseType(assistantResponseString) {
@@ -851,10 +851,10 @@ function inspectResponseType(assistantResponseString) {
 /**
  * Opens a `link` in the default browser.
  *
- * @param {String} link
+ * @param {string} link
  * Link that is to be opened in the browser.
  *
- * @param {Boolean} autoMinimizeAssistantWindow
+ * @param {boolean} autoMinimizeAssistantWindow
  * Minimize the Assistant Window after the link is opened.
  * _(Defaults to `true`)_
  */
@@ -869,7 +869,7 @@ function openLink(link, autoMinimizeAssistantWindow=true) {
 
 /**
  * Jumps to any result in `history` using `historyIndex`
- * @param {Number} historyIndex
+ * @param {number} historyIndex
  */
 function seekHistory(historyIndex) {
   historyHead = historyIndex;
@@ -885,7 +885,7 @@ function seekHistory(historyIndex) {
 /**
  * Decrements the `historyHead` and then shows previous result from the `history`
  *
- * @returns {Boolean}
+ * @returns {boolean}
  * `true` if successfully jumps to previous result, `false` otherwise.
  */
 function jumpToPrevious() {
@@ -902,7 +902,7 @@ function jumpToPrevious() {
 /**
  * Increments the `historyHead` and then shows next result from the `history`
  *
- * @returns {Boolean}
+ * @returns {boolean}
  * `true` if successfully jumps to next result, `false` otherwise.
  */
 function jumpToNext() {
@@ -920,8 +920,8 @@ function jumpToNext() {
  * Callback for file selection.
  *
  * @callback fileDialogCallback
- * @param {String[]} filePaths
- * @param {String[]} bookmarks
+ * @param {string[]} filePaths
+ * @param {string[]} bookmarks
  */
 
 /**
@@ -930,7 +930,7 @@ function jumpToNext() {
  * @param {fileDialogCallback} callback
  * The function called after a file is selected.
  *
- * @param {String} openDialogTitle
+ * @param {string} openDialogTitle
  * The Title for the dialog box.
  */
 function openFileDialog(callback, openDialogTitle=null) {
@@ -2264,7 +2264,7 @@ function updateNav() {
 
 /**
  * Ask a `query` from assistant in text.
- * @param {String} query
+ * @param {string} query
  */
 function assistantTextQuery(query) {
   if (query.trim()) {
@@ -2281,7 +2281,7 @@ function assistantTextQuery(query) {
 
 /**
  * Set the `query` in titlebar
- * @param {String} query
+ * @param {string} query
  */
 function setQueryTitle(query) {
   let init = document.querySelector(".init");
@@ -2303,7 +2303,7 @@ function setQueryTitle(query) {
 
 /**
  * Returns the title displayed in the 'titlebar'
- * @returns {String} Title
+ * @returns {string} Title
  */
 function getCurrentQuery() {
   return document.querySelector('.app-title').innerText;
@@ -2312,7 +2312,7 @@ function getCurrentQuery() {
 /**
  * Retry/Refresh result for the query displayed in the titlebar
  *
- * @param {Boolean} popHistory
+ * @param {boolean} popHistory
  * Remove the recent result from history and replace it with the refreshed one.
  * _(Defaults to `true`)_
  */
@@ -2345,28 +2345,28 @@ function deactivateLoader() {
  * @param {Object} opts
  * Options to be passed to define and customize the error screen
  *
- * @param {String=} opts.errContainerId
+ * @param {string=} opts.errContainerId
  * Set the `id` of error container
  *
  * @param {Object} opts.icon
  * The icon object
  *
- * @param {String=} opts.icon.path
+ * @param {string=} opts.icon.path
  * The Path to the icon to be used as Error Icon
  *
- * @param {String=} opts.icon.style
+ * @param {string=} opts.icon.style
  * Additional styles applied to the icon
  *
- * @param {String=} opts.title
+ * @param {string=} opts.title
  * The Title of the error
  *
- * @param {String=} opts.details
+ * @param {string=} opts.details
  * Description of the error
  *
- * @param {String=} opts.subdetails
+ * @param {string=} opts.subdetails
  * Sub-details/Short description of the error
  *
- * @param {String=} opts.customStyle
+ * @param {string=} opts.customStyle
  * Any custom styles that you want to apply
  */
 function displayErrorScreen(opts={}) {
@@ -2417,11 +2417,11 @@ function displayErrorScreen(opts={}) {
  * @param {*} screen
  * The screen data provided by Assistant SDK
  *
- * @param {Boolean} pushToHistory
+ * @param {boolean} pushToHistory
  * Push the *screen data* to the `history`.
  * _(Defaults to `false`)_
  *
- * @param {String} theme
+ * @param {"dark" | "light" | "system"} theme
  * Theme to be applied on screen data.
  * Leave this parameter to infer from `assistantConfig.theme`
  */
@@ -2840,7 +2840,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
 /**
  * Generates a screen data object from current screen.
  *
- * @param {Boolean} includePreventAutoScaleFlag
+ * @param {boolean} includePreventAutoScaleFlag
  * Include "prevent-auto-scale" flag to the last element
  * of main content. _(Defaults to `false`)_
  *
@@ -2898,7 +2898,7 @@ function generateScreenData(includePreventAutoScaleFlag=false) {
  * @param {HTMLElement} el
  * Element to be scrolled horizontally
  *
- * @param {Boolean} smoothScroll
+ * @param {boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
 function _scrollHorizontally(e, el, smoothScroll) {
@@ -2920,7 +2920,7 @@ function _scrollHorizontally(e, el, smoothScroll) {
  * @param {HTMLElement} element
  * Element to be applied upon
  *
- * @param {Boolean} smoothScroll
+ * @param {boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
 function registerHorizontalScroll(element, smoothScroll=true) {
@@ -2985,7 +2985,7 @@ function updateReleases(releases) {
 /**
  * Displays `message` for short timespan near the `nav region`.
  *
- * @param {String} message
+ * @param {string} message
  * Message that you want to display
  *
  * @param {boolean} allowOlyOneMessage
@@ -3013,7 +3013,7 @@ function displayQuickMessage(message, allowOlyOneMessage=false) {
  * @param {Element} inputElement
  * The target `input` DOM Element to apply the styles on
  *
- * @param {Boolean} addShakeAnimation
+ * @param {boolean} addShakeAnimation
  * Whether additional shaking animation should be applied to the `inputElement`.
  * _(Defaults to `false`)_
  */
@@ -3044,15 +3044,15 @@ function markInputAsValid(inputElement) {
  * @param {Element} inputElement
  * The `input` DOM Element to be validated
  *
- * @param {Boolean} addShakeAnimationOnError
+ * @param {boolean} addShakeAnimationOnError
  * Add animation to let the user know if the path does not exist.
  * _(Defaults to `false`)_
  *
- * @param {Boolean} trimSpaces
+ * @param {boolean} trimSpaces
  * Trims leading and trailing spaces if any are present in the
  * path entered in `inputElement`. _(Defaults to `true`)_
  *
- * @returns {Boolean}
+ * @returns {boolean}
  * Returns boolean value (true/false) based on the validity of path
  */
 function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpaces=true) {
@@ -3073,7 +3073,7 @@ function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpa
  *
  * _(Call is initiated by the Google Assistant auth library)_
  *
- * @param {Fuction} oauthValidationCallback
+ * @param {function} oauthValidationCallback
  * The callback to process the OAuth Code.
  */
 function showGetTokenScreen(oauthValidationCallback) {
@@ -3345,7 +3345,7 @@ async function getReleases() {
  * @param {*} releaseObject
  * A Release object (JSON) for a particular version
  *
- * @returns {String}
+ * @returns {string}
  * The Download URL for downloading the installer
  * based on the platform (Windows, MacOS, Linux)
  */
@@ -3573,12 +3573,12 @@ function _stopAudioAndMic() {
  * If the theme is set to `"system"`, it returns
  * the system theme.
  *
- * @param {String} theme
+ * @param {"dark" | "light" | "system"} theme
  * Get the effective theme for given theme
  * explicitly. Leave it blank to infer from
  * `assistantConfig.theme`
  *
- * @returns {String}
+ * @returns {string}
  * Effective theme based on config and system preferences
  */
 function getEffectiveTheme(theme=null) {
@@ -3598,13 +3598,13 @@ function getEffectiveTheme(theme=null) {
 
 /**
  * Sets the theme based on the given `theme`.
+ *
+ * @param {"dark" | "light" | "system"} theme
+ * The theme which you want to switch to.
  * Ignore this parameter, if you want to set
  * the theme based on `assistantConfig.theme`
  *
- * @param {String} theme
- * The theme which you want to switch to.
- *
- * @param {Boolean} forceAssistantResponseThemeChange
+ * @param {boolean} forceAssistantResponseThemeChange
  * Change theme for Assistant Response screen.
  * _(Defaults to `true`)_
  */
@@ -3946,7 +3946,7 @@ function _getMicPermEnableHelp() {
  * - **MacOS**: `Cmd`
  * - **Linux**: `Super`
  *
- * @returns {String}
+ * @returns {string}
  * Platform-specific key name for `super`
  */
 function getSuperKey() {
@@ -3961,11 +3961,11 @@ function getSuperKey() {
  * Maps the value `n` which ranges between `start1` and `stop1`
  * to `start2` and `stop2`.
  *
- * @param {Number} n
- * @param {Number} start1
- * @param {Number} stop1
- * @param {Number} start2
- * @param {Number} stop2
+ * @param {number} n
+ * @param {number} start1
+ * @param {number} stop1
+ * @param {number} start2
+ * @param {number} stop2
  */
 function map(n, start1, stop1, start2, stop2) {
   return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
@@ -3974,9 +3974,9 @@ function map(n, start1, stop1, start2, stop2) {
 /**
  * Contrain `n` between `high` and `low`
  *
- * @param {Number} n
- * @param {Number} low
- * @param {Number} high
+ * @param {number} n
+ * @param {number} low
+ * @param {number} high
  */
 function constrain(n, low, high) {
   return (n < low) ? low : (n > high) ? high : n;
