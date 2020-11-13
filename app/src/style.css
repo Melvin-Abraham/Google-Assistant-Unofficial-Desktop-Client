@@ -56,20 +56,19 @@ body {
     font-family: 'Product Sans';
     -webkit-user-select: none;
     background: transparent;
-
     transition: color 150ms ease-in;
 }
 
 #master-bg {
     z-index: -10;
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    top: 2px;
+    left: 3px;
+    bottom: 7px;
+    right: 3px;
     background: var(--color-bg);
     border-radius: var(--window-border-radius);
-
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
     transition: all 150ms ease-in;
 }
 
@@ -596,8 +595,9 @@ body {
 #assistant-persistent-bar {
     z-index: 0;
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 7px;
+    left: 3px;
+    right: 3px;
     width: 100%;
     display: block;
     border-bottom-left-radius: var(--window-border-radius);
