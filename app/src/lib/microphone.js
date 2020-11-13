@@ -33,6 +33,8 @@ class Microphone extends EventEmitter {
             this.audioProcessor.connect(this.audioContext.destination);
             this.emit('ready');
         });
+
+        this.emit('mic-started');
     }
 
     /**
@@ -47,6 +49,8 @@ class Microphone extends EventEmitter {
         this.audioProcessor.disconnect();
         this.audioProcessor.onaudioprocess = null;
         this.audioProcessor = null;
+
+        this.emit('mic-stopped');
     }
 
     /**

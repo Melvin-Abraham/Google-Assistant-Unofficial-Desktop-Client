@@ -669,7 +669,7 @@ assistant
 
       // Setup mic for recording
 
-      mic.on('data', (data) => {
+      let processConversation = (data) => {
         const buffer = Buffer.from(data);
         conversation.write(buffer);
 
@@ -696,7 +696,16 @@ assistant
           background-color: var(--color-green);
           height: ${constrain(map(amp, 0, amp_threshold, 6, 20), 6, 20)}px;`
         );
-      });
+      }
+
+      let micStoppedListener = () => {
+        mic.off('data', processConversation);
+        mic.off('mic-stopped', micStoppedListener);
+        conversation.end();
+      };
+      
+      mic.on('data', processConversation);
+      mic.on('mic-stopped', micStoppedListener);
     }
   })
   .on('error', (err) => {
