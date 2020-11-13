@@ -2,9 +2,11 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const { argv } = require('process');
 const ipcMain = electron.ipcMain;
 
-const {app, BrowserWindow, Menu, nativeImage} = electron;
+const { app, BrowserWindow, Menu, nativeImage } = electron;
 
 let mainWindow;
 let tray;
@@ -16,10 +18,55 @@ const gotInstanceLock = app.requestSingleInstanceLock();
 
 let userDataPath = app.getPath('userData');
 let configFilePath = path.join(userDataPath, 'config.json');
+let logFilePath = path.join(userDataPath, 'main_process-debug.log');
 let assistantConfig = {};
 
+process.on('uncaughtException', async (err) => {
+    let prelude = (app.isReady()) ? 'Uncaught Exception' : 'Uncaught Exception thrown before app was ready';
+    let errorMessage = `\n${prelude}:\n\n${err.stack}\n\nLogs for this run is available here:\n    ${logFilePath}`;
+
+    debugLog(errorMessage, 'error');
+
+    if (app.isReady()) {
+        let buttonIndex = await electron.dialog.showMessageBox(
+            null,
+            {
+                title: 'Error',
+                type: 'error',
+                message: 'An unhandled exception occurred in the main process',
+                detail: errorMessage.trimStart(),
+                buttons: ['OK', 'Show logs'],
+                cancelId: 0
+            }
+        );
+
+        if (buttonIndex.response === 1) {
+            electron.shell.openExternal(logFilePath, { activate: true });
+        }
+    }
+    else {
+        electron.dialog.showErrorBox(
+            'An unhandled exception occurred in the main process',
+            errorMessage.trimStart()
+        );
+    }
+});
+
+fs.writeFileSync(logFilePath, '');
+
+debugLog(`system = ${os.type()} ${os.release()}`, 'info', true);
+debugLog(`arch = ${os.arch()}`, 'info', true);
+debugLog(`args = ${process.argv}`, 'info', true);
+debugLog(`pid = ${process.pid}`, 'info', true);
+debugLog('');
+
 if (fs.existsSync(configFilePath)) {
+    debugLog('Reading Assistant Config');
     assistantConfig = JSON.parse(fs.readFileSync(configFilePath));
+    debugLog('Successfully read Assistant Config');
+}
+else {
+    debugLog('Config file does not exist.');
 }
 
 // Set TMPDIR environment variable for linux snap
@@ -35,6 +82,8 @@ app.setLoginItemSettings({
 });
 
 if (!gotInstanceLock) {
+    debugLog('Another instance is already running', 'warn');
+    
     electron.dialog.showErrorBox(
         "Preventing launch",
         "An instance of Google Assistant is already running.\nOperation Aborted"
@@ -44,6 +93,8 @@ if (!gotInstanceLock) {
     app.quit();
 }
 else {
+    debugLog('Sucessfully got instance lock');
+    
     app.allowRendererProcessReuse = false;
     app.commandLine.appendSwitch('enable-transparent-visuals');
     app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
@@ -51,10 +102,14 @@ else {
     app.on('ready', () => setTimeout(onAppReady, 800));
 }
 
+// throw Error('Testing error');
+
 /**
  * Function invoked when the application is ready to start.
  */
 function onAppReady() {
+    debugLog('Firing application "ready" event');
+    
     // Create new window
     mainWindow = new BrowserWindow({
         minWidth: 790,
@@ -76,7 +131,11 @@ function onAppReady() {
         alwaysOnTop: true
     });
 
+    debugLog('Created Browser Window');
+
     // Tray Icon Section
+
+    debugLog('Creating Tray Icon');
 
     // Set grayscale icon letting the user know
     // that the application is not ready to be launched
@@ -85,12 +144,16 @@ function onAppReady() {
     );
 
     if (process.platform !== 'win32') {
+        debugLog('Setting tray icon size');
+
         trayIcon = trayIcon.resize({
             height: 16.0,
             width: 16.0,
             quality: 'best'
         })
     }
+
+    debugLog('Configuring tray');
 
     tray = new electron.Tray(trayIcon);
     tray.setToolTip("Google Assistant Unofficial Desktop Client");
@@ -144,6 +207,8 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // SHORTCUT REGISTRATION
 
+    debugLog('Registering Global Shortcut');
+
     electron.globalShortcut.register('Super+Shift+A', () => {
         const isContentsVisible = mainWindow.isVisible();
 
@@ -192,9 +257,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // WINDOW SIZING AND POSITIONING
 
+    debugLog('Setting Assistant window position');
     setAssistantWindowPosition();
 
     // Load HTML
+
+    debugLog('Loading application in the browser window');
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'app', 'src', 'index.html'),
@@ -204,8 +272,12 @@ Press ${getSuperKey()}+Shift+A to launch`,
 
     // HIDE ON START
 
+    debugLog('Hiding window');
+
     mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
         .then(() => {
+            debugLog('Assistant is ready for launch');
+            
             // After the assistant has been initialized
             // set `readyForLaunch` to `true`
             readyForLaunch = true;
@@ -224,12 +296,15 @@ Press ${getSuperKey()}+Shift+A to launch`,
                 })
             }
 
+            debugLog('Setting "Ready for launch" tray icon');
             tray.setImage(trayIcon);
         });
 
     mainWindow.hide();
 
     // FLOATING WINDOW
+
+    debugLog(`Setting window float behavior = "${assistantConfig['windowFloatBehavior']}"`);
 
     if (assistantConfig['windowFloatBehavior'] === 'always-on-top') {
         mainWindow.setAlwaysOnTop(true, 'floating');
@@ -258,6 +333,7 @@ function getSuperKey() {
  * Toggles the assistant microphone in the renderer process.
  */
 function requestMicToggle() {
+    debugLog('Requested microphone toggle');
     mainWindow.webContents.send('request-mic-toggle');
 }
 
@@ -276,6 +352,7 @@ function launchAssistant() {
  * Quits the assistant application.
  */
 function quitApp() {
+    debugLog('Requested quit application');
     app.isQuiting = true;
     app.quit();
 }
@@ -311,7 +388,7 @@ function _getDisplayIndex(displayList) {
         displayIndex = parseInt(assistantConfig["displayPreference"]) - 1;
 
         if (displayIndex > displayList.length - 1 || displayIndex < 0) {
-            console.log(`Resetting Display Preference: ${displayIndex + 1} -> 1`);
+            debugLog(`Resetting Display Preference: ${displayIndex + 1} -> 1`);
             displayIndex = 0;
         }
         else {
@@ -337,4 +414,60 @@ function _isSnap() {
  */
 function _isLinux() {
     return ['win32', 'darwin'].indexOf(process.platform) === -1;
+}
+
+/**
+ * Logs debug message in the console.
+ * 
+ * @param {string} message
+ * Debug message to be printed
+ * 
+ * @param {"info" | "error" | "warn"} type
+ * Type of log
+ * 
+ * @param {boolean} logFileSync
+ * Should the log be saved to file synchronously
+ */
+function debugLog(message, type='info', logFileSync=false) {
+    let date = new Date();
+    let tag = '';
+
+    if (type === 'info') {
+        tag = '[INFO] '
+    }
+    else if (type === 'error') {
+        tag = '[ERROR]'
+    }
+    else if (type === 'warn') {
+        tag = '[WARN] '
+    }
+
+    let processTag = '[main]';
+    let pre = `${date.toISOString()} | ${processTag} ${tag} : `;
+    let finalMessage = message.replace(/\n(.*)/g, `\n${pre}$1`);
+
+    if (!logFileSync) {
+        fs.appendFile(
+            logFilePath,
+            pre + finalMessage + '\n',
+            { encoding: 'utf-8', flag: 'a' },
+            () => {}
+        );
+    }
+    else {
+        fs.appendFileSync(
+            logFilePath,
+            pre + finalMessage + '\n',
+            { encoding: 'utf-8', flag: 'a' }
+        )
+    }
+
+    if (argv.indexOf('--verbose') !== -1) {
+        console.debug(pre + finalMessage);
+    }
+    else {
+        if (type === 'error') {
+            console.debug(`\n\nLogs for this run is available here:\n    ${logFilePath}\n\n`);
+        }
+    }
 }

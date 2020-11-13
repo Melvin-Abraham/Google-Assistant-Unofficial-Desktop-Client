@@ -106,6 +106,7 @@
     },
     "scripts": {
         "start": "electron .",
+        "start:verbose": "electron . --verbose",
         "dist": "electron-builder",
         "pack": "electron-builder --dir",
         "postinstall": "electron-builder install-app-deps"
