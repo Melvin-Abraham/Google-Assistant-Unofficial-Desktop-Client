@@ -70,6 +70,7 @@ let history = [];
 let historyHead = -1;
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
+let isAssistantReady = false;
 let p5jsMic = new p5.AudioIn();  // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
 let assistant_input = document.querySelector('#assistant-input');
@@ -626,6 +627,7 @@ const startConversation = (conversation) => {
 // will start a conversation and wait for audio data
 // as soon as it's ready
 assistant
+  .on('ready', () => isAssistantReady = true)
   .on('started', (conversation) => {
     console.log("Assistant Started!");
     startConversation(conversation);
@@ -3748,6 +3750,10 @@ function startMic() {
   if (config.conversation["textQuery"] !== undefined) {
     delete config.conversation["textQuery"];
   }
+
+  // Prevent triggering microphone when assistant
+  // has not been initialized.
+  if (!isAssistantReady) return;
 
   mic.start();
   assistant.start(config.conversation);
