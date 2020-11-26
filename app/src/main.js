@@ -348,7 +348,7 @@ catch (err) {
     // Unexpected Error
 
     displayErrorScreen({
-      title: 'Unexpected Exception Occured',
+      title: 'Unexpected Exception Occurred',
       details: 'The Assistant failed to initialize due to some unexpected error. Try reloading the assistant.',
       subdetails: 'Error: Assistant init failed'
     });
@@ -714,10 +714,11 @@ assistant
   .on('error', (err) => {
     console.log('Assistant Error:', err);
     let currentHTML = document.querySelector('body').innerHTML;
+    let suggestionOnClickListeners = [...document.querySelectorAll('.suggestion-parent > .suggestion')].map(btn => btn.onclick);
 
     if (assistantConfig["savedTokensPath"] != "") {
       displayErrorScreen({
-        title: 'Unexpected Exception Occured',
+        title: 'Unexpected Exception Occurred',
         details: 'An unexpected error occurred.',
         subdetails: `Error: ${err.message}`
       });
@@ -736,6 +737,11 @@ assistant
         }
 
         suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
+        let suggestions = [...document.querySelectorAll('.suggestion-parent > .suggestion')]
+        
+        suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
+          suggestions[suggestionIndex].onclick = listener;
+        });
 
         historyHead--;
 
@@ -973,6 +979,7 @@ function saveConfig(config=null) {
 async function openConfig() {
   if (!document.querySelector('#config-screen')) {
     let currentHTML = document.querySelector('body').innerHTML;
+    let suggestionOnClickListeners = [...document.querySelectorAll('.suggestion-parent > .suggestion')].map(btn => btn.onclick);
 
     if (!releases) {
       getReleases();
@@ -1853,6 +1860,11 @@ async function openConfig() {
       }
 
       suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
+      let suggestions = [...document.querySelectorAll('.suggestion-parent > .suggestion')]
+        
+      suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
+        suggestions[suggestionIndex].onclick = listener;
+      });
 
       historyHead--;
 
