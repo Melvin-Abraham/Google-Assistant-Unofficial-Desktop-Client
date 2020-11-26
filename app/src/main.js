@@ -259,7 +259,8 @@ const config = {
     keyFilePath: assistantConfig["keyFilePath"],
     // where you want the tokens to be saved
     // will create the directory if not already there
-    savedTokensPath: assistantConfig["savedTokensPath"],
+    // Initial launch of the assistant will not trigger token saving
+    savedTokensPath: (!firstLaunch) ? assistantConfig["savedTokensPath"] : undefined,
     tokenInput: showGetTokenScreen
   },
   // this param is optional, but all options will be shown
