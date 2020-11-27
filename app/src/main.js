@@ -56,6 +56,7 @@ let assistantConfig = {
   "microphoneSource": "default",
   "speakerSource": "default",
   "displayPreference": "1",
+  "windowBorder": "none",
   "launchAtStartup": true,
   "alwaysCloseToTray": true,
   "enablePingSound": true,
@@ -211,8 +212,10 @@ else {
   }
 }
 
-// Set Application Theme
+// Setup Assistant Window
+
 setTheme();
+setAssistantWindowBorder();
 
 if(assistantConfig["startAsMaximized"]) {
   toggleExpandWindow();
@@ -1311,6 +1314,29 @@ async function openConfig() {
               </select>
             </div>
           </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Window Border
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Window border creates distinction between the application and the background"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="win-border-selector" style="padding-right: 50px;">
+                <option value="none">None</option>
+                <option value="minimal">Minimal</option>
+                <option value="prominent">Prominent</option>
+                <option value="color-shift">Color Shift</option>
+              </select>
+            </div>
+          </div>
           <div class="setting-label">
             ACCESSIBILTY
             <hr />
@@ -1743,6 +1769,7 @@ async function openConfig() {
     let microphoneSourceSelector = document.querySelector('#mic-source-selector');
     let speakerSourceSelector = document.querySelector('#speaker-source-selector');
     let displayPreferenceSelector = document.querySelector('#display-selector');
+    let winBorderSelector = document.querySelector('#win-border-selector');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
     let enablePingSound = document.querySelector('#ping-sound');
@@ -1780,6 +1807,7 @@ async function openConfig() {
     microphoneSourceSelector.value = assistantConfig["microphoneSource"];
     speakerSourceSelector.value = assistantConfig["speakerSource"];
     displayPreferenceSelector.value = assistantConfig["displayPreference"];
+    winBorderSelector.value = assistantConfig["windowBorder"];
     launchAtStartUp.checked = assistantConfig["launchAtStartup"];
     alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
     enablePingSound.checked = assistantConfig["enablePingSound"];
@@ -2143,6 +2171,7 @@ async function openConfig() {
         assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
         assistantConfig["speakerSource"] = speakerSourceSelector.value;
         assistantConfig["displayPreference"] = displayPreferenceSelector.value;
+        assistantConfig["windowBorder"] = winBorderSelector.value;
         assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
         assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
         assistantConfig["enablePingSound"] = enablePingSound.checked;
@@ -2173,6 +2202,8 @@ async function openConfig() {
             close();
           }
         }
+
+        setAssistantWindowBorder();
 
         mic.setDeviceId(assistantConfig["microphoneSource"]);
 
@@ -2950,6 +2981,21 @@ function setAssistantWindowPosition() {
   ipcRenderer.send('set-assistant-window-position');
 }
 
+function setAssistantWindowBorder() {
+  if (assistantConfig["windowBorder"] === 'prominent') {
+    document.querySelector('#master-bg').setAttribute('data-border', 'prominent');
+  }
+  else if (assistantConfig["windowBorder"] === 'minimal') {
+    document.querySelector('#master-bg').setAttribute('data-border', 'minimal');
+  }
+  else if (assistantConfig["windowBorder"] === 'color-shift') {
+    document.querySelector('#master-bg').setAttribute('data-border', 'color-shift');
+  }
+  else {
+    document.querySelector('#master-bg').setAttribute('data-border', 'none');
+  }
+}
+
 /**
  * Toggle Expand/Collapse Assistant Window.
  *
@@ -3645,6 +3691,8 @@ function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
   ) {
     displayScreenData(history[historyHead]["screen-data"]);
   }
+
+  document.querySelector('#master-bg').setAttribute('data-theme', effectiveTheme);
 }
 
 /**

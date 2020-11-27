@@ -65,12 +65,57 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
-    right: 0;
+    bottom: 1px;
+    right: 1px;
     background: var(--color-bg);
     border-radius: var(--window-border-radius);
+    border: transparent 0px solid;
 
     transition: all 150ms ease-in;
+}
+
+#master-bg[data-border="prominent"][data-theme="dark"] {
+    border: var(--color-blue) 1.5px solid;
+}
+
+#master-bg[data-border="prominent"][data-theme="light"] {
+    border: var(--color-blue) 2px solid;
+}
+
+#master-bg[data-border="minimal"][data-theme="light"] {
+    border: #c0c0c0 1.5px solid;
+}
+
+#master-bg[data-border="minimal"][data-theme="dark"] {
+    border: #505050 1.5px solid;
+}
+
+#master-bg[data-border="color-shift"][data-theme="dark"] {
+    border-width: 1.5px;
+    animation: color-shift-border-anim infinite 5000ms;
+}
+
+#master-bg[data-border="color-shift"][data-theme="light"] {
+    border-width: 2px;
+    animation: color-shift-border-anim infinite 5000ms;
+}
+
+@keyframes color-shift-border-anim {
+    0% {
+        border-color: var(--color-blue);
+    }
+    25% {
+        border-color: var(--color-green);
+    }
+    50% {
+        border-color: var(--color-red);
+    }
+    75% {
+        border-color: var(--color-yellow);
+    }
+    100% {
+        border-color: var(--color-blue);
+    }
 }
 
 .invert {
@@ -218,7 +263,7 @@ body {
 }
 
 @keyframes loading {
-    from {left: -200px; width: 30%;}
+    from {left: -30%; width: 30%;}
     50% {width: 30%;}
     70% {width: 70%;}
     80% { left: 50%;}
