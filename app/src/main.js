@@ -32,8 +32,10 @@ const GoogleAssistant = require('google-assistant');
 const fs = require('fs');
 const os = require('os');
 const { execSync, exec } = require('child_process');
-const themes = require('./themes.js');
-const supportedLanguages = require('./lang.js');
+const isValidAccelerator = require('electron-is-accelerator');
+const themes = require('./common/themes.js');
+const supportedLanguages = require('./common/lang.js');
+const { KeyBindingListener, getNativeKeyName } = require('./keybinding.js');
 const Microphone = require('./lib/microphone.js');
 const AudioPlayer = require('./lib/audio_player.js');
 
@@ -45,27 +47,7 @@ let parser = new DOMParser();
 
 let userDataPath = app.getPath('userData');
 let configFilePath = path.join(userDataPath, 'config.json');
-let assistantConfig = {
-  "keyFilePath": "",
-  "savedTokensPath": "",
-  "forceNewConversation": false,
-  "enableAudioOutput": true,
-  "enableMicOnContinousConversation": true,
-  "startAsMaximized": false,
-  "windowFloatBehavior": "always-on-top",
-  "microphoneSource": "default",
-  "speakerSource": "default",
-  "displayPreference": "1",
-  "windowBorder": "none",
-  "launchAtStartup": true,
-  "alwaysCloseToTray": true,
-  "enablePingSound": true,
-  "enableAutoScaling": true,
-  "enableMicOnStartup": false,
-  "hotkeyBehavior": "launch+mic",
-  "language": "en-US",
-  "theme": "dark"
-};
+let assistantConfig = require('./common/initialConfig.js');
 
 let history = [];
 let historyHead = -1;
@@ -709,7 +691,7 @@ assistant
         mic.off('mic-stopped', micStoppedListener);
         conversation.end();
       };
-      
+
       mic.on('data', processConversation);
       mic.on('mic-stopped', micStoppedListener);
     }
@@ -741,7 +723,7 @@ assistant
 
         suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
         let suggestions = [...document.querySelectorAll('.suggestion-parent > .suggestion')]
-        
+
         suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
           suggestions[suggestionIndex].onclick = listener;
         });
@@ -1441,7 +1423,9 @@ async function openConfig() {
               ">
                 <img
                   src="../res/help.svg"
-                  title="Configure what happens when '${getSuperKey()} + Shift + A' is triggered"
+                  title="Configure what happens when '${
+                    assistantConfig.assistantHotkey.split('+').map(getNativeKeyName).join(' + ')
+                  }' is triggered"
                 >
               </span>
             </div>
@@ -1451,6 +1435,32 @@ async function openConfig() {
                 <option value="launch+mic">Launch App / Toggle Microphone</option>
                 <option value="launch+close">Launch App / Close App</option>
               </select>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
+              Assistant Hotkey
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Customize the hotkey for waking up the assistant.\n\nNote: Custom hotkeys are not bound to work always and will depend on\nthe desktop environment and foreground application."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px; display: inline-flex;">
+              <div id="hotkey-div" class="config-input" style="
+                width: -webkit-fill-available;
+                font-size: 16px;
+              ">
+                Hotkey
+              </div>
+              <label id="hotkey-reset-btn" class="button disabled">
+                Reset
+              </label>
             </div>
           </div>
           <div class="setting-item">
@@ -1772,12 +1782,95 @@ async function openConfig() {
     let winBorderSelector = document.querySelector('#win-border-selector');
     let launchAtStartUp = document.querySelector('#launch-at-startup');
     let alwaysCloseToTray = document.querySelector('#close-to-tray');
+    let assistantHotkeyBar = document.querySelector('#hotkey-div');
     let enablePingSound = document.querySelector('#ping-sound');
     let enableAutoScaling = document.querySelector('#auto-scale');
     let themeSelector = document.querySelector('#theme-selector');
     let hotkeyBehaviorSelector = document.querySelector('#hotkey-behavior-selector');
 
     keyFilePathInput.addEventListener('focusout', () => validatePathInput(keyFilePathInput));
+
+    // Assistant Hotkey
+    let keybindingListener = new KeyBindingListener();
+    let assistantHotkey = assistantConfig["assistantHotkey"];
+
+    if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
+      assistantHotkey = 'Super+Shift+A';
+  }
+
+    // Mark input as valid/invalid based on hotkey
+    const validateAccelerator = () => {
+      if (isValidAccelerator(assistantHotkey)) {
+        markInputAsValid(assistantHotkeyBar);
+      }
+      else {
+        markInputAsInvalid(assistantHotkeyBar);
+      }
+    }
+
+    const resetHotkey = () => {
+      assistantHotkey = assistantConfig["assistantHotkey"];
+      assistantHotkeyBar.innerText = assistantHotkey.split('+')
+                                      .map(key => getNativeKeyName(key))
+                                      .join(' + ');
+
+      main_area.querySelector('#hotkey-reset-btn').classList.add('disabled');
+      main_area.querySelector('#hotkey-reset-btn').onclick = null;
+      validateAccelerator();
+    }
+
+    /**
+     * Callback function to handle raw key combinations.
+     * 
+     * @param {string[]} rawKeyCombinations
+     * Returns a list of keys pressed by the user.
+     * The keys returned are compliant with Electron and
+     * is cross-platform.
+     */
+    const keyCombinationCallback = (rawKeyCombinations) => {
+      assistantHotkey = rawKeyCombinations.join('+');
+      const keyCombinations = rawKeyCombinations.map(key => getNativeKeyName(key));
+
+      assistantHotkeyBar.innerText = keyCombinations.join(' + ');
+      assistantHotkeyBar.classList.remove('input-active');
+
+      assistantHotkeyBar.removeEventListener('key-combination', keyCombinationCallback);
+
+      // Mark input as valid/invalid based on hotkey
+      validateAccelerator();
+
+      // Enable or disable reset button
+      if (assistantHotkey != assistantConfig["assistantHotkey"]) {
+        main_area.querySelector('#hotkey-reset-btn').classList.remove('disabled');
+        main_area.querySelector('#hotkey-reset-btn').onclick = resetHotkey;
+      }
+      else {
+        main_area.querySelector('#hotkey-reset-btn').classList.add('disabled');
+        main_area.querySelector('#hotkey-reset-btn').onclick = null;
+      }
+    };
+
+    assistantHotkeyBar.onclick = () => {
+      if (assistantHotkeyBar.classList.contains('input-active')) {
+        return;
+      }
+
+      keybindingListener.startListening(true);
+
+      assistantHotkeyBar.innerText = 'Listening for key combinations... ESC to cancel';
+      assistantHotkeyBar.classList.add('input-active');
+
+      keybindingListener.on('key-combination', keyCombinationCallback);
+
+      keybindingListener.on('cancel', () => {
+        assistantHotkeyBar.innerText = assistantHotkey.split('+')
+                                        .map(key => getNativeKeyName(key))
+                                        .join(' + ');
+
+        assistantHotkeyBar.classList.remove('input-active');
+        assistantHotkeyBar.removeEventListener('key-combination', keyCombinationCallback);
+      });
+    }
 
     // Populate microphone and speaker source selectors
     let deviceList = await navigator.mediaDevices.enumerateDevices();
@@ -1814,6 +1907,9 @@ async function openConfig() {
     enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
     themeSelector.value = assistantConfig["theme"];
     hotkeyBehaviorSelector.value = assistantConfig["hotkeyBehavior"];
+    assistantHotkeyBar.innerText = assistantHotkey.split('+')
+                                    .map(key => getNativeKeyName(key))
+                                    .join(' + ');
 
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
@@ -1889,7 +1985,7 @@ async function openConfig() {
 
       suggestion_area.innerHTML = currentDOM.querySelector('#suggestion-area').innerHTML;
       let suggestions = [...document.querySelectorAll('.suggestion-parent > .suggestion')]
-        
+
       suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
         suggestions[suggestionIndex].onclick = listener;
       });
@@ -2038,6 +2134,7 @@ async function openConfig() {
 
     document.querySelector('#cancel-config-changes').onclick = () => {
       closeCurrentScreen();
+      keybindingListener.stopListening();
     }
 
     document.querySelector('#save-config').onclick = () => {
@@ -2157,6 +2254,18 @@ async function openConfig() {
           shouldUpdateDisplayPref = false;
         }
 
+        if (assistantConfig["assistantHotkey"] !== assistantHotkey) {
+          if (isValidAccelerator(assistantHotkey)) {
+            ipcRenderer.send('update-hotkey', assistantHotkey);
+          }
+          else {
+            let assistantHotkeyDiv = document.querySelector('#hotkey-div');
+
+            markInputAsInvalid(assistantHotkeyDiv, true);
+            return;
+          }
+        }
+
         // Set the `assistantConfig` as per the settings
 
         assistantConfig["keyFilePath"] = keyFilePathInput.value;
@@ -2178,12 +2287,14 @@ async function openConfig() {
         assistantConfig["enableAutoScaling"] = enableAutoScaling.checked;
         assistantConfig["theme"] = themeSelector.value;
         assistantConfig["hotkeyBehavior"] = hotkeyBehaviorSelector.value;
+        assistantConfig["assistantHotkey"] = assistantHotkey;
 
         // Apply settings for appropriate options
 
         config.conversation.isNew = assistantConfig["forceNewConversation"];
         config.conversation.lang = assistantConfig["language"];
         assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
+        keybindingListener.stopListening();
 
         app.setLoginItemSettings({
           openAtLogin: assistantConfig["launchAtStartup"]
@@ -3077,13 +3188,20 @@ function displayQuickMessage(message, allowOlyOneMessage=false) {
  * @param {boolean} addShakeAnimation
  * Whether additional shaking animation should be applied to the `inputElement`.
  * _(Defaults to `false`)_
+ * 
+ * @param scrollIntoView
+ * Scrolls the element into view. _(Defaults to `true`)_
  */
-function markInputAsInvalid(inputElement, addShakeAnimation=false) {
+function markInputAsInvalid(inputElement, addShakeAnimation=false, scrollIntoView=true) {
   inputElement.classList.add(['input-err']);
 
   if (addShakeAnimation) {
     inputElement.classList.add(['shake']);
     setTimeout(() => inputElement.classList.remove(['shake']), 300);
+  }
+
+  if (scrollIntoView) {
+    inputElement.scrollIntoView({behavior: 'smooth', block: 'nearest'});
   }
 }
 
@@ -3108,6 +3226,9 @@ function markInputAsValid(inputElement) {
  * @param {boolean} addShakeAnimationOnError
  * Add animation to let the user know if the path does not exist.
  * _(Defaults to `false`)_
+ * 
+ * @param {boolean} scrollIntoView
+ * Scrolls the element into view when invalid. _(Defaults to `true`)_
  *
  * @param {boolean} trimSpaces
  * Trims leading and trailing spaces if any are present in the
@@ -3116,11 +3237,11 @@ function markInputAsValid(inputElement) {
  * @returns {boolean}
  * Returns boolean value (true/false) based on the validity of path
  */
-function validatePathInput(inputElement, addShakeAnimationOnError=false, trimSpaces=true) {
+function validatePathInput(inputElement, addShakeAnimationOnError=false, scrollIntoView=true, trimSpaces=true) {
   let val = (trimSpaces) ? inputElement.value.trim() : inputElement.value;
 
   if (val != "" && !fs.existsSync(val)) {
-    markInputAsInvalid(inputElement, addShakeAnimationOnError);
+    markInputAsInvalid(inputElement, addShakeAnimationOnError, scrollIntoView);
     return false;
   }
   else {
@@ -4005,23 +4126,6 @@ function _getMicPermEnableHelp() {
       You can ${defaultMsg.replace(/^M/, 'm')}
     `;
   }
-}
-
-/**
- * Returns the name for `super` key based on platform:
- * - **Windows**: `Win`
- * - **MacOS**: `Cmd`
- * - **Linux**: `Super`
- *
- * @returns {string}
- * Platform-specific key name for `super`
- */
-function getSuperKey() {
-  return (process.platform == 'win32')
-      ? "Win"
-      : (process.platform == 'darwin')
-          ? "Cmd"
-          : "Super"
 }
 
 /**

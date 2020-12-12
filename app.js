@@ -5,6 +5,8 @@ const fs = require('fs');
 const os = require('os');
 const { argv } = require('process');
 const ipcMain = electron.ipcMain;
+const isValidAccelerator = require('electron-is-accelerator');
+const { getNativeKeyName } = require('./app/src/keybinding.js');
 
 const { app, BrowserWindow, Menu, nativeImage } = electron;
 
@@ -19,7 +21,7 @@ const gotInstanceLock = app.requestSingleInstanceLock();
 let userDataPath = app.getPath('userData');
 let configFilePath = path.join(userDataPath, 'config.json');
 let logFilePath = path.join(userDataPath, 'main_process-debug.log');
-let assistantConfig = {};
+let assistantConfig = require('./app/src/common/initialConfig.js');
 
 process.on('uncaughtException', async (err) => {
     let prelude = (app.isReady()) ? 'Uncaught Exception' : 'Uncaught Exception thrown before app was ready';
@@ -78,7 +80,7 @@ if (_isLinux() && _isSnap()) {
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: (assistantConfig['launchAtStartup'] !== undefined) ? assistantConfig['launchAtStartup'] : true
+    openAtLogin: assistantConfig['launchAtStartup']
 });
 
 if (!gotInstanceLock) {
@@ -101,8 +103,6 @@ else {
 
     app.on('ready', () => setTimeout(onAppReady, 800));
 }
-
-// throw Error('Testing error');
 
 /**
  * Function invoked when the application is ready to start.
@@ -159,46 +159,26 @@ function onAppReady() {
     tray.setToolTip("Google Assistant Unofficial Desktop Client");
     tray.on('double-click', () => launchAssistant());
 
-    let trayContextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Launch Assistant',
-            click: function () {
-                launchAssistant();
-            },
-            accelerator: `Super+Shift+A`
-        },
-        {
-            label: 'Close to Tray',
-            click: function () {
-                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-                setTimeout(() => mainWindow.hide(), 100);
-            }
-        },
-        {
-            label: 'Open DevTools',
-            click: function () {
-                mainWindow.webContents.openDevTools({mode: 'undocked'})
-            }
-        },
-        {
-            label: 'Quit',
-            click: function () {
-                quitApp();
-            },
-        },
-        {
-            label: `v${electron.app.getVersion()}`,
-            enabled: false,
-        }
-    ]);
+    debugLog('Building tray context menu');
 
-    tray.setContextMenu(trayContextMenu);
+    let assistantHotkey = assistantConfig["assistantHotkey"]
+
+    if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
+        assistantHotkey = 'Super+Shift+A';
+    }
+
+    setTrayContextMenu(assistantHotkey);
+
+    debugLog('Invoking `tray.displayBaloon`');
+
     tray.displayBalloon({
         "title": 'Google Assistant',
 
         "content":
-`Google Assistant is running in background!\n
-Press ${getSuperKey()}+Shift+A to launch`,
+            `Google Assistant is running in background!\n\n` +
+            `Press ${
+                assistantConfig.assistantHotkey.split('+').map(getNativeKeyName).join(' + ')
+            } to launch`,
 
         "icon": nativeImage.createFromPath(
             path.join(__dirname, "app", "res", "icons", "icon.png")
@@ -208,33 +188,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
     // SHORTCUT REGISTRATION
 
     debugLog('Registering Global Shortcut');
-
-    electron.globalShortcut.register('Super+Shift+A', () => {
-        const isContentsVisible = mainWindow.isVisible();
-
-        let hotkeyBehavior = (assistantConfig['hotkeyBehavior'] !== undefined)
-                                ? assistantConfig['hotkeyBehavior']
-                                : "launch+mic";
-
-        if (hotkeyBehavior === 'launch' || !isContentsVisible) {
-            launchAssistant();
-        }
-        else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
-            mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
-            mainWindow.webContents.send('window-will-close');
-
-            if (process.platform !== 'darwin') {
-                mainWindow.close();
-            }
-            else {
-                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
-                setTimeout(() => mainWindow.hide(), 100);
-            }
-        }
-        else {
-            requestMicToggle();
-        }
-    });
+    registerAssistantHotkey(assistantHotkey);
 
     mainWindow.on('will-quit', () => electron.globalShortcut.unregisterAll());
 
@@ -316,17 +270,7 @@ Press ${getSuperKey()}+Shift+A to launch`,
     ipcMain.on('update-first-launch', () => global.firstLaunch = false);
     ipcMain.on('update-config', (event, config) => assistantConfig = config);
     ipcMain.on('set-assistant-window-position', (event) => setAssistantWindowPosition());
-}
-
-/**
- * Returns the `Super` key equivalent for different platforms.
- */
-function getSuperKey() {
-    return (process.platform === 'win32')
-        ? "Win"
-        : (process.platform === 'darwin')
-            ? "Cmd"
-            : "Super"
+    ipcMain.on('update-hotkey', (event, hotkey) => updateHotkey(hotkey));
 }
 
 /**
@@ -400,6 +344,95 @@ function _getDisplayIndex(displayList) {
     }
 
     return displayIndex;
+}
+
+/**
+ * Builds and binds context menu to the tray.
+ * 
+ * @param {string} assistantHotkey
+ * Accelerator for assistant hotkey. Used for showing the
+ * accelerator alongside the "Launch Assistant" label.
+ */
+function setTrayContextMenu(assistantHotkey) {
+    let trayContextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Launch Assistant',
+            click: function () {
+                launchAssistant();
+            },
+            accelerator: assistantHotkey
+        },
+        {
+            label: 'Close to Tray',
+            click: function () {
+                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+                setTimeout(() => mainWindow.hide(), 100);
+            }
+        },
+        {
+            label: 'Open DevTools',
+            click: function () {
+                mainWindow.webContents.openDevTools({mode: 'undocked'})
+            }
+        },
+        {
+            label: 'Quit',
+            click: function () {
+                quitApp();
+            },
+        },
+        {
+            label: `v${electron.app.getVersion()}`,
+            enabled: false,
+        }
+    ]);
+
+    tray.setContextMenu(trayContextMenu);
+}
+
+/**
+ * Registers global shortcut for Assistant.
+ * 
+ * @param {string} hotkey
+ * Accelerator for assistant hotkey
+ */
+function registerAssistantHotkey(hotkey) {
+    electron.globalShortcut.register(hotkey, () => {
+        let hotkeyBehavior = assistantConfig['hotkeyBehavior'];
+        const isContentsVisible = mainWindow.isVisible();
+
+        if (hotkeyBehavior === 'launch' || !isContentsVisible) {
+            launchAssistant();
+        }
+        else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
+            mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
+            mainWindow.webContents.send('window-will-close');
+
+            if (process.platform !== 'darwin') {
+                mainWindow.close();
+            }
+            else {
+                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+                setTimeout(() => mainWindow.hide(), 100);
+            }
+        }
+        else {
+            requestMicToggle();
+        }
+    });
+}
+
+/**
+ * Re-registers global shortcut and rebuilds tray context menu
+ * based on newly assigned assistant hotkey.
+ * 
+ * @param {string} newHotkey
+ * Newly assigned assistant hotkey
+ */
+function updateHotkey(newHotkey) {
+    electron.globalShortcut.unregisterAll();
+    registerAssistantHotkey(newHotkey);
+    setTrayContextMenu(newHotkey);
 }
 
 /**

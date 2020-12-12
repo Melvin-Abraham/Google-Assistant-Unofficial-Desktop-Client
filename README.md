@@ -81,11 +81,13 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/g-assist)
 
-## Keyboard Shortcut
+## Default Keyboard Shortcut
 
 * **Windows:** Win + Shift + A
 * **MacOS:** Cmd + Shift + A
 * **Linux:** Super + Shift + A
+
+**Note:** Keyboard shortcut is configurable in the settings
 
 ## TODO
 

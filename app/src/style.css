@@ -855,6 +855,10 @@ input {
     font-size: 20px;
 }
 
+.input-active {
+    border: rgba(31, 143, 255, var(--opacity-input-border-low)) 2px solid;
+}
+
 .input-err {
     border: rgba(234, 67, 52, var(--opacity-input-border-low)) 2px solid !important;
     background: #ea43351c;
@@ -917,6 +921,11 @@ button:hover, .button:hover {
 
 button:active, .button:active {
     background: var(--color-btn-bg-active);
+}
+
+button.disabled, .button.disabled, button[disabled], .button[disabled] {
+    cursor: default;
+    background: var(--color-btn-bg-default);
 }
 
 /********** ICON BUTTON **********/
