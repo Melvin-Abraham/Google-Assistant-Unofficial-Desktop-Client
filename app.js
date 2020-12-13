@@ -64,7 +64,8 @@ debugLog('');
 
 if (fs.existsSync(configFilePath)) {
     debugLog('Reading Assistant Config');
-    assistantConfig = JSON.parse(fs.readFileSync(configFilePath));
+    let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
+    Object.assign(assistantConfig, savedConfig);
     debugLog('Successfully read Assistant Config');
 }
 else {
