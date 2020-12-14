@@ -86,7 +86,7 @@ app.setLoginItemSettings({
 
 if (!gotInstanceLock) {
     debugLog('Another instance is already running', 'warn');
-    
+
     electron.dialog.showErrorBox(
         "Preventing launch",
         "An instance of Google Assistant is already running.\nOperation Aborted"
@@ -97,7 +97,7 @@ if (!gotInstanceLock) {
 }
 else {
     debugLog('Sucessfully got instance lock');
-    
+
     app.allowRendererProcessReuse = false;
     app.commandLine.appendSwitch('enable-transparent-visuals');
     app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
@@ -110,7 +110,7 @@ else {
  */
 function onAppReady() {
     debugLog('Firing application "ready" event');
-    
+
     // Create new window
     mainWindow = new BrowserWindow({
         minWidth: 790,
@@ -232,7 +232,7 @@ function onAppReady() {
     mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
         .then(() => {
             debugLog('Assistant is ready for launch');
-            
+
             // After the assistant has been initialized
             // set `readyForLaunch` to `true`
             readyForLaunch = true;
@@ -349,7 +349,7 @@ function _getDisplayIndex(displayList) {
 
 /**
  * Builds and binds context menu to the tray.
- * 
+ *
  * @param {string} assistantHotkey
  * Accelerator for assistant hotkey. Used for showing the
  * accelerator alongside the "Launch Assistant" label.
@@ -393,7 +393,7 @@ function setTrayContextMenu(assistantHotkey) {
 
 /**
  * Registers global shortcut for Assistant.
- * 
+ *
  * @param {string} hotkey
  * Accelerator for assistant hotkey
  */
@@ -426,7 +426,7 @@ function registerAssistantHotkey(hotkey) {
 /**
  * Re-registers global shortcut and rebuilds tray context menu
  * based on newly assigned assistant hotkey.
- * 
+ *
  * @param {string} newHotkey
  * Newly assigned assistant hotkey
  */
@@ -452,13 +452,13 @@ function _isLinux() {
 
 /**
  * Logs debug message in the console.
- * 
+ *
  * @param {string} message
  * Debug message to be printed
- * 
+ *
  * @param {"info" | "error" | "warn"} type
  * Type of log
- * 
+ *
  * @param {boolean} logFileSync
  * Should the log be saved to file synchronously
  */

@@ -170,6 +170,13 @@ else {
     `;
 
     suggestion_area.querySelector("#proceed-btn").onclick = () => {
+      // Set assistant's language to system language
+      let systemLanguage = navigator.language;
+
+      if (Object.keys(supportedLanguages).includes(systemLanguage)) {
+        assistantConfig.language = systemLanguage;
+      }
+
       // Write the config
       fs.writeFile(
         configFilePath,
@@ -1116,6 +1123,9 @@ async function openConfig() {
                   `)
                 }).join('')}
               </select>
+              <label id="detect-lang-btn" class="button" style="margin-left: 6px;">
+                Detect Language
+              </label>
             </div>
           </div>
           <div class="setting-item">
@@ -1821,7 +1831,7 @@ async function openConfig() {
 
     /**
      * Callback function to handle raw key combinations.
-     * 
+     *
      * @param {string[]} rawKeyCombinations
      * Returns a list of keys pressed by the user.
      * The keys returned are compliant with Electron and
@@ -1930,6 +1940,36 @@ async function openConfig() {
         "Select Saved Token File"
       );
     };
+
+    main_area.querySelector('#detect-lang-btn').onclick = () => {
+      let languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
+      let systemLocale = navigator.language;
+      let systemLanguage = languageNames.of(systemLocale);
+
+      if (Object.keys(supportedLanguages).includes(systemLocale)) {
+        languageSelector.value = systemLocale;
+
+        languageSelector.classList.add('selector-active');
+        setTimeout(() => languageSelector.classList.remove('selector-active'), 200);
+      }
+      else {
+        let buttonId = dialog.showMessageBoxSync(
+          assistantWindow,
+          {
+            type: 'error',
+            title: 'Language unsupported',
+            message: 'Language unsupported',
+            detail: `Your system seems to use "${systemLanguage}" [Locale: "${systemLocale}"].\nThis language is not supported by Google Assistant SDK at the moment.\n\nIf you happen to find this language in the Google Assistant SDK's "Language Support" page, please do open an issue regarding the same.`,
+            buttons: ['Track supported languages', 'OK'],
+            cancelId: 1
+          }
+        );
+
+        if (buttonId === 0) {
+          openLink('https://developers.google.com/assistant/sdk/reference/rpc/languages');
+        }
+      }
+    }
 
     validatePathInput(keyFilePathInput);
 
@@ -3188,7 +3228,7 @@ function displayQuickMessage(message, allowOlyOneMessage=false) {
  * @param {boolean} addShakeAnimation
  * Whether additional shaking animation should be applied to the `inputElement`.
  * _(Defaults to `false`)_
- * 
+ *
  * @param scrollIntoView
  * Scrolls the element into view. _(Defaults to `true`)_
  */
@@ -3226,7 +3266,7 @@ function markInputAsValid(inputElement) {
  * @param {boolean} addShakeAnimationOnError
  * Add animation to let the user know if the path does not exist.
  * _(Defaults to `false`)_
- * 
+ *
  * @param {boolean} scrollIntoView
  * Scrolls the element into view when invalid. _(Defaults to `true`)_
  *

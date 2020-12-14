@@ -1144,3 +1144,7 @@ select:hover {
 option {
     background: var(--color-option-bg);
 }
+
+.selector-active {
+    border: var(--color-blue) 1px solid;
+}
