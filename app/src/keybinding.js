@@ -11,6 +11,7 @@ class KeyBindingListener extends EventEmitter {
     constructor() {
         super();
         this.blacklistedKeys = ['Meta', 'Shift', 'Alt', 'Control', 'CapsLock', 'ContextMenu'];
+        this.listener = null;
     }
 
     /**
@@ -61,17 +62,19 @@ class KeyBindingListener extends EventEmitter {
      * pressed.
      */
     startListening(stopListeningAfterKeyCombination=false, escapeToCancel=true) {
-        window.addEventListener('keydown', (e) => {
+        this.listener = (e) => {
             this._keyDownListener(e, stopListeningAfterKeyCombination, escapeToCancel)
-        });
+        };
+        
+        window.addEventListener('keydown', this.listener);
     }
 
     /**
      * Stop listening for `keydown` events
      */
     stopListening() {
-        if (this._keyDownListener) {
-            window.removeEventListener('keydown', this._keyDownListener);
+        if (this.listener) {
+            window.removeEventListener('keydown', this.listener);
         }
     }
 }
