@@ -1239,6 +1239,27 @@ async function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
+              Hide on first launch
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="When enabled, Assistant will be kept hidden on first launch and will require hotkey to show up.\nNote: The window will always stay hidden when launched at system startup."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="hide-on-first-launch" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-key">
               Enable Auto Scaling
 
               <span style="
@@ -1360,7 +1381,7 @@ async function openConfig() {
           </div>
           <div class="setting-item">
             <div class="setting-key">
-              Launch At Startup
+              Launch at System Startup
 
               <span style="
                 vertical-align: sub;
@@ -1785,6 +1806,7 @@ async function openConfig() {
     let enableMicOnContinousConversation = document.querySelector('#continous-conv-mic');
     let enableMicOnStartup = document.querySelector('#enable-mic-startup');
     let startAsMaximized = document.querySelector('#start-maximized');
+    let hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
     let winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
     let microphoneSourceSelector = document.querySelector('#mic-source-selector');
     let speakerSourceSelector = document.querySelector('#speaker-source-selector');
@@ -1906,6 +1928,7 @@ async function openConfig() {
     enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
     enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
+    hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
     winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
     microphoneSourceSelector.value = assistantConfig["microphoneSource"];
     speakerSourceSelector.value = assistantConfig["speakerSource"];
@@ -2316,6 +2339,7 @@ async function openConfig() {
         assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
+        assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
         assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
         assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
         assistantConfig["speakerSource"] = speakerSourceSelector.value;

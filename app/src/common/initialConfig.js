@@ -15,6 +15,7 @@ const initialAssistantConfig = {
     "enablePingSound": true,
     "enableAutoScaling": true,
     "enableMicOnStartup": false,
+    "hideOnFirstLaunch": true,
     "assistantHotkey": "Super+Shift+A",
     "hotkeyBehavior": "launch+mic",
     "language": "en-US",

@@ -81,8 +81,13 @@ if (_isLinux() && _isSnap()) {
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: assistantConfig['launchAtStartup']
+    openAtLogin: assistantConfig['launchAtStartup'],
+    args: ['--sys-startup']
 });
+
+let openedAtLogin = (process.platform === 'darwin')
+                        ? app.getLoginItemSettings().wasOpenedAtLogin
+                        : argv.includes('--sys-startup');
 
 if (!gotInstanceLock) {
     debugLog('Another instance is already running', 'warn');
@@ -170,21 +175,23 @@ function onAppReady() {
 
     setTrayContextMenu(assistantHotkey);
 
-    debugLog('Invoking `tray.displayBaloon`');
+    if (assistantConfig["hideOnFirstLaunch"] || openedAtLogin) {
+        debugLog('Invoking `tray.displayBaloon`');
 
-    tray.displayBalloon({
-        "title": 'Google Assistant',
+        tray.displayBalloon({
+            "title": 'Google Assistant',
 
-        "content":
-            `Google Assistant is running in background!\n\n` +
-            `Press ${
-                assistantConfig.assistantHotkey.split('+').map(getNativeKeyName).join(' + ')
-            } to launch`,
+            "content":
+                `Google Assistant is running in background!\n\n` +
+                `Press ${
+                    assistantConfig.assistantHotkey.split('+').map(getNativeKeyName).join(' + ')
+                } to launch`,
 
-        "icon": nativeImage.createFromPath(
-            path.join(__dirname, "app", "res", "icons", "icon.png")
-        ),
-    });
+            "icon": nativeImage.createFromPath(
+                path.join(__dirname, "app", "res", "icons", "icon.png")
+            ),
+        });
+    }
 
     // SHORTCUT REGISTRATION
 
@@ -226,6 +233,7 @@ function onAppReady() {
     }));
 
     // HIDE ON START
+    // Hidden when assistant is initializing
 
     debugLog('Hiding window');
 
@@ -253,6 +261,11 @@ function onAppReady() {
 
             debugLog('Setting "Ready for launch" tray icon');
             tray.setImage(trayIcon);
+
+            if (!assistantConfig["hideOnFirstLaunch"] && !openedAtLogin) {
+                debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
+                launchAssistant();
+            }
         });
 
     mainWindow.hide();
@@ -451,7 +464,8 @@ function _isLinux() {
 }
 
 /**
- * Logs debug message in the console.
+ * Logs debug message in the console (with `--verbose` flag)
+ * and file.
  *
  * @param {string} message
  * Debug message to be printed
