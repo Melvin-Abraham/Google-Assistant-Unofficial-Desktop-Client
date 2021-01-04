@@ -78,10 +78,18 @@ if (_isLinux() && _isSnap()) {
     process.env["TMPDIR"] = process.env["XDG_RUNTIME_DIR"];
 }
 
+// Set `DEV_MODE` and `NODE_ENV` environment variable
+// if running in development mode
+
+if (isDevMode()) {
+    process.env['DEV_MODE'] = true;
+    process.env['NODE_ENV'] = 'development';
+}
+
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: assistantConfig['launchAtStartup'],
+    openAtLogin: !process.env.DEV_MODE ? assistantConfig['launchAtStartup'] : false,
     args: ['--sys-startup']
 });
 
@@ -461,6 +469,14 @@ function _isSnap() {
  */
 function _isLinux() {
     return ['win32', 'darwin'].indexOf(process.platform) === -1;
+}
+
+/**
+ * Checks if the application is running in Development mode.
+ */
+function isDevMode() {
+    let executablePath = process.argv0;
+    return /[\\/]electron.*$/.test(executablePath);
 }
 
 /**

@@ -1121,6 +1121,12 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+.slider.disabled {
+    cursor: default;
+    opacity: 0.3 !important;
+    padding: unset;
+}
+
 /********** DROP-DOWN **********/
 
 select {

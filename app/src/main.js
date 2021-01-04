@@ -1053,7 +1053,7 @@ async function openConfig() {
             AUTHENTICATION
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__key-file-path" class="setting-item">
             <div class="setting-key">
               Key File Path
 
@@ -1074,7 +1074,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__saved-tokens-path" class="setting-item">
             <div class="setting-key">
               Saved Tokens Path
 
@@ -1099,7 +1099,7 @@ async function openConfig() {
             CONVERSATION
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__language" class="setting-item">
             <div class="setting-key">
               Language
 
@@ -1128,7 +1128,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__force-new-conv" class="setting-item">
             <div class="setting-key">
               Force New Conversation
 
@@ -1149,7 +1149,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__audio-output" class="setting-item">
             <div class="setting-key">
               Enable Audio Output
 
@@ -1170,7 +1170,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__mic-on-cont-conv" class="setting-item">
             <div class="setting-key">
               Enable microphone on Continous Conversation
 
@@ -1191,7 +1191,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__mic-on-startup" class="setting-item">
             <div class="setting-key">
               Enable microphone on application startup
 
@@ -1216,7 +1216,7 @@ async function openConfig() {
             WINDOW
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__start-maximized" class="setting-item">
             <div class="setting-key">
               Start as Maximized
 
@@ -1237,7 +1237,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__hide-on-first-launch" class="setting-item">
             <div class="setting-key">
               Hide on first launch
 
@@ -1258,7 +1258,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__auto-scale" class="setting-item">
             <div class="setting-key">
               Enable Auto Scaling
 
@@ -1279,7 +1279,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__win-float-behavior" class="setting-item">
             <div class="setting-key">
               Window Float Behavior
 
@@ -1301,7 +1301,7 @@ async function openConfig() {
               </select>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__display-pref" class="setting-item">
             <div class="setting-key">
               Display Preference
 
@@ -1327,7 +1327,7 @@ async function openConfig() {
               </select>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__win-border" class="setting-item">
             <div class="setting-key">
               Window Border
 
@@ -1354,7 +1354,7 @@ async function openConfig() {
             ACCESSIBILTY
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__ping-sound" class="setting-item">
             <div class="setting-key">
               Enable 'ping' feedback sound for microphone
 
@@ -1379,7 +1379,7 @@ async function openConfig() {
             APPLICATION
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__launch-at-startup" class="setting-item">
             <div class="setting-key">
               Launch at System Startup
 
@@ -1400,7 +1400,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__close-to-tray" class="setting-item">
             <div class="setting-key">
               Always Close to Tray
 
@@ -1421,7 +1421,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__theme" class="setting-item">
             <div class="setting-key">
               Theme
 
@@ -1444,7 +1444,7 @@ async function openConfig() {
               <span id="curr-theme-icon"></span>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__hotket-behavior" class="setting-item">
             <div class="setting-key">
               Configure Hotkey Behavior
 
@@ -1468,7 +1468,7 @@ async function openConfig() {
               </select>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__assistant-hotkey" class="setting-item">
             <div class="setting-key">
               Assistant Hotkey
 
@@ -1494,7 +1494,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__mic-src" class="setting-item">
             <div class="setting-key">
               Microphone Source
 
@@ -1515,7 +1515,7 @@ async function openConfig() {
               ></select>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__speaker-src" class="setting-item">
             <div class="setting-key">
               Speaker Source
 
@@ -1536,7 +1536,7 @@ async function openConfig() {
               ></select>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__relaunch-assistant" class="setting-item">
             <div class="setting-key">
               Relaunch Assistant
             </div>
@@ -1555,7 +1555,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__quit-assistant" class="setting-item">
             <div class="setting-key">
               Quit from Tray
 
@@ -1579,7 +1579,7 @@ async function openConfig() {
             DEVELOPER OPTIONS
             <hr />
           </div>
-          <div class="setting-item">
+          <div id="config-item__show-dev-tools" class="setting-item">
             <div class="setting-key">
               Show Developer Tools
             </div>
@@ -1592,7 +1592,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__app-data-dir" class="setting-item">
             <div class="setting-key">
               Application Data Directory
 
@@ -1615,7 +1615,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__cmd-args" class="setting-item">
             <div class="setting-key">
               Show Command Line Arguments
 
@@ -1638,7 +1638,7 @@ async function openConfig() {
               </label>
             </div>
           </div>
-          <div class="setting-item">
+          <div id="config-item__about-assistant" class="setting-item">
             <div class="setting-key">
               About Assistant
 
@@ -1919,6 +1919,24 @@ async function openConfig() {
         speakerSourceSelector.appendChild(selectItem);
       }
     });
+
+    // Disable "Launch at system startup" option
+    // when running in development mode
+
+    if (process.env.DEV_MODE) {
+      let launchAtStartupConfigItem = document.querySelector('#config-item__launch-at-startup');
+      let launchAtStartupHelpElement = launchAtStartupConfigItem.querySelector('.setting-key img');
+      let launchAtStartupSwitchElement = launchAtStartupConfigItem.querySelector('.setting-value .switch');
+
+      launchAtStartUp.disabled = true;
+      launchAtStartupSwitchElement.setAttribute('title', 'Disabled in development mode');
+      launchAtStartupSwitchElement.querySelector('.slider').classList.add('disabled');
+      launchAtStartupHelpElement.setAttribute(
+        'title',
+        launchAtStartupHelpElement.getAttribute('title')
+          + '\n(This option is currently disabled due to development mode)'
+      );
+    }
 
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
@@ -2361,7 +2379,8 @@ async function openConfig() {
         keybindingListener.stopListening();
 
         app.setLoginItemSettings({
-          openAtLogin: assistantConfig["launchAtStartup"]
+          openAtLogin: !process.env.DEV_MODE ? assistantConfig["launchAtStartup"] : false,
+          args: ['--sys-startup']
         });
 
         if (assistantConfig["windowFloatBehavior"] !== 'close-on-blur') {
