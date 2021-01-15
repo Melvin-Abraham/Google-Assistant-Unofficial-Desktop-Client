@@ -947,6 +947,10 @@ button.disabled, .button.disabled, button[disabled], .button[disabled] {
     background: rgba(var(--color-fg-rgb), 0.22);
 }
 
+.ico-btn.disabled {
+    background: none;
+}
+
 img[type="icon"] {
     height: 30px;
     width: 30px;
