@@ -77,7 +77,10 @@ let _canAccessMicrophone = true;
 navigator.mediaDevices.getUserMedia({audio: true})
   .then((rawStream) => rawStream.getTracks().forEach(track => track.stop()))
   .catch(e => {
+    console.group(...consoleMessage('Microphone not accessible', 'warn'));
     console.error(e);
+    console.groupEnd();
+    
     _canAccessMicrophone = false;
     displayQuickMessage("Microphone is not accessible");
   });
@@ -86,6 +89,7 @@ navigator.mediaDevices.getUserMedia({audio: true})
 if (fs.existsSync(configFilePath)) {
   let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
   Object.assign(assistantConfig, savedConfig);
+  console.log(...consoleMessage('Config loaded'));
 
   isFirstTimeUser = false;
 }
@@ -197,7 +201,7 @@ else {
     settings_btn.onclick = "";
     settings_btn.classList.add('disabled');
 
-    throw Error("First Time User: Halting Assistant Initialization");
+    throw Error("First Time User: Halting Assistant Initialization. Click through the welcome screens to proceed.");
   }
 }
 
@@ -280,6 +284,9 @@ try {
   assistant = new GoogleAssistant(config.auth);
 }
 catch (err) {
+  console.group(...consoleMessage('Assistant Initialization failed', 'error'));
+  console.error(err);
+  
   if (err.message.startsWith('Cannot find module')) {
     // Auth file does not exist
     console.log("Auth does not exist!!");
@@ -362,6 +369,8 @@ catch (err) {
       </div>
     `;
   }
+
+  console.groupEnd();
 }
 
 if (assistantConfig["keyFilePath"] == "") {
@@ -484,8 +493,9 @@ const startConversation = (conversation) => {
     })
     .on('device-action', (action) => {
       // if you've set this device up to handle actions, you'll get that here
-      console.log("Device Actions:")
-      console.log(action)
+      console.group(...consoleMessage("Device Actions"));
+      console.log(action);
+      console.groupEnd();
     })
     .on('screen-data', (screen) => {
       // if the screen.isOn flag was set to true, you'll get the format and data of the output
@@ -497,7 +507,9 @@ const startConversation = (conversation) => {
       audPlayer.play();
 
       if (error) {
-        console.log('Conversation Ended Error:', error);
+        console.group(...consoleMessage('Error thrown after conversation ended', 'error'));
+        console.error(error);
+        console.groupEnd();
 
         displayErrorScreen(
           {
@@ -513,13 +525,15 @@ const startConversation = (conversation) => {
       }
 
       else {
-        console.log('Conversation Complete')
+        console.log(...consoleMessage('Conversation Complete'));
       };
 
       if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
     })
     .on('error', error => {
+      console.group(...consoleMessage('Error occurred during conversation', 'error'));
       console.error(error);
+      console.groupEnd();
 
       if (error.details != 'Service unavailable.') {
         suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
@@ -622,7 +636,7 @@ const startConversation = (conversation) => {
 assistant
   .on('ready', () => isAssistantReady = true)
   .on('started', (conversation) => {
-    console.log("Assistant Started!");
+    console.log(...consoleMessage("Assistant Started!"));
     startConversation(conversation);
 
     // Stop Assistant Response Playback
@@ -704,7 +718,10 @@ assistant
     }
   })
   .on('error', (err) => {
-    console.log('Assistant Error:', err);
+    console.group(...consoleMessage('Error thrown by Assistant', 'error'));
+    console.error(err);
+    console.groupEnd();
+    
     let currentHTML = document.querySelector('body').innerHTML;
     let suggestionOnClickListeners = [...document.querySelectorAll('.suggestion-parent > .suggestion')].map(btn => btn.onclick);
 
@@ -959,7 +976,7 @@ function saveConfig(config=null) {
       (!config) ? assistantConfig : config
     ),
     () => {
-      console.log('Updated Config');
+      console.log(...consoleMessage('Updated Config'));
       displayQuickMessage("Settings Updated!");
     }
   );
@@ -1994,6 +2011,8 @@ async function openConfig() {
         setTimeout(() => languageSelector.classList.remove('selector-active'), 200);
       }
       else {
+        console.warn(...consoleMessage(`Locale ${systemLocale} is not supported by API`, 'warn'));
+        
         let buttonId = dialog.showMessageBoxSync(
           assistantWindow,
           {
@@ -2117,11 +2136,14 @@ async function openConfig() {
         let releases = await getReleases();
 
         if (releases) {
+          console.group(...consoleMessage('Fetched releases'));
           console.log(releases);
 
           if (releases[0] == 'Error') {
             throw Error(releases[1]);
           }
+
+          console.groupEnd();
 
           if (releases[0].tag_name != 'v' + app.getVersion()) {
             checkForUpdateSection.innerHTML = `
@@ -2180,7 +2202,11 @@ async function openConfig() {
           }
         }
       }
-      catch (e) {
+      catch (error) {
+        console.group(...consoleMessage('Error while fetching releases', 'error'));
+        console.error(error);
+        console.groupEnd();
+        
         checkForUpdateSection.innerHTML = `
           <div style="animation: fade_in_from_right_anim 300ms;">
             <span>
@@ -2294,9 +2320,10 @@ async function openConfig() {
           try {
             fs.mkdirSync(path.dirname(savedTokensPathVal), {recursive: true});
           }
-          catch (e) {
-            console.log("EPERM Exception: mkdir failed");
-            console.error(e);
+          catch (error) {
+            console.group(...consoleMessage('EPERM Exception: mkdir failed', 'error'));
+            console.error(error);
+            console.groupEnd();
 
             let errMsgContent =
               `Assistant failed to create the following path:\n"${savedTokensPathVal}"` +
@@ -2423,7 +2450,7 @@ async function openConfig() {
         // Collapses and properly positions the window (if the display preferences change)
 
         if (shouldUpdateDisplayPref) {
-          console.log(`Switching to \"Display ${assistantConfig["displayPreference"]}\"`);
+          console.log(...consoleMessage(`Switching to \"Display ${assistantConfig["displayPreference"]}\"`));
           toggleExpandWindow(false);
         }
 
@@ -2672,8 +2699,9 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
   let htmlDocument = parser.parseFromString(htmlString, "text/html");
   suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
 
-  console.log('Screen Data HTML Document');
+  console.group(...consoleMessage('Processing Screen Data'));
   console.log(htmlDocument);
+  console.groupEnd();
 
   let mainContentDOM = htmlDocument.querySelector("#assistant-card-content");
 
@@ -2860,7 +2888,8 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
           }
         }
         else {
-          console.log('Error: Response Object', googleImagesResponse)
+          console.error('Error: Response Object', googleImagesResponse);
+
           let errorDetails = 'Assistant cannot fetch images due to malformed request';
           let subdetails = `Error: HTTP status code ${googleImagesResponse.status}`;
 
@@ -3234,6 +3263,7 @@ function quitApp() {
  * @param {*} releases
  */
 function updateReleases(releases) {
+  console.log(...consoleMessage('Temporarily caching releases...'));
   ipcRenderer.send('update-releases', releases);
 }
 
@@ -3458,17 +3488,23 @@ function showGetTokenScreen(oauthValidationCallback) {
         try {
           tokensString = fs.readFileSync(config.auth.savedTokensPath);
         }
-        catch (e) {
+        catch (error) {
           // If file doesn't exist
 
-          console.error(e);
+          console.group(...consoleMessage('Error occurred while saving tokens', 'error'));
+          console.error(error);
+          console.groupEnd();
+          
           tokensString = "";
         }
 
         if (tokensString.length) {
           // Tokens were saved
 
+          console.groupCollapsed(...consoleMessage('Tokens saved'));
           console.log(tokensString);
+          console.groupEnd();
+
           displayQuickMessage("Tokens saved", true);
 
           setTimeout(() => {
@@ -3546,8 +3582,10 @@ function showGetTokenScreen(oauthValidationCallback) {
     try {
       oauthValidationCallback(oauthCode);
     }
-    catch (e) {
-      console.log(e);
+    catch (error) {
+      console.group(...consoleMessage('Error fetching tokens', 'error'));
+      console.error(error);
+      console.groupEnd();
 
       displayErrorScreen(
         {
@@ -3884,11 +3922,11 @@ function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
 
   let themeLabel = (effectiveTheme == 'light') ? 'light-theme' : 'dark-theme';
 
-  console.log('THEME:', effectiveTheme, themeLabel);
-
   Object.keys(themes[themeLabel]).forEach(variable => {
     document.documentElement.style.setProperty(variable, themes[themeLabel][variable]);
   });
+
+  console.log(...consoleMessage(`Setting theme: ${effectiveTheme} (${assistantConfig.theme})`));
 
   if (forceAssistantResponseThemeChange &&
       document.querySelector('.assistant-markup-response')
@@ -3990,7 +4028,7 @@ function getReleaseObject(version) {
  */
 function getChangelog(version) {
   const ver = _getVersion(version);
-  console.log(`Getting Changelog for "${ver}"`);
+  console.log(...consoleMessage(`Getting Changelog for "${ver}"`));
 
   const releaseObject = getReleaseObject(ver);
   const content = releaseObject.body.trim();
@@ -4212,6 +4250,53 @@ function _getMicPermEnableHelp() {
 }
 
 /**
+ * Returns a formatted message to be logged in console
+ * prefixed with a type.
+ * 
+ * @param {string} message
+ * The message to be logged in the console
+ * 
+ * @param {"info" | "error" | "warn"} type
+ * Type of the message
+ * 
+ * @returns {string[]}
+ * List of strings with formatting to be printed in console.
+ * Use `...` operator to unpack the list as parameters to the
+ * console function.
+ * 
+ * @example <caption>Passing to `console.log`</caption>
+ * console.log(...consoleMessage('This is an info', 'info'));
+ * 
+ * @example <caption>Passing to `console.group`</caption>
+ * console.group(...consoleMessage('This is an error', 'error'));
+ * console.error(error);
+ * console.groupEnd();
+ */
+function consoleMessage(message, type='info') {
+  let labelColor = '';
+
+  switch (type) {
+    case 'error':
+      labelColor = '#EA4335';
+      break;
+
+    case 'warn':
+      labelColor = '#E1A804';
+      break;
+
+    default:
+      labelColor = '#4285F4';
+      break;
+  }
+  
+  return [
+    `%c[${type.toUpperCase()}]%c ${message}`,
+    `color: ${labelColor}`,
+    'color: unset'
+  ]
+}
+
+/**
  * Maps the value `n` which ranges between `start1` and `stop1`
  * to `start2` and `stop2`.
  *
@@ -4268,21 +4353,23 @@ function fetchReleasesAndCheckUpdates() {
         displayUpdateAvailable();
       }
       else {
-        console.log("No Updates Available!");
+        console.log(...consoleMessage("No Updates Available!"));
       }
     })();
   }
 
   else {
+    console.group(...consoleMessage('Fetched releases'));
     console.log("RELEASES:", releases);
+    console.groupEnd();
 
     if (updateAvailable(releases)) {
       displayUpdateAvailable();
-      console.log("Updates Available");
+      console.log(...consoleMessage("Updates Available"));
     }
 
     else {
-      console.log("No updates avaiable");
+      console.log(...consoleMessage("No updates avaiable"));
     }
   }
 }
