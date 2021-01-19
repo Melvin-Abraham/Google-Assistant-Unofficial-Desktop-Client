@@ -144,6 +144,17 @@ const supportedLanguages = {
       { "label": "당신은 무엇을 할 수 있나요?", "query": "당신은 무엇을 할 수 있나요?" }
     ]
   },
+  "pl-PL": {
+    "langName": "Polski (Polska)",
+    "welcomeMessage": "Cześć, w czym mogę pomóc?",
+    "inputPlaceholder": "Spytaj mnie o coś...",
+    "listeningMessage": "Słucham...",
+    "initSuggestions": [
+      { "label": "Pogoda", "query": "Jaka jest dzisiaj pogoda?" },
+      { "label": "Rzuć monetą", "query": "Rzuć monetą" },
+      { "label": "Co potrafisz?", "query": "Co potrafisz?" }
+    ]
+  },
   "pt-BR": {
     "langName": "Português (Brasil)",
     "welcomeMessage": "Oi! Como posso ajudar?",
