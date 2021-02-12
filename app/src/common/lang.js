@@ -126,11 +126,11 @@ const supportedLanguages = {
     "langName": "日本語（日本）",
     "welcomeMessage": "こんにちは！ 手伝いましょうか？",
     "inputPlaceholder": "何でも聞いてください...",
-    "listeningMessage": "聞いている...",
+    "listeningMessage": "聞いています...",
     "initSuggestions": [
       { "label": "天気", "query": "今日の天気は？" },
-      { "label": "コインを投げる", "query": "コインを投げる" },
-      { "label": "あなたは何ができますか？", "query": "あなたは何ができますか？" }
+      { "label": "コインを投げて", "query": "コインを投げて" },
+      { "label": "何ができる？", "query": "何ができる？" }
     ]
   },
   "ko-KR": {
