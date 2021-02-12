@@ -99,12 +99,6 @@ let openedAtLogin = (process.platform === 'darwin')
 
 if (!gotInstanceLock) {
     debugLog('Another instance is already running', 'warn');
-
-    electron.dialog.showErrorBox(
-        "Preventing launch",
-        "An instance of Google Assistant is already running.\nOperation Aborted"
-    )
-
     app.isQuiting = true;
     app.quit();
 }
@@ -115,6 +109,7 @@ else {
     app.commandLine.appendSwitch('enable-transparent-visuals');
     app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
 
+    app.on('second-instance', launchAssistant);
     app.on('ready', () => setTimeout(onAppReady, 800));
 }
 
