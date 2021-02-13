@@ -73,13 +73,13 @@ const supportedLanguages = {
     "listeningMessage": "Escuchando...",
     "initSuggestions": [
       { "label": "Clima", "query": "¿Cómo está el clima hoy?" },
-      { "label": "Tirar una moneda", "query": "Tirar una moneda" },
+      { "label": "Tirar una moneda", "query": "Lanza una moneda" },
       { "label": "¿Qué puedes hacer?", "query": "¿Qué puedes hacer?" }
     ]
   },
   "es-MX": {
     "langName": "Español (México)",
-    "welcomeMessage": "¡Hola! ¿Cómo puedo ayudar?",
+    "welcomeMessage": "¡Hola! ¿En qué te puedo ayudar?",
     "inputPlaceholder": "Pregúntame lo que sea...",
     "listeningMessage": "Escuchando...",
     "initSuggestions": [
