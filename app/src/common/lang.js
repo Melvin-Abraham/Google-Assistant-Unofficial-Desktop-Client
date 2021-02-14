@@ -144,6 +144,17 @@ const supportedLanguages = {
       { "label": "당신은 무엇을 할 수 있나요?", "query": "당신은 무엇을 할 수 있나요?" }
     ]
   },
+  "nl-NL": {
+    "langName": "Nederlands (Nederland)",
+    "welcomeMessage": "Hallo! Hoe kan ik je helpen?",
+    "inputPlaceholder": "Vraag me iets...",
+    "listeningMessage": "Aan het luisteren...",
+    "initSuggestions": [
+      { "label": "Weer", "query": "Wat voor weer is het?" },
+      { "label": "Gooi een dobbelsteen", "query": "Gooi een dobbelsteen" },
+      { "label": "Wat kun je doen?", "query": "Wat kun je doen?" }
+    ]
+  }
   "pt-BR": {
     "langName": "Português (Brasil)",
     "welcomeMessage": "Oi! Como posso ajudar?",
