@@ -526,7 +526,7 @@ body {
 }
 
 .setting-label {
-    margin: 8px 10px 20px 10px;
+    margin: 20px 10px 20px 10px;
     font-weight: bold;
 }
 
@@ -538,7 +538,7 @@ body {
     display: grid;
     grid-template-areas: 'setting-key setting-value setting-value';
     grid-template-columns: minmax(200px, 1fr) 1fr 1fr;
-    padding: 0 30px 20px 40px;
+    padding: 10px 30px 10px 40px;
     column-gap: 15px;
     font-size: 19px;
 }
@@ -580,6 +580,19 @@ body {
 
 .config-input:focus {
     border: rgba(31, 143, 255, var(--opacity-input-border-low)) 2px solid;
+}
+
+.config-item-highlight {
+    animation: config-item-highlight-animation 5000ms forwards ease-out;
+}
+
+@keyframes config-item-highlight-animation {
+    0% {
+        background-color: #1e90ff30;
+    }
+    100% {
+        background-color: unset;
+    }
 }
 
 /********** SUGGESTION BAR SECTION **********/
@@ -1047,7 +1060,7 @@ img[type="icon"] {
 }
 
 .accordion input:checked ~ .accordion-content {
-    max-height: 500px;
+    max-height: 1500px;
 }
 
 .accordion-chevron {

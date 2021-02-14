@@ -63,7 +63,7 @@ let main_area = document.querySelector('#main-area');
 let init_headline;
 
 // Add click listener for "Settings" button
-document.querySelector('#settings-btn').onclick = openConfig;
+document.querySelector('#settings-btn').onclick = () => openConfig();
 
 // Notify the main process that first launch is completed
 ipcRenderer.send('update-first-launch');
@@ -80,7 +80,7 @@ navigator.mediaDevices.getUserMedia({audio: true})
     console.group(...consoleMessage('Microphone not accessible', 'warn'));
     console.error(e);
     console.groupEnd();
-    
+
     _canAccessMicrophone = false;
     displayQuickMessage("Microphone is not accessible");
   });
@@ -286,7 +286,7 @@ try {
 catch (err) {
   console.group(...consoleMessage('Assistant Initialization failed', 'error'));
   console.error(err);
-  
+
   if (err.message.startsWith('Cannot find module')) {
     // Auth file does not exist
     console.log("Auth does not exist!!");
@@ -539,8 +539,8 @@ const startConversation = (conversation) => {
         suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
         let suggestion_parent = document.querySelector('.suggestion-parent');
 
-        if (error.code == 14) {
-          if (error.details.indexOf('No access or refresh token is set') == -1) {
+        if (error.code === 14) {
+          if (!error.details.includes('No access or refresh token is set')) {
             displayErrorScreen({
               icon: {
                 path: '../res/offline_icon.svg',
@@ -617,6 +617,40 @@ const startConversation = (conversation) => {
                 Open Settings
               </div>
             `;
+          }
+        }
+
+        else if (error.code === 3) {
+          if (error.details.includes('unsupported language_code')) {
+            // Unsupported language code
+
+            displayErrorScreen({
+              title: 'Invalid Language Code',
+              details: `The language code "${assistantConfig.language}" is unsupported as of now.`,
+              subdetails: `Error: ${error.details}`
+            });
+
+            suggestion_parent.innerHTML = `
+              <div class="suggestion" onclick="openConfig('language')">
+                <span>
+                  <img src="../res/troubleshoot.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: top;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Set Language
+              </div>
+
+              <div
+                class="suggestion"
+                onclick="openLink('https://developers.google.com/assistant/sdk/reference/rpc/languages')"
+              >
+                Track language support
+              </div>
+            ` + suggestion_parent.innerHTML;
           }
         }
 
@@ -721,7 +755,7 @@ assistant
     console.group(...consoleMessage('Error thrown by Assistant', 'error'));
     console.error(err);
     console.groupEnd();
-    
+
     let currentHTML = document.querySelector('body').innerHTML;
     let suggestionOnClickListeners = [...document.querySelectorAll('.suggestion-parent > .suggestion')].map(btn => btn.onclick);
 
@@ -984,8 +1018,12 @@ function saveConfig(config=null) {
 
 /**
  * Opens the 'Settings' screen
+ *
+ * @param {string?} configItem
+ * Highlights and scrolls instantly to the requested
+ * config item by ID
  */
-async function openConfig() {
+async function openConfig(configItem=null) {
   if (!document.querySelector('#config-screen')) {
     let currentHTML = document.querySelector('body').innerHTML;
     let suggestionOnClickListeners = [...document.querySelectorAll('.suggestion-parent > .suggestion')].map(btn => btn.onclick);
@@ -1065,7 +1103,7 @@ async function openConfig() {
           : ''
         }
 
-        <div style="padding: 30px 0">
+        <div style="padding: 20px 0">
           <div class="setting-label">
             AUTHENTICATION
             <hr />
@@ -1845,7 +1883,7 @@ async function openConfig() {
 
     if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
       assistantHotkey = 'Super+Shift+A';
-  }
+    }
 
     // Mark input as valid/invalid based on hotkey
     const validateAccelerator = () => {
@@ -2012,7 +2050,7 @@ async function openConfig() {
       }
       else {
         console.warn(...consoleMessage(`Locale ${systemLocale} is not supported by API`, 'warn'));
-        
+
         let buttonId = dialog.showMessageBoxSync(
           assistantWindow,
           {
@@ -2206,7 +2244,7 @@ async function openConfig() {
         console.group(...consoleMessage('Error while fetching releases', 'error'));
         console.error(error);
         console.groupEnd();
-        
+
         checkForUpdateSection.innerHTML = `
           <div style="animation: fade_in_from_right_anim 300ms;">
             <span>
@@ -2490,6 +2528,20 @@ async function openConfig() {
         }
       }
     }
+  }
+
+  // Scroll to requested config item
+
+  if (configItem) {
+    let configItemId = `#config-item__${configItem}`;
+    let configItemElement = document.querySelector(configItemId);
+
+    configItemElement.classList.add('config-item-highlight');
+
+    setTimeout(
+      () => configItemElement.scrollIntoView({behavior: 'smooth'}),
+      150
+    );
   }
 }
 
@@ -3494,7 +3546,7 @@ function showGetTokenScreen(oauthValidationCallback) {
           console.group(...consoleMessage('Error occurred while saving tokens', 'error'));
           console.error(error);
           console.groupEnd();
-          
+
           tokensString = "";
         }
 
@@ -3571,7 +3623,7 @@ function showGetTokenScreen(oauthValidationCallback) {
           `;
         }
 
-        document.querySelector('#oauth-retry-btn').onclick = () => {showGetTokenScreen(oauthValidationCallback)};
+        document.querySelector('#oauth-retry-btn').onclick = () => showGetTokenScreen(oauthValidationCallback);
         clearInterval(countdownIntervalId);
       }
 
@@ -3601,7 +3653,7 @@ function showGetTokenScreen(oauthValidationCallback) {
         </div>
       `;
 
-      document.querySelector('#oauth-retry-btn').onclick = () => {showGetTokenScreen(oauthValidationCallback)};
+      document.querySelector('#oauth-retry-btn').onclick = () => showGetTokenScreen(oauthValidationCallback);
     }
   };
 }
@@ -4252,21 +4304,21 @@ function _getMicPermEnableHelp() {
 /**
  * Returns a formatted message to be logged in console
  * prefixed with a type.
- * 
+ *
  * @param {string} message
  * The message to be logged in the console
- * 
+ *
  * @param {"info" | "error" | "warn"} type
  * Type of the message
- * 
+ *
  * @returns {string[]}
  * List of strings with formatting to be printed in console.
  * Use `...` operator to unpack the list as parameters to the
  * console function.
- * 
+ *
  * @example <caption>Passing to `console.log`</caption>
  * console.log(...consoleMessage('This is an info', 'info'));
- * 
+ *
  * @example <caption>Passing to `console.group`</caption>
  * console.group(...consoleMessage('This is an error', 'error'));
  * console.error(error);
@@ -4288,7 +4340,7 @@ function consoleMessage(message, type='info') {
       labelColor = '#4285F4';
       break;
   }
-  
+
   return [
     `%c[${type.toUpperCase()}]%c ${message}`,
     `color: ${labelColor}`,
