@@ -154,7 +154,7 @@ const supportedLanguages = {
       { "label": "Gooi een dobbelsteen", "query": "Gooi een dobbelsteen" },
       { "label": "Wat kun je doen?", "query": "Wat kun je doen?" }
     ]
-  }
+  },
   "pt-BR": {
     "langName": "Português (Brasil)",
     "welcomeMessage": "Oi! Como posso ajudar?",
