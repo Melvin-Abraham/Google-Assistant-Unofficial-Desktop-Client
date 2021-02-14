@@ -151,7 +151,7 @@ const supportedLanguages = {
     "listeningMessage": "Aan het luisteren...",
     "initSuggestions": [
       { "label": "Weer", "query": "Wat voor weer is het?" },
-      { "label": "Gooi een dobbelsteen", "query": "Gooi een dobbelsteen" },
+      { "label": "Gooi een munt", "query": "Gooi een munt" },
       { "label": "Wat kun je doen?", "query": "Wat kun je doen?" }
     ]
   },
