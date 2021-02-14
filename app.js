@@ -98,12 +98,22 @@ let openedAtLogin = (process.platform === 'darwin')
                         : argv.includes('--sys-startup');
 
 if (!gotInstanceLock) {
-    debugLog('Another instance is already running', 'warn');
+    // Prevent opening of first instance when launched in Dev Mode
+    // Makes sure the developer is launching a fresh instance for testing
+    if (isDevMode()) {
+        debugLog('Another instance is already running', 'warn');
 
-    electron.dialog.showErrorBox(
-        "Preventing launch",
-        "An instance of Google Assistant is already running.\nOperation Aborted"
-    )
+        electron.dialog.showErrorBox(
+            "Preventing launch", [
+                "An instance of Google Assistant is already running.",
+                "Operation Aborted\n",
+                "You are prompted with this error since you are launching the app in Dev Mode.",
+            ].join('\n')
+        );
+    }
+    else {
+        debugLog('Another instance is already running. Switching to first instance...');
+    }
 
     app.isQuiting = true;
     app.quit();
@@ -114,6 +124,15 @@ else {
     app.allowRendererProcessReuse = false;
     app.commandLine.appendSwitch('enable-transparent-visuals');
     app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
+
+    app.on('second-instance', (_, args) => {
+        // Switch to current instance if a non dev-mode
+        // instance is launched.
+        if (!isDevMode(args[0])) {
+            if (!mainWindow.isVisible()) launchAssistant();
+            else mainWindow.focus();
+        }
+    });
 
     app.on('ready', () => setTimeout(onAppReady, 800));
 }
@@ -473,9 +492,13 @@ function _isLinux() {
 
 /**
  * Checks if the application is running in Development mode.
+ * 
+ * @param {string?} execPath
+ * Path of the executable. Typically `argv[0]`.
+ * If left blank, current executable path will be used.
  */
-function isDevMode() {
-    let executablePath = process.argv0;
+function isDevMode(execPath) {
+    let executablePath = execPath ?? process.argv0;
     return /[\\/]electron.*$/.test(executablePath);
 }
 
