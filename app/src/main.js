@@ -4140,8 +4140,9 @@ function stopMic() {
 function closeOnBlurCallback() {
   let isDevToolsFocused = assistantWindow.webContents.isDevToolsFocused();
 
-  // Only close when not focusing DevTools
-  if (!isDevToolsFocused) {
+  // Only close when not focusing DevTools and
+  // the application is initialized properly
+  if (!isDevToolsFocused && initScreenFlag) {
     _stopAudioAndMic();
     close();
   }
