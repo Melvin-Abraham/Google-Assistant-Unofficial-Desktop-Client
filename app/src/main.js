@@ -4459,6 +4459,14 @@ window.onkeypress = (e) => {
       assistant_input.focus();
     }
   }
+  if (e.key == 'Escape') {
+	//trigger the close button logic
+    close_btn.click(); 
+  }
+  if (e.key == 'F12') {
+	 //trigger the open dev tools in settings logic
+    assistantWindow.webContents.openDevTools({mode: 'undocked'});
+  }
 }
 
 // Change theme when system theme changes
