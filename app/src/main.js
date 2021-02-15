@@ -215,10 +215,7 @@ if(assistantConfig["startAsMaximized"]) {
 }
 
 if (assistantConfig["windowFloatBehavior"] === 'close-on-blur') {
-  window.onblur = () => {
-    _stopAudioAndMic();
-    close();
-  }
+  window.onblur = closeOnBlurCallback;
 }
 
 // Set microphone and speaker source
@@ -2456,10 +2453,7 @@ async function openConfig(configItem=null) {
           window.onblur = null;
         }
         else {
-          window.onblur = () => {
-            _stopAudioAndMic();
-            close();
-          }
+          window.onblur = closeOnBlurCallback;
         }
 
         setAssistantWindowBorder();
@@ -4137,6 +4131,20 @@ function stopMic() {
 
   assistant_mic = document.querySelector('#assistant-mic');
   assistant_mic.onclick = startMic;
+}
+
+/**
+ * Callback function called when the application
+ * requests to close the window when out of focus.
+ */
+function closeOnBlurCallback() {
+  let isDevToolsFocused = assistantWindow.webContents.isDevToolsFocused();
+
+  // Only close when not focusing DevTools
+  if (!isDevToolsFocused) {
+    _stopAudioAndMic();
+    close();
+  }
 }
 
 /**
