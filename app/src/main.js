@@ -51,6 +51,7 @@ let assistantConfig = require('./common/initialConfig.js');
 
 let history = [];
 let historyHead = -1;
+let queryHistoryHead = -1;
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let isAssistantReady = false;
@@ -3144,6 +3145,7 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
     });
 
     historyHead = history.length - 1;
+    queryHistoryHead = history.length;
     updateNav();
   }
 
@@ -4449,6 +4451,36 @@ setTimeout(() => {
     startMic();
   }
 }, 200);
+
+/**
+ * Manage up/down keys in assistant input box.
+ * @param {KeyboardEvent} e
+ */
+assistant_input.onkeydown = (e) => {
+  switch (e.key) {
+    case 'ArrowUp':
+      if (queryHistoryHead > 0) {
+        queryHistoryHead--;
+        assistant_input.value = history[queryHistoryHead].query;
+      }
+
+      break;
+
+    case 'ArrowDown':
+      if (queryHistoryHead <= history.length - 1) {
+        queryHistoryHead++;
+
+        if (queryHistoryHead === history.length) {
+          assistant_input.value = '';
+        }
+        else {
+          assistant_input.value = history[queryHistoryHead].query;
+        }
+      }
+
+      break;
+  }
+}
 
 // Auto-focus Assistant Input box when '/' is pressed
 
