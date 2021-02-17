@@ -51,7 +51,8 @@ let assistantConfig = require('./common/initialConfig.js');
 
 let history = [];
 let historyHead = -1;
-let queryHistoryHead = -1;
+let queryHistoryHead = 0;
+let currentTypedQuery = '';  // Query that the user is typing currently
 let firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let isAssistantReady = false;
@@ -2588,6 +2589,7 @@ function assistantTextQuery(query) {
     assistant.start(config.conversation);
     setQueryTitle(query);
     assistant_input.value = "";
+    currentTypedQuery = "";
 
     stopMic();
   }
@@ -4471,7 +4473,7 @@ assistant_input.onkeydown = (e) => {
         queryHistoryHead++;
 
         if (queryHistoryHead === history.length) {
-          assistant_input.value = '';
+          assistant_input.value = currentTypedQuery;
         }
         else {
           assistant_input.value = history[queryHistoryHead].query;
@@ -4480,6 +4482,17 @@ assistant_input.onkeydown = (e) => {
 
       break;
   }
+}
+
+/**
+ * Remember user's currently typed query when user
+ * inputs some characters in the assistant input box.
+ *
+ * @param {InputEvent} e
+ */
+assistant_input.oninput = (e) => {
+  queryHistoryHead = history.length;
+  currentTypedQuery = e.target.value;
 }
 
 // Auto-focus Assistant Input box when '/' is pressed
