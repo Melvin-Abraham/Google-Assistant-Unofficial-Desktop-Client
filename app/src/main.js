@@ -1355,6 +1355,28 @@ async function openConfig(configItem=null) {
               </select>
             </div>
           </div>
+          <div id="config-item__esc-key-behavior" class="setting-item">
+            <div class="setting-key">
+              Escape Key Behavior
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Configure whether you want to close or minimize the assistant window with the escape key"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="esc-key-behavior-selector" style="padding-right: 50px;">
+                <option value="nothing">Nothing</option>
+                <option value="minimize">Minimize Window</option>
+                <option value="close">Close Window</option>
+              </select>
+            </div>
+          </div>
           <div id="config-item__display-pref" class="setting-item">
             <div class="setting-key">
               Display Preference
@@ -1862,6 +1884,7 @@ async function openConfig(configItem=null) {
     let startAsMaximized = document.querySelector('#start-maximized');
     let hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
     let winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
+    let escKeyBehaviorSelector = document.querySelector('#esc-key-behavior-selector');
     let microphoneSourceSelector = document.querySelector('#mic-source-selector');
     let speakerSourceSelector = document.querySelector('#speaker-source-selector');
     let displayPreferenceSelector = document.querySelector('#display-selector');
@@ -2002,6 +2025,7 @@ async function openConfig(configItem=null) {
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
     winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
+    escKeyBehaviorSelector.value = assistantConfig["escapeKeyBehavior"];
     microphoneSourceSelector.value = assistantConfig["microphoneSource"];
     speakerSourceSelector.value = assistantConfig["speakerSource"];
     displayPreferenceSelector.value = assistantConfig["displayPreference"];
@@ -2423,6 +2447,7 @@ async function openConfig(configItem=null) {
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
         assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
+        assistantConfig["escapeKeyBehavior"] = escKeyBehaviorSelector.value;
         assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
         assistantConfig["speakerSource"] = speakerSourceSelector.value;
         assistantConfig["displayPreference"] = displayPreferenceSelector.value;
@@ -4502,6 +4527,17 @@ window.onkeypress = (e) => {
     if (document.activeElement.tagName != 'INPUT') {
       e.preventDefault();
       assistant_input.focus();
+    }
+  }
+}
+
+window.onkeydown = (e) => {
+  if (e.key == 'Escape') {
+    if (assistantConfig["escapeKeyBehavior"] === "minimize") {
+      assistantWindow.minimize()
+    }
+    else if (assistantConfig["escapeKeyBehavior"] === "close") {
+      assistantWindow.close()
     }
   }
 }
