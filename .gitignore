@@ -7,4 +7,4 @@ yarn-error.log
 yarn.lock
 .npm
 .vscode/
-.idea/workspace.xml
+/.idea
