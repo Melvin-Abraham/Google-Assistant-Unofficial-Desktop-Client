@@ -539,7 +539,45 @@ const startConversation = (conversation) => {
         let suggestion_parent = document.querySelector('.suggestion-parent');
 
         if (error.code === 14) {
-          if (!error.details.includes('No access or refresh token is set')) {
+          if (error.details.includes('invalid_grant')) {
+            displayErrorScreen({
+              icon: {
+                path: '../res/offline_icon.svg',
+                style: 'margin-top: -5px;'
+              },
+              title: 'Auth Error',
+              details: 'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
+              subdetails: `Error: ${error.details}`
+            });
+
+            suggestion_parent.innerHTML += `
+              <div class="suggestion" onclick="_resetSavedTokensFile()">
+                <span>
+                  <img src="../res/refresh.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: top;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Reset Tokens
+              </div>
+              <div class="suggestion" onclick="openConfig('saved-tokens-path')">
+                <span>
+                  <img src="../res/troubleshoot.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: top;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Set Saved Tokens Path
+              </div>
+            `;
+          }
+          else if (!error.details.includes('No access or refresh token is set')) {
             displayErrorScreen({
               icon: {
                 path: '../res/offline_icon.svg',
@@ -4310,6 +4348,52 @@ function _getMicPermEnableHelp() {
 
     return `
       You can ${defaultMsg.replace(/^M/, 'm')}
+    `;
+  }
+}
+
+/**
+ * Deletes the saved tokens file forcing the Get Tokens
+ * screen on next start.
+ * 
+ * @param {boolean} showRelaunchScreen
+ * If set to `true`, the "Relaunch Required" screen will
+ * be shown.
+ */
+function _resetSavedTokensFile(showRelaunchScreen=true) {
+  let savedTokensFilePath = assistantConfig.savedTokensPath;
+  fs.unlinkSync(savedTokensFilePath);
+
+  if (showRelaunchScreen) {
+    displayErrorScreen(
+      {
+        icon: {
+          path: '../res/refresh.svg',
+          style: `height: 100px;
+                  animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+                  ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}`
+        },
+        title: 'Relaunch Required',
+        details: 'A relaunch is required for changes to take place',
+        subdetails: 'Info: Tokens file reset'
+      }
+    );
+
+    let suggestion_parent = document.querySelector('.suggestion-parent');
+
+    suggestion_parent.innerHTML = `
+      <div class="suggestion" onclick="relaunchAssistant()">
+        <span>
+          <img src="../res/refresh.svg" style="
+            height: 20px;
+            width: 20px;
+            vertical-align: top;
+            padding-right: 5px;
+            ${getEffectiveTheme() == 'light' ? 'filter: invert(1);' : ''}"
+          >
+        </span>
+        Relaunch Assistant
+      </div>
     `;
   }
 }
