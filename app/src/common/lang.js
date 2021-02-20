@@ -1,6 +1,7 @@
 // @SRC: https://developers.google.com/assistant/sdk/reference/rpc/languages
 const supportedLanguages = {
   "de-DE": {
+    "isSdkLanguage": true,
     "langName": "Deutsch (Deutschland)",
     "welcomeMessage": "Hallo! Wie kann ich helfen?",
     "inputPlaceholder": "Frag mich was...",
@@ -12,6 +13,7 @@ const supportedLanguages = {
     ]
   },
   "en-AU": {
+    "isSdkLanguage": true,
     "langName": "English (Australia)",
     "welcomeMessage": "Hi! How can I help?",
     "inputPlaceholder": "Ask me anything...",
@@ -23,6 +25,7 @@ const supportedLanguages = {
     ]
   },
   "en-CA": {
+    "isSdkLanguage": true,
     "langName": "English (Canada)",
     "welcomeMessage": "Hi! How can I help?",
     "inputPlaceholder": "Ask me anything...",
@@ -34,6 +37,7 @@ const supportedLanguages = {
     ]
   },
   "en-GB": {
+    "isSdkLanguage": true,
     "langName": "English (Great Britain)",
     "welcomeMessage": "Hi! How can I help?",
     "inputPlaceholder": "Ask me anything...",
@@ -45,6 +49,7 @@ const supportedLanguages = {
     ]
   },
   "en-IN": {
+    "isSdkLanguage": true,
     "langName": "English (India)",
     "welcomeMessage": "Hi! How can I help?",
     "inputPlaceholder": "Ask me anything...",
@@ -56,6 +61,7 @@ const supportedLanguages = {
     ]
   },
   "en-US": {
+    "isSdkLanguage": true,
     "langName": "English (United States)",
     "welcomeMessage": "Hi! How can I help?",
     "inputPlaceholder": "Ask me anything...",
@@ -67,6 +73,7 @@ const supportedLanguages = {
     ]
   },
   "es-ES": {
+    "isSdkLanguage": true,
     "langName": "Español (España)",
     "welcomeMessage": "¡Hola! ¿Cómo puedo ayudar?",
     "inputPlaceholder": "Pregúntame lo que sea...",
@@ -78,6 +85,7 @@ const supportedLanguages = {
     ]
   },
   "es-MX": {
+    "isSdkLanguage": true,
     "langName": "Español (México)",
     "welcomeMessage": "¡Hola! ¿En qué te puedo ayudar?",
     "inputPlaceholder": "Pregúntame lo que sea...",
@@ -89,7 +97,7 @@ const supportedLanguages = {
     ]
   },
   "fr-CA": {
-
+    "isSdkLanguage": true,
     "langName": "Français (Canada)",
     "welcomeMessage": "Salut! Comment puis-je aider?",
     "inputPlaceholder": "Demande-moi n'importe quoi...",
@@ -101,6 +109,7 @@ const supportedLanguages = {
     ]
   },
   "fr-FR": {
+    "isSdkLanguage": true,
     "langName": "Français (France)",
     "welcomeMessage": "Salut! Comment puis-je aider?",
     "inputPlaceholder": "Demande-moi n'importe quoi...",
@@ -112,6 +121,7 @@ const supportedLanguages = {
     ]
   },
   "it-IT": {
+    "isSdkLanguage": true,
     "langName": "Italiano (Italia)",
     "welcomeMessage": "Ciao! Come posso aiutare?",
     "inputPlaceholder": "Chiedimi qualunque cosa...",
@@ -123,6 +133,7 @@ const supportedLanguages = {
     ]
   },
   "ja-JP": {
+    "isSdkLanguage": true,
     "langName": "日本語（日本）",
     "welcomeMessage": "こんにちは！ 手伝いましょうか？",
     "inputPlaceholder": "何でも聞いてください...",
@@ -134,6 +145,7 @@ const supportedLanguages = {
     ]
   },
   "ko-KR": {
+    "isSdkLanguage": true,
     "langName": "한국어 (대한민국)",
     "welcomeMessage": "안녕하세요! 내가 어떻게 도움이 될 수 있습니다?",
     "inputPlaceholder": "무엇이든 물어보세요...",
@@ -144,7 +156,20 @@ const supportedLanguages = {
       { "label": "당신은 무엇을 할 수 있나요?", "query": "당신은 무엇을 할 수 있나요?" }
     ]
   },
+  "nl-NL": {
+    "isSdkLanguage": false,
+    "langName": "Nederlands (Nederland)",
+    "welcomeMessage": "Hallo! Hoe kan ik je helpen?",
+    "inputPlaceholder": "Vraag me iets...",
+    "listeningMessage": "Aan het luisteren...",
+    "initSuggestions": [
+      { "label": "Weer", "query": "Wat voor weer is het?" },
+      { "label": "Gooi een munt", "query": "Gooi een munt" },
+      { "label": "Wat kun je doen?", "query": "Wat kun je doen?" }
+    ]
+  },
   "pt-BR": {
+    "isSdkLanguage": true,
     "langName": "Português (Brasil)",
     "welcomeMessage": "Oi! Como posso ajudar?",
     "inputPlaceholder": "Me pergunte qualquer coisa...",

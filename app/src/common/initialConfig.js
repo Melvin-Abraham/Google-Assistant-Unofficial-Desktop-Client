@@ -19,6 +19,7 @@ const initialAssistantConfig = {
     "assistantHotkey": "Super+Shift+A",
     "hotkeyBehavior": "launch+mic",
     "language": "en-US",
+    "languageGui": "en-US",
     "theme": "dark"
 };
 

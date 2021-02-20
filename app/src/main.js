@@ -90,6 +90,18 @@ navigator.mediaDevices.getUserMedia({audio: true})
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
   let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
+
+  // Migrate language settings to allow GUI to have a different language as told to Assistant
+  // languageGui might be missing in save config. Populating here from language
+  if (typeof savedConfig['languageGui'] == "undefined") {
+    savedConfig.languageGui = savedConfig.language;
+  }
+
+  // When the Assistant SDK adds support for the set gui automatically migrate the language setting.
+  if (savedConfig.languageGui != savedConfig.language && supportedLanguages[savedConfig.languageGui]["isSdkLanguage"]) {
+    savedConfig.language = savedConfig.languageGui;
+  }
+
   Object.assign(assistantConfig, savedConfig);
   console.log(...consoleMessage('Config loaded'));
 
@@ -180,7 +192,12 @@ else {
       let systemLanguage = navigator.language;
 
       if (Object.keys(supportedLanguages).includes(systemLanguage)) {
-        assistantConfig.language = systemLanguage;
+        assistantConfig.languageGui = systemLanguage;
+
+        // Preserve or set the actual SDK language (defaults to en-US as defined in initialConfig)
+        if (supportedLanguages[assistantConfig.language]["isSdkLanguage"]) {
+          assistantConfig.language = systemLanguage;
+        }
       }
 
       // Write the config
@@ -527,7 +544,7 @@ const startConversation = (conversation) => {
         console.log(...consoleMessage('Conversation Complete'));
       };
 
-      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["languageGui"]].welcomeMessage;
     })
     .on('error', error => {
       console.group(...consoleMessage('Error occurred during conversation', 'error'));
@@ -722,7 +739,7 @@ assistant
 
       console.log('STARTING MICROPHONE...');
       if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
-      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].listeningMessage;
+      if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["languageGui"]].listeningMessage;
 
       // Set `p5jsMic` for visulaization
       p5jsMic.start();
@@ -1191,7 +1208,7 @@ async function openConfig(configItem=null) {
             CONVERSATION
             <hr />
           </div>
-          <div id="config-item__language" class="setting-item">
+          <div id="config-item__language-gui" class="setting-item">
             <div class="setting-key">
               Language
 
@@ -1206,7 +1223,7 @@ async function openConfig(configItem=null) {
               </span>
             </div>
             <div class="setting-value" style="height: 35px;">
-              <select id="lang-selector" style="padding-right: 10px;">
+              <select id="lang-gui-selector" style="padding-right: 10px;">
                 ${Object.keys(supportedLanguages).map(langCode => {
                   return (`
                     <option value="${langCode}">
@@ -1218,6 +1235,32 @@ async function openConfig(configItem=null) {
               <label id="detect-lang-btn" class="button" style="margin-left: 6px;">
                 Detect Language
               </label>
+            </div>
+          </div>
+          <div id="config-item__language" class="setting-item">
+            <div class="setting-key">
+              SDK Language
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Supported language to converse with the Assistant."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="lang-selector" style="padding-right: 10px;">
+                ${Object.keys(supportedLanguages).filter((langCode) => supportedLanguages[langCode]["isSdkLanguage"]).map(langCode => {
+      return (`
+                    <option value="${langCode}">
+                      ${supportedLanguages[langCode]["langName"]}
+                    </option>
+                  `)
+    }).join('')}
+              </select>
             </div>
           </div>
           <div id="config-item__force-new-conv" class="setting-item">
@@ -1892,6 +1935,7 @@ async function openConfig(configItem=null) {
 
     let keyFilePathInput = main_area.querySelector('#key-file-path');
     let savedTokensPathInput = main_area.querySelector('#saved-tokens-path');
+    let languageGuiSelector = document.querySelector('#lang-gui-selector');
     let languageSelector = document.querySelector('#lang-selector');
     let forceNewConversationCheckbox = document.querySelector('#new-conversation');
     let enableAudioOutput = document.querySelector('#audio-output');
@@ -2032,6 +2076,7 @@ async function openConfig(configItem=null) {
 
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
+    languageGuiSelector.value = assistantConfig["languageGui"];
     languageSelector.value = assistantConfig["language"];
     forceNewConversationCheckbox.checked = assistantConfig["forceNewConversation"];
     enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
@@ -2053,6 +2098,8 @@ async function openConfig(configItem=null) {
     assistantHotkeyBar.innerText = assistantHotkey.split('+')
                                     .map(key => getNativeKeyName(key))
                                     .join(' + ');
+
+    main_area.querySelector('#config-item__language').style.display = (supportedLanguages[assistantConfig["languageGui"]]["isSdkLanguage"]) ? 'none' : '';
 
     main_area.querySelector('#key-file-path-browse-btn').onclick = () => {
       openFileDialog(
@@ -2080,10 +2127,10 @@ async function openConfig(configItem=null) {
       let systemLanguage = languageNames.of(systemLocale);
 
       if (Object.keys(supportedLanguages).includes(systemLocale)) {
-        languageSelector.value = systemLocale;
+        languageGuiSelector.value = systemLocale;
 
-        languageSelector.classList.add('selector-active');
-        setTimeout(() => languageSelector.classList.remove('selector-active'), 200);
+        languageGuiSelector.classList.add('selector-active');
+        setTimeout(() => languageGuiSelector.classList.remove('selector-active'), 200);
       }
       else {
         console.warn(...consoleMessage(`Locale ${systemLocale} is not supported by API`, 'warn'));
@@ -2104,6 +2151,10 @@ async function openConfig(configItem=null) {
           openLink('https://developers.google.com/assistant/sdk/reference/rpc/languages');
         }
       }
+    }
+
+    languageGuiSelector.onchange = () => {
+      document.querySelector('#config-item__language').style.display = (supportedLanguages[languageGuiSelector.value]["isSdkLanguage"]) ? 'none' : '';
     }
 
     validatePathInput(keyFilePathInput);
@@ -2175,12 +2226,12 @@ async function openConfig(configItem=null) {
       init_headline = document.querySelector('#init-headline');
 
       if (init_headline) {
-        const welcomeMsg = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+        const welcomeMsg = supportedLanguages[assistantConfig["languageGui"]].welcomeMessage;
         init_headline.innerText = welcomeMsg;
 
         suggestion_area.innerHTML = `
           <div class="suggestion-parent">
-            ${supportedLanguages[assistantConfig["language"]].initSuggestions.map(suggestionObj => {
+            ${supportedLanguages[assistantConfig["languageGui"]].initSuggestions.map(suggestionObj => {
               return (`
                 <div
                   class="suggestion"
@@ -2453,7 +2504,12 @@ async function openConfig(configItem=null) {
 
         assistantConfig["keyFilePath"] = keyFilePathInput.value;
         assistantConfig["savedTokensPath"] = savedTokensPathInput.value;
-        assistantConfig["language"] = languageSelector.value;
+        assistantConfig["languageGui"] = languageGuiSelector.value;
+        if (supportedLanguages[assistantConfig["languageGui"]]["isSdkLanguage"]) {
+          assistantConfig["language"] = languageGuiSelector.value;
+        } else {
+          assistantConfig["language"] = languageSelector.value;
+        }
         assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
         assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
         assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
@@ -2477,7 +2533,7 @@ async function openConfig(configItem=null) {
 
         config.conversation.isNew = assistantConfig["forceNewConversation"];
         config.conversation.lang = assistantConfig["language"];
-        assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
+        assistant_input.placeholder = supportedLanguages[assistantConfig["languageGui"]].inputPlaceholder;
         keybindingListener.stopListening();
 
         app.setLoginItemSettings({
@@ -3927,14 +3983,14 @@ function setInitScreen() {
 
     <div id="init-headline-parent">
       <div id="init-headline">
-        ${supportedLanguages[assistantConfig["language"]].welcomeMessage}
+        ${supportedLanguages[assistantConfig["languageGui"]].welcomeMessage}
       </div>
     </div>
   </div>`;
 
   suggestion_area.innerHTML = `
   <div class="suggestion-parent">
-    ${supportedLanguages[assistantConfig["language"]].initSuggestions.map(suggestionObj => {
+    ${supportedLanguages[assistantConfig["languageGui"]].initSuggestions.map(suggestionObj => {
       return (`
         <div
           class="suggestion"
@@ -3947,7 +4003,7 @@ function setInitScreen() {
   </div>`;
 
   init_headline = document.querySelector('#init-headline');
-  assistant_input.placeholder = supportedLanguages[assistantConfig["language"]].inputPlaceholder;
+  assistant_input.placeholder = supportedLanguages[assistantConfig["languageGui"]].inputPlaceholder;
 }
 
 /**
@@ -4158,7 +4214,7 @@ function stopMic() {
   (mic) ? mic.stop() : null;
   p5jsMic.stop();
 
-  if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["language"]].welcomeMessage;
+  if (init_headline) init_headline.innerText = supportedLanguages[assistantConfig["languageGui"]].welcomeMessage;
 
   // Set the `Assistant Mic` icon
 
