@@ -4534,10 +4534,11 @@ window.onkeypress = (e) => {
 window.onkeydown = (e) => {
   if (e.key == 'Escape') {
     if (assistantConfig["escapeKeyBehavior"] === "minimize") {
-      assistantWindow.minimize()
+      assistantWindow.minimize();
     }
     else if (assistantConfig["escapeKeyBehavior"] === "close") {
-      assistantWindow.close()
+      _stopAudioAndMic();
+      close();
     }
   }
 }
