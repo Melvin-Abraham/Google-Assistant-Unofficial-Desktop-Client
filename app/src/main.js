@@ -4532,6 +4532,12 @@ window.onkeypress = (e) => {
 }
 
 window.onkeydown = (e) => {
+  if (document.querySelector('#config-screen')) {
+    let inputActive = document.querySelector('#hotkey-div');
+    if (inputActive.classList.contains("input-active")) {
+      return;
+    }
+  }
   if (e.key == 'Escape') {
     if (assistantConfig["escapeKeyBehavior"] === "minimize") {
       assistantWindow.minimize();
@@ -4539,8 +4545,8 @@ window.onkeydown = (e) => {
     else if (assistantConfig["escapeKeyBehavior"] === "close") {
       _stopAudioAndMic();
       close();
-    }
   }
+}
 }
 
 // Change theme when system theme changes
