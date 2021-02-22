@@ -114,10 +114,10 @@
     "dependencies": {
         "electron-is-accelerator": "^0.2.0",
         "google-assistant": "0.6.4",
-        "grpc": "1.24.4"
+        "grpc": "1.24.5"
     },
     "devDependencies": {
-        "electron": "9.3.5",
+        "electron": "10.3.2",
         "electron-builder": "22.9.1"
     }
 }
