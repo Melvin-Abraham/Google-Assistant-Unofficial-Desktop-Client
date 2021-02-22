@@ -76,6 +76,19 @@ const supportedLanguages = {
       { "label": "What can you do?", "query": "What can you do?" }
     ],
     "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
+  },
+  "es-ES": {	    
+    "langName": "Español (España)",	
+    "welcomeMessage": "¡Hola! ¿Cómo puedo ayudar?",	
+    "inputPlaceholder": "Pregúntame lo que sea...",	
+    "listeningMessage": "Escuchando...",	
+    "initSuggestions": [	
+      { "label": "Clima", "query": "¿Cómo está el clima hoy?" },	
+      { "label": "Tirar una moneda", "query": "Lanza una moneda" },	
+      { "label": "¿Qué puedes hacer?", "query": "¿Qué puedes hacer?" }	
+    ],
+    "noSuggestionsText": "Sin sugerencias.",
     "settingsUpdatedText": "¡Configuración actualizada!"
   },
   "es-MX": {
