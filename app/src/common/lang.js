@@ -9,7 +9,9 @@ const supportedLanguages = {
       { "label": "Wetter", "query": "Wie ist das Wetter heute?" },
       { "label": "Wirf eine Münze", "query": "Wirf eine Münze" },
       { "label": "Was kannst du tun?", "query": "Was kannst du tun?" }
-    ]
+    ],
+    "noSuggestionsText": "Keine Vorschläge.",
+    "settingsUpdatedText": "Einstellungen aktualisiert!"
   },
   "en-AU": {
     "langName": "English (Australia)",
@@ -20,7 +22,9 @@ const supportedLanguages = {
       { "label": "Weather", "query": "How\\'s the Weather today?" },
       { "label": "Toss a coin", "query": "Toss a coin" },
       { "label": "What can you do?", "query": "What can you do?" }
-    ]
+    ],
+    "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
   },
   "en-CA": {
     "langName": "English (Canada)",
@@ -31,7 +35,9 @@ const supportedLanguages = {
       { "label": "Weather", "query": "How\\'s the Weather today?" },
       { "label": "Toss a coin", "query": "Toss a coin" },
       { "label": "What can you do?", "query": "What can you do?" }
-    ]
+    ],
+    "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
   },
   "en-GB": {
     "langName": "English (Great Britain)",
@@ -42,7 +48,9 @@ const supportedLanguages = {
       { "label": "Weather", "query": "How\\'s the Weather today?" },
       { "label": "Toss a coin", "query": "Toss a coin" },
       { "label": "What can you do?", "query": "What can you do?" }
-    ]
+    ],
+    "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
   },
   "en-IN": {
     "langName": "English (India)",
@@ -53,7 +61,9 @@ const supportedLanguages = {
       { "label": "Weather", "query": "How\\'s the Weather today?" },
       { "label": "Toss a coin", "query": "Toss a coin" },
       { "label": "What can you do?", "query": "What can you do?" }
-    ]
+    ],
+    "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
   },
   "en-US": {
     "langName": "English (United States)",
@@ -64,18 +74,22 @@ const supportedLanguages = {
       { "label": "Weather", "query": "How\\'s the Weather today?" },
       { "label": "Toss a coin", "query": "Toss a coin" },
       { "label": "What can you do?", "query": "What can you do?" }
-    ]
+    ],
+    "noSuggestionsText": "No suggestions.",
+    "settingsUpdatedText": "Settings Updated!"
   },
-  "es-ES": {
-    "langName": "Español (España)",
-    "welcomeMessage": "¡Hola! ¿Cómo puedo ayudar?",
-    "inputPlaceholder": "Pregúntame lo que sea...",
-    "listeningMessage": "Escuchando...",
-    "initSuggestions": [
-      { "label": "Clima", "query": "¿Cómo está el clima hoy?" },
-      { "label": "Tirar una moneda", "query": "Lanza una moneda" },
-      { "label": "¿Qué puedes hacer?", "query": "¿Qué puedes hacer?" }
-    ]
+  "es-ES": {	    
+    "langName": "Español (España)",	
+    "welcomeMessage": "¡Hola! ¿Cómo puedo ayudar?",	
+    "inputPlaceholder": "Pregúntame lo que sea...",	
+    "listeningMessage": "Escuchando...",	
+    "initSuggestions": [	
+      { "label": "Clima", "query": "¿Cómo está el clima hoy?" },	
+      { "label": "Tirar una moneda", "query": "Lanza una moneda" },	
+      { "label": "¿Qué puedes hacer?", "query": "¿Qué puedes hacer?" }	
+    ],
+    "noSuggestionsText": "Sin sugerencias.",
+    "settingsUpdatedText": "¡Configuración actualizada!"
   },
   "es-MX": {
     "langName": "Español (México)",
@@ -86,7 +100,9 @@ const supportedLanguages = {
       { "label": "Clima", "query": "¿Cómo está el clima hoy?" },
       { "label": "Tirar una moneda", "query": "Tirar una moneda" },
       { "label": "¿Qué puedes hacer?", "query": "¿Qué puedes hacer?" }
-    ]
+    ],
+    "noSuggestionsText": "Sin sugerencias.",
+    "settingsUpdatedText": "¡Configuración actualizada!"
   },
   "fr-CA": {
 
@@ -98,7 +114,9 @@ const supportedLanguages = {
       { "label": "Temps", "query": "Quel temps fait-il aujourd\\'hui?" },
       { "label": "Un tirage au sort", "query": "Un tirage au sort" },
       { "label": "Que pouvez-vous faire?", "query": "Que pouvez-vous faire?" }
-    ]
+    ],
+    "noSuggestionsText": "Pas de suggestions.",
+    "settingsUpdatedText": "Réglages a Réussi!"
   },
   "fr-FR": {
     "langName": "Français (France)",
@@ -109,7 +127,9 @@ const supportedLanguages = {
       { "label": "Temps", "query": "Quel temps fait-il aujourd\\'hui?" },
       { "label": "Un tirage au sort", "query": "Un tirage au sort" },
       { "label": "Que pouvez-vous faire?", "query": "Que pouvez-vous faire?" }
-    ]
+    ],
+    "noSuggestionsText": "Pas de suggestions.",
+    "settingsUpdatedText": "Réglages a Réussi!"
   },
   "it-IT": {
     "langName": "Italiano (Italia)",
@@ -120,7 +140,9 @@ const supportedLanguages = {
       { "label": "Tempo metereologico", "query": "Com\\'è il tempo oggi?" },
       { "label": "Lancia una moneta", "query": "Lancia una moneta" },
       { "label": "Cosa sai fare?", "query": "Cosa sai fare?" }
-    ]
+    ],
+    "noSuggestionsText": "Nessun suggerimento.",
+    "settingsUpdatedText": "Impostazioni aggiornate!"
   },
   "ja-JP": {
     "langName": "日本語（日本）",
@@ -131,7 +153,9 @@ const supportedLanguages = {
       { "label": "天気", "query": "今日の天気は？" },
       { "label": "コインを投げて", "query": "コインを投げて" },
       { "label": "何ができる？", "query": "何ができる？" }
-    ]
+    ],
+    "noSuggestionsText": "提案はありません。",
+    "settingsUpdatedText": "設定が更新されました！"
   },
   "ko-KR": {
     "langName": "한국어 (대한민국)",
@@ -142,7 +166,9 @@ const supportedLanguages = {
       { "label": "날씨", "query": "오늘의 날씨는 어떻습니까?" },
       { "label": "동전을 던지세요", "query": "동전을 던지세요" },
       { "label": "당신은 무엇을 할 수 있나요?", "query": "당신은 무엇을 할 수 있나요?" }
-    ]
+    ],
+    "noSuggestionsText": "제안이 없습니다.",
+    "settingsUpdatedText": "설정이 업데이트!"
   },
   "pt-BR": {
     "langName": "Português (Brasil)",
@@ -153,7 +179,9 @@ const supportedLanguages = {
       { "label": "Clima", "query": "Como está o tempo hoje?" },
       { "label": "Atirar uma moeda", "query": "Atirar uma moeda" },
       { "label": "O que você pode fazer?", "query": "O que você pode fazer?" }
-    ]
+    ],
+    "noSuggestionsText": "Nenhuma sugestão.",
+    "settingsUpdatedText": "Configurações Atualizadas!"
   }
 }
 
