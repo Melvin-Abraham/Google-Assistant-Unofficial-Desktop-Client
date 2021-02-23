@@ -637,6 +637,10 @@ body {
     border: 1px solid var(--color-suggestion-border-active);
 }
 
+.suggestion.disabled {
+    padding: 8px 20px;
+}
+
 @keyframes fade_in_from_right_anim {
     from {
         padding-left: 15px;
