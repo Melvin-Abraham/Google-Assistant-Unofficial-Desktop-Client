@@ -1503,6 +1503,28 @@ async function openConfig(configItem=null) {
               </select>
             </div>
           </div>
+          <div id="config-item__escape-key-behavior" class="setting-item">
+            <div class="setting-key">
+              Escape Key Behavior
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Configure whether you want to close or minimize the assistant window with the escape key"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <select id="esc-key-behavior-selector" style="padding-right: 50px;">
+                <option value="none">Do Nothing</option>
+                <option value="minimize">Minimize Window</option>
+                <option value="close">Close Window</option>
+              </select>
+            </div>
+          </div>
           <div id="config-item__display-pref" class="setting-item">
             <div class="setting-key">
               Display Preference
@@ -1524,11 +1546,13 @@ async function openConfig(configItem=null) {
                   .map((display, index) => {
                     const { bounds, scaleFactor } = display;
 
-                    return `<option value="${index + 1}">
-                      Display ${index + 1} - (${bounds.width * scaleFactor} x ${
-                        bounds.height * scaleFactor
-                      })
-                    </option>`;
+                    return `
+                      <option value="${index + 1}">
+                        Display ${index + 1} - (${bounds.width * scaleFactor} x ${
+                          bounds.height * scaleFactor
+                        })
+                      </option>
+                    `;
                   })
                 }
               </select>
@@ -2034,6 +2058,7 @@ async function openConfig(configItem=null) {
     let startAsMaximized = document.querySelector("#start-maximized");
     let hideOnFirstLaunch = document.querySelector("#hide-on-first-launch");
     let winFloatBehaviorSelector = document.querySelector("#win-float-behavior-selector");
+    let escKeyBehaviorSelector = document.querySelector("#esc-key-behavior-selector");
     let microphoneSourceSelector = document.querySelector("#mic-source-selector");
     let speakerSourceSelector = document.querySelector("#speaker-source-selector");
     let displayPreferenceSelector = document.querySelector("#display-selector");
@@ -2198,6 +2223,7 @@ async function openConfig(configItem=null) {
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
     winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
+    escKeyBehaviorSelector.value = assistantConfig["escapeKeyBehavior"];
     microphoneSourceSelector.value = assistantConfig["microphoneSource"];
     speakerSourceSelector.value = assistantConfig["speakerSource"];
     displayPreferenceSelector.value = assistantConfig["displayPreference"];
@@ -2626,6 +2652,7 @@ async function openConfig(configItem=null) {
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
         assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
+        assistantConfig["escapeKeyBehavior"] = escKeyBehaviorSelector.value;
         assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
         assistantConfig["speakerSource"] = speakerSourceSelector.value;
         assistantConfig["displayPreference"] = displayPreferenceSelector.value;
@@ -4219,15 +4246,15 @@ function setInitScreen() {
     ${supportedLanguages[assistantConfig["language"]].initSuggestions
       .map((suggestionObj) => {
         return `
-        <div
-          class="suggestion"
-          onclick="assistantTextQuery('${suggestionObj.query}')"
-        >
-            ${suggestionObj.label}
-        </div>
-      `;
-      })
-      .join("")}
+          <div
+            class="suggestion"
+            onclick="assistantTextQuery('${suggestionObj.query}')"
+          >
+              ${suggestionObj.label}
+          </div>
+        `;
+        }).join("")
+      }
   </div>`;
 
   init_headline = document.querySelector("#init-headline");
@@ -4645,9 +4672,7 @@ function _getMicPermEnableHelp() {
   } else {
     // If platform is "Windows" or any linux distro (application not a snap package)
 
-    return `
-      You can ${defaultMsg.replace(/^M/, "m")}
-    `;
+    return `You can ${defaultMsg.replace(/^M/, "m")}`;
   }
 }
 
@@ -4892,6 +4917,28 @@ window.onkeypress = (e) => {
     }
   }
 };
+
+window.onkeydown = (e) => {
+  if (document.querySelector('#config-screen')) {
+    let isHotkeyBarActive = document.querySelector(
+      '#hotkey-div'
+    );
+
+    if (isHotkeyBarActive.classList.contains("input-active")) {
+      return;
+    }
+  }
+
+  if (e.key === 'Escape') {
+    if (assistantConfig["escapeKeyBehavior"] === "minimize") {
+      assistantWindow.minimize();
+    }
+    else if (assistantConfig["escapeKeyBehavior"] === "close") {
+      _stopAudioAndMic();
+      close();
+    }
+  }
+}
 
 // Change theme when system theme changes
 
