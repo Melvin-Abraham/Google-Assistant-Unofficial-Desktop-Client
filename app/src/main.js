@@ -1355,7 +1355,7 @@ async function openConfig(configItem=null) {
               </select>
             </div>
           </div>
-          <div id="config-item__esc-key-behavior" class="setting-item">
+          <div id="config-item__escape-key-behavior" class="setting-item">
             <div class="setting-key">
               Escape Key Behavior
 
@@ -1371,7 +1371,7 @@ async function openConfig(configItem=null) {
             </div>
             <div class="setting-value" style="height: 35px;">
               <select id="esc-key-behavior-selector" style="padding-right: 50px;">
-                <option value="nothing">Nothing</option>
+                <option value="none">Do Nothing</option>
                 <option value="minimize">Minimize Window</option>
                 <option value="close">Close Window</option>
               </select>
@@ -4533,20 +4533,24 @@ window.onkeypress = (e) => {
 
 window.onkeydown = (e) => {
   if (document.querySelector('#config-screen')) {
-    let inputActive = document.querySelector('#hotkey-div');
-    if (inputActive.classList.contains("input-active")) {
+    let isHotkeyBarActive = document.querySelector(
+      '#hotkey-div'
+    );
+
+    if (isHotkeyBarActive.classList.contains("input-active")) {
       return;
     }
   }
-  if (e.key == 'Escape') {
+
+  if (e.key === 'Escape') {
     if (assistantConfig["escapeKeyBehavior"] === "minimize") {
       assistantWindow.minimize();
     }
     else if (assistantConfig["escapeKeyBehavior"] === "close") {
       _stopAudioAndMic();
       close();
+    }
   }
-}
 }
 
 // Change theme when system theme changes

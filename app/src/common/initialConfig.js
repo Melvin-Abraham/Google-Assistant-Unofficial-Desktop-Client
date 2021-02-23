@@ -6,7 +6,7 @@ const initialAssistantConfig = {
     "enableMicOnContinousConversation": true,
     "startAsMaximized": false,
     "windowFloatBehavior": "always-on-top",
-    "escapeKeyBehavior": "close",
+    "escapeKeyBehavior": "none",
     "microphoneSource": "default",
     "speakerSource": "default",
     "displayPreference": "1",
