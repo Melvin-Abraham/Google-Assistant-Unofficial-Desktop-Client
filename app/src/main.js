@@ -766,9 +766,8 @@ const startConversation = (conversation) => {
 
         // Stop Microphone
         stopMic();
-      }
-    });
-};
+    })
+  };
 
 // will start a conversation and wait for audio data
 // as soon as it's ready
