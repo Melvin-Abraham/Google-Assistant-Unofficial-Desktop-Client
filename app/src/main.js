@@ -129,7 +129,11 @@ if (fs.existsSync(configFilePath)) {
           width: 16px;
           vertical-align: top;
           padding-right: 10px;
-          ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+          ${
+            getEffectiveTheme() == "light"
+              ? "filter: invert(1);"
+              : ""
+          }"
         >
       </span>
       Get Started
@@ -151,7 +155,8 @@ if (fs.existsSync(configFilePath)) {
 
         <div id="first-time-desc-parent">
           <div id="first-time-desc">
-            This client is based on Google Assistant SDK. This means that it is limited in its capability and might not be working the same way the official client on phones and other devices work
+            This client is based on Google Assistant SDK. This means that it is limited in its capability and
+            might not be working the same way the official client on phones and other devices work
           </div>
         </div>
       </div>
@@ -168,7 +173,11 @@ if (fs.existsSync(configFilePath)) {
             width: 16px;
             vertical-align: top;
             padding-right: 10px;
-            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+            ${
+              getEffectiveTheme() == "light"
+                ? "filter: invert(1);"
+                : ""
+            }"
           >
         </span>
         Proceed
@@ -308,7 +317,11 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 10px;
-            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+            ${
+              getEffectiveTheme() == "light"
+                ? "filter: invert(1);"
+                : ""
+            }"
           >
         </span>
         Open Settings
@@ -335,7 +348,11 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 10px;
-            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+            ${
+              getEffectiveTheme() == "light"
+                ? "filter: invert(1);"
+                : ""
+            }"
           >
         </span>
         Open Settings
@@ -361,7 +378,11 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 5px;
-            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+            ${
+              getEffectiveTheme() == "light"
+                ? "filter: invert(1);"
+                : ""
+            }"
           >
         </span>
         Relaunch Assistant
@@ -434,7 +455,11 @@ if (assistantConfig["keyFilePath"] == "") {
           vertical-align: text-top;
           padding-right: 5px;
           padding-top: 2px;
-          ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+          ${
+            getEffectiveTheme() == "light"
+              ? "filter: invert(1);"
+              : ""
+          }"
         >
       </span>
       Check out this wiki
@@ -520,19 +545,24 @@ const startConversation = (conversation) => {
           details: "Unexpected Error occurred at the end of conversation",
           subdetails: `Error: ${error.message}`,
         });
-      } else if (
+      }
+
+      else if (
         continueConversation &&
         assistantConfig["enableMicOnContinousConversation"] &&
         !mic.isActive
       ) {
         audPlayer.audioPlayer.addEventListener("waiting", () => startMic());
-      } else {
+      }
+
+      else {
         console.log(...consoleMessage("Conversation Complete"));
       }
 
-      if (init_headline)
+      if (init_headline) {
         init_headline.innerText =
           supportedLanguages[assistantConfig["language"]].welcomeMessage;
+      }
     })
     .on("error", (error) => {
       console.group(
@@ -567,7 +597,9 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
@@ -581,14 +613,18 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
                 Set Saved Tokens Path
               </div>
             `;
-          } else if (
+          }
+
+          else if (
             !error.details.includes("No access or refresh token is set")
           ) {
             displayErrorScreen({
@@ -639,14 +675,18 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
                 Retry
               </div>
             ` + suggestion_parent.innerHTML;
-          } else {
+          }
+
+          else {
             // Invalid Saved Tokens
 
             displayErrorScreen({
@@ -672,7 +712,9 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 10px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
@@ -680,7 +722,9 @@ const startConversation = (conversation) => {
               </div>
             `;
           }
-        } else if (error.code === 3) {
+        }
+
+        else if (error.code === 3) {
           if (error.details.includes("unsupported language_code")) {
             // Unsupported language code
 
@@ -690,8 +734,7 @@ const startConversation = (conversation) => {
               subdetails: `Error: ${error.details}`,
             });
 
-            suggestion_parent.innerHTML =
-              `
+            suggestion_parent.innerHTML = `
               <div class="suggestion" onclick="openConfig('language')">
                 <span>
                   <img src="../res/troubleshoot.svg" style="
@@ -700,7 +743,9 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
@@ -759,14 +804,15 @@ assistant
       );
 
       assistant_mic_parent.outerHTML = `
-      <div id="assistant-mic-parent" class="fade-scale">
-        <div id="amp-bar-group">
-            <div class="amp-bar" style="background-color: #4285F4;"></div>
-            <div class="amp-bar" style="background-color: #EA4335;"></div>
-            <div class="amp-bar" style="background-color: #FBBC05;"></div>
-            <div class="amp-bar" style="background-color: #34A853;"></div>
+        <div id="assistant-mic-parent" class="fade-scale">
+          <div id="amp-bar-group">
+              <div class="amp-bar" style="background-color: #4285F4;"></div>
+              <div class="amp-bar" style="background-color: #EA4335;"></div>
+              <div class="amp-bar" style="background-color: #FBBC05;"></div>
+              <div class="amp-bar" style="background-color: #34A853;"></div>
+          </div>
         </div>
-      </div>`;
+      `;
 
       // Add Event Listener to Stop Mic
 
@@ -788,31 +834,31 @@ assistant
         let amp_bar_list = document.querySelectorAll(".amp-bar");
 
         amp_bar_list[0].setAttribute(
-          "style",
-          `
-          background-color: var(--color-blue);
-          height: ${constrain(map(amp, 0, amp_threshold, 6, 25), 6, 25)}px;`
+          "style", [
+            `background-color: var(--color-blue);`,
+            `height: ${constrain(map(amp, 0, amp_threshold, 6, 25), 6, 25)}px;`
+          ].join("")
         );
 
         amp_bar_list[1].setAttribute(
-          "style",
-          `
-          background-color: var(--color-red);
-          height: ${constrain(map(amp, 0, amp_threshold, 6, 15), 6, 15)}px;`
+          "style", [
+            `background-color: var(--color-red);`,
+            `height: ${constrain(map(amp, 0, amp_threshold, 6, 15), 6, 15)}px;`
+          ].join("")
         );
 
         amp_bar_list[2].setAttribute(
-          "style",
-          `
-          background-color: var(--color-yellow);
-          height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;`
+          "style", [
+            `background-color: var(--color-yellow);`,
+            `height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;`
+          ].join("")
         );
 
         amp_bar_list[3].setAttribute(
-          "style",
-          `
-          background-color: var(--color-green);
-          height: ${constrain(map(amp, 0, amp_threshold, 6, 20), 6, 20)}px;`
+          "style", [
+            `background-color: var(--color-green);`,
+            `height: ${constrain(map(amp, 0, amp_threshold, 6, 20), 6, 20)}px;`
+          ].join("")
         );
       };
 
@@ -862,6 +908,7 @@ assistant
         suggestion_area.innerHTML = currentDOM.querySelector(
           "#suggestion-area"
         ).innerHTML;
+
         let suggestions = [
           ...document.querySelectorAll(".suggestion-parent > .suggestion"),
         ];
@@ -887,7 +934,11 @@ assistant
               width: 20px;
               vertical-align: top;
               padding-right: 5px;
-              ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+              ${
+                getEffectiveTheme() == "light"
+                  ? "filter: invert(1);"
+                  : ""
+              }"
             >
           </span>
           Relaunch Assistant
@@ -918,7 +969,11 @@ assistant
               width: 20px;
               vertical-align: top;
               padding-right: 10px;
-              ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+              ${
+                getEffectiveTheme() == "light"
+                  ? "filter: invert(1);"
+                  : ""
+              }"
             >
           </span>
           Open Settings
@@ -996,7 +1051,7 @@ function inspectResponseType(assistantResponseString) {
  * Minimize the Assistant Window after the link is opened.
  * _(Defaults to `true`)_
  */
-function openLink(link, autoMinimizeAssistantWindow = true) {
+function openLink(link, autoMinimizeAssistantWindow=true) {
   if (link === "") return;
   electronShell.openExternal(link);
 
@@ -1088,7 +1143,7 @@ function openFileDialog(callback, openDialogTitle = null) {
  * @param {*} config
  * Pass config as an object or pass `null` to consider `asssistantConfig`
  */
-function saveConfig(config = null) {
+function saveConfig(config=null) {
   fs.writeFile(
     configFilePath,
     JSON.stringify(!config ? assistantConfig : config),
@@ -1108,9 +1163,10 @@ function saveConfig(config = null) {
  * Highlights and scrolls instantly to the requested
  * config item by ID
  */
-async function openConfig(configItem = null) {
+async function openConfig(configItem=null) {
   if (!document.querySelector("#config-screen")) {
     let currentHTML = document.querySelector("body").innerHTML;
+
     let suggestionOnClickListeners = [
       ...document.querySelectorAll(".suggestion-parent > .suggestion"),
     ].map((btn) => btn.onclick);
@@ -1129,9 +1185,7 @@ async function openConfig(configItem = null) {
           Settings
         </div>
 
-        ${
-          !_canAccessMicrophone
-            ? `
+        ${!_canAccessMicrophone ? `
           <div
             class="setting-key accordion"
             style="
@@ -1152,7 +1206,9 @@ async function openConfig(configItem = null) {
                     vertical-align: sub;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "" : "filter: invert(1);"
+                      getEffectiveTheme() == "light"
+                        ? ""
+                        : "filter: invert(1);"
                     }"
                   >
                 </span>
@@ -1164,7 +1220,9 @@ async function openConfig(configItem = null) {
                 <span
                   class="accordion-chevron"
                   style="${
-                    getEffectiveTheme() == "light" ? "" : "filter: invert(1);"
+                    getEffectiveTheme() == "light"
+                      ? ""
+                      : "filter: invert(1);"
                   }"
                 >
                   <img src="../res/chevron_down.svg" />
@@ -1191,8 +1249,7 @@ async function openConfig(configItem = null) {
                 </i>
               </div>
             </div>
-          </div>`
-            : ""
+          </div>` : ""
         }
 
         <div style="padding: 20px 0">
@@ -1265,12 +1322,12 @@ async function openConfig(configItem = null) {
                 ${Object.keys(supportedLanguages)
                   .map((langCode) => {
                     return `
-                    <option value="${langCode}">
-                      ${supportedLanguages[langCode]["langName"]}
-                    </option>
-                  `;
+                      <option value="${langCode}">
+                        ${supportedLanguages[langCode]["langName"]}
+                      </option>
+                    `;
                   })
-                  .join("")}
+                .join("")}
               </select>
               <label id="detect-lang-btn" class="button" style="margin-left: 6px;">
                 Detect Language
@@ -1472,11 +1529,12 @@ async function openConfig(configItem = null) {
                     const { bounds, scaleFactor } = display;
 
                     return `<option value="${index + 1}">
-                    Display ${index + 1} - (${bounds.width * scaleFactor} x ${
-                      bounds.height * scaleFactor
-                    })
-                  </option>`;
-                  })}
+                      Display ${index + 1} - (${bounds.width * scaleFactor} x ${
+                        bounds.height * scaleFactor
+                      })
+                    </option>`;
+                  })
+                }
               </select>
             </div>
           </div>
@@ -1607,10 +1665,11 @@ async function openConfig(configItem = null) {
               ">
                 <img
                   src="../res/help.svg"
-                  title="Configure what happens when '${assistantConfig.assistantHotkey
-                    .split("+")
-                    .map(getNativeKeyName)
-                    .join(" + ")}' is triggered"
+                  title="Configure what happens when '${
+                    assistantConfig.assistantHotkey
+                      .split("+")
+                      .map(getNativeKeyName)
+                      .join(" + ")}' is triggered"
                 >
               </span>
             </div>
@@ -1703,7 +1762,9 @@ async function openConfig(configItem = null) {
                     vertical-align: sub;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
@@ -1892,29 +1953,28 @@ async function openConfig(configItem = null) {
                       releases && getReleaseObject(_getVersion())
                         ? _markdownToHtml(getChangelog())
                         : `
-                        <span>
-                          <img src="../res/error.svg" style="
-                            height: 20px;
-                            width: 20px;
-                            vertical-align: sub;
-                            padding-right: 5px;"
-                          >
-                        </span>
-                        <span style="color: var(--color-red);">
-                          An error occured while fetching releases
-                        </span>
+                          <span>
+                            <img src="../res/error.svg" style="
+                              height: 20px;
+                              width: 20px;
+                              vertical-align: sub;
+                              padding-right: 5px;"
+                            >
+                          </span>
+                          <span style="color: var(--color-red);">
+                            An error occured while fetching releases
+                          </span>
 
-                        <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
-                          <i>
-                            Please check your internet
-                          </i>
-                        </div>
-                      `
+                          <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
+                            <i>
+                              Please check your internet
+                            </i>
+                          </div>
+                        `
                     }
 
-                    ${
-                      releases
-                        ? `<div style="padding-top: 25px; padding-bottom: 10px;">
+                    ${releases ? `
+                      <div style="padding-top: 25px; padding-bottom: 10px;">
                         <div class="button setting-item-button" onclick="openLink(getReleaseObject().html_url)">
                           <span>
                             <img src="../res/proceed.svg" style="
@@ -1933,7 +1993,7 @@ async function openConfig(configItem = null) {
                           Show in GitHub
                         </div>
                       </div>`
-                        : ""
+                      : ""
                     }
                   </div>
                 </div>
@@ -1971,25 +2031,15 @@ async function openConfig(configItem = null) {
     let keyFilePathInput = main_area.querySelector("#key-file-path");
     let savedTokensPathInput = main_area.querySelector("#saved-tokens-path");
     let languageSelector = document.querySelector("#lang-selector");
-    let forceNewConversationCheckbox = document.querySelector(
-      "#new-conversation"
-    );
+    let forceNewConversationCheckbox = document.querySelector("#new-conversation");
     let enableAudioOutput = document.querySelector("#audio-output");
-    let enableMicOnContinousConversation = document.querySelector(
-      "#continous-conv-mic"
-    );
+    let enableMicOnContinousConversation = document.querySelector("#continous-conv-mic");
     let enableMicOnStartup = document.querySelector("#enable-mic-startup");
     let startAsMaximized = document.querySelector("#start-maximized");
     let hideOnFirstLaunch = document.querySelector("#hide-on-first-launch");
-    let winFloatBehaviorSelector = document.querySelector(
-      "#win-float-behavior-selector"
-    );
-    let microphoneSourceSelector = document.querySelector(
-      "#mic-source-selector"
-    );
-    let speakerSourceSelector = document.querySelector(
-      "#speaker-source-selector"
-    );
+    let winFloatBehaviorSelector = document.querySelector("#win-float-behavior-selector");
+    let microphoneSourceSelector = document.querySelector("#mic-source-selector");
+    let speakerSourceSelector = document.querySelector("#speaker-source-selector");
     let displayPreferenceSelector = document.querySelector("#display-selector");
     let winBorderSelector = document.querySelector("#win-border-selector");
     let launchAtStartUp = document.querySelector("#launch-at-startup");
@@ -1998,9 +2048,7 @@ async function openConfig(configItem = null) {
     let enablePingSound = document.querySelector("#ping-sound");
     let enableAutoScaling = document.querySelector("#auto-scale");
     let themeSelector = document.querySelector("#theme-selector");
-    let hotkeyBehaviorSelector = document.querySelector(
-      "#hotkey-behavior-selector"
-    );
+    let hotkeyBehaviorSelector = document.querySelector("#hotkey-behavior-selector");
 
     keyFilePathInput.addEventListener("focusout", () =>
       validatePathInput(keyFilePathInput)
@@ -2137,20 +2185,19 @@ async function openConfig(configItem = null) {
         .querySelector(".slider")
         .classList.add("disabled");
       launchAtStartupHelpElement.setAttribute(
-        "title",
-        launchAtStartupHelpElement.getAttribute("title") +
-          "\n(This option is currently disabled due to development mode)"
+        "title", [
+          launchAtStartupHelpElement.getAttribute("title"),
+          "(This option is currently disabled due to development mode)"
+        ].join('\n')
       );
     }
 
     keyFilePathInput.value = assistantConfig["keyFilePath"];
     savedTokensPathInput.value = assistantConfig["savedTokensPath"];
     languageSelector.value = assistantConfig["language"];
-    forceNewConversationCheckbox.checked =
-      assistantConfig["forceNewConversation"];
+    forceNewConversationCheckbox.checked = assistantConfig["forceNewConversation"];
     enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
-    enableMicOnContinousConversation.checked =
-      assistantConfig["enableMicOnContinousConversation"];
+    enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
     enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
     startAsMaximized.checked = assistantConfig["startAsMaximized"];
     hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
@@ -2278,6 +2325,7 @@ async function openConfig(configItem = null) {
       suggestion_area.innerHTML = currentDOM.querySelector(
         "#suggestion-area"
       ).innerHTML;
+
       let suggestions = [
         ...document.querySelectorAll(".suggestion-parent > .suggestion"),
       ];
@@ -2298,6 +2346,7 @@ async function openConfig(configItem = null) {
       if (init_headline) {
         const welcomeMsg =
           supportedLanguages[assistantConfig["language"]].welcomeMessage;
+
         init_headline.innerText = welcomeMsg;
 
         suggestion_area.innerHTML = `
@@ -2305,13 +2354,13 @@ async function openConfig(configItem = null) {
             ${supportedLanguages[assistantConfig["language"]].initSuggestions
               .map((suggestionObj) => {
                 return `
-                <div
-                  class="suggestion"
-                  onclick="assistantTextQuery('${suggestionObj.query}')"
-                >
-                    ${suggestionObj.label}
-                </div>
-              `;
+                  <div
+                    class="suggestion"
+                    onclick="assistantTextQuery('${suggestionObj.query}')"
+                  >
+                      ${suggestionObj.label}
+                  </div>
+                `;
               })
               .join("")}
           </div>
@@ -2484,14 +2533,12 @@ async function openConfig(configItem = null) {
           cancelId: 1,
         });
 
-        if (res == 1) {
-          return;
-        } else {
-          savedTokensPathInput.value = path.join(
-            savedTokensPathInput.value,
-            "tokens.json"
-          );
-        }
+        if (res == 1) return;
+
+        savedTokensPathInput.value = path.join(
+          savedTokensPathInput.value,
+          "tokens.json"
+        );
       } else if (
         keyFilePathInput.value.trim() != "" &&
         !fs.existsSync(path.dirname(savedTokensPathInput.value))
@@ -2576,11 +2623,9 @@ async function openConfig(configItem = null) {
         assistantConfig["keyFilePath"] = keyFilePathInput.value;
         assistantConfig["savedTokensPath"] = savedTokensPathInput.value;
         assistantConfig["language"] = languageSelector.value;
-        assistantConfig["forceNewConversation"] =
-          forceNewConversationCheckbox.checked;
+        assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
         assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
-        assistantConfig["enableMicOnContinousConversation"] =
-          enableMicOnContinousConversation.checked;
+        assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
@@ -2663,13 +2708,15 @@ async function openConfig(configItem = null) {
           displayErrorScreen({
             icon: {
               path: "../res/refresh.svg",
-              style: `height: 100px;
-                        animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-                        ${
-                          getEffectiveTheme() == "light"
-                            ? "filter: invert(1);"
-                            : ""
-                        }`,
+              style: `
+                height: 100px;
+                animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+                ${
+                  getEffectiveTheme() == "light"
+                    ? "filter: invert(1);"
+                    : ""
+                }
+              `,
             },
             title: "Relaunch Required",
             details: "A relaunch is required for changes to take place",
@@ -2686,7 +2733,11 @@ async function openConfig(configItem = null) {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 5px;
-                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+                  ${
+                    getEffectiveTheme() == "light"
+                      ? "filter: invert(1);"
+                      : ""
+                  }"
                 >
               </span>
               Relaunch Assistant
@@ -2803,7 +2854,7 @@ function getCurrentQuery() {
  * Remove the recent result from history and replace it with the refreshed one.
  * _(Defaults to `true`)_
  */
-function retryRecent(popHistory = true) {
+function retryRecent(popHistory=true) {
   popHistory ? history.pop() : null;
   assistantTextQuery(getCurrentQuery());
 }
@@ -2856,7 +2907,7 @@ function deactivateLoader() {
  * @param {string=} opts.customStyle
  * Any custom styles that you want to apply
  */
-function displayErrorScreen(opts = {}) {
+function displayErrorScreen(opts={}) {
   let options = {
     errContainerId: "",
     icon: {
@@ -2912,7 +2963,7 @@ function displayErrorScreen(opts = {}) {
  * Theme to be applied on screen data.
  * Leave this parameter to infer from `assistantConfig.theme`
  */
-async function displayScreenData(screen, pushToHistory = false, theme = null) {
+async function displayScreenData(screen, pushToHistory=false, theme=null) {
   deactivateLoader();
 
   let htmlString = screen.data.toString();
@@ -2954,7 +3005,8 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
     });
   }
 
-  let element = main_area.querySelector(".assistant-markup-response")
+  let element = main_area
+    .querySelector(".assistant-markup-response")
     .lastElementChild;
 
   let hasWebAnswer = main_area.querySelector("#tv_web_answer_root");
@@ -2962,8 +3014,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
   let hasCarousel = main_area.querySelector("#selection-carousel-tv");
   let hasPhotoCarousel = main_area.querySelector("#photo-carousel-tv");
   let hasTextContainer = element.classList.contains("show_text_container");
-  let hasPlainText =
-    hasTextContainer && element.querySelector(".show_text_content");
+  let hasPlainText = hasTextContainer && element.querySelector(".show_text_content");
   let hasDefinition = main_area.querySelector("#flex_text_audio_icon_chunk");
   let elementFlag = element.getAttribute("data-flag");
   let isGoogleImagesContent;
@@ -2979,50 +3030,48 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
     if (!hasPlainText) {
       if (assistantConfig["enableAutoScaling"]) {
         element.setAttribute(
-          "style",
+          "style", `
+            transform: ${
+              hasKnowledgePanel || hasWebAnswer ? "scale(0.65)" : "scale(0.75)"
+            };
+            position: relative;
+            left: ${
+              hasKnowledgePanel || hasWebAnswer
+                ? "-15%"
+                : hasCarousel && !hasPhotoCarousel
+                ? "-91%"
+                : hasPhotoCarousel
+                ? "-26%"
+                : "-10%"
+            };
+            top: ${
+              hasKnowledgePanel
+                ? "-40px"
+                : hasWebAnswer
+                ? "-35px"
+                : hasDefinition
+                ? "-70px"
+                : hasCarousel && !hasPhotoCarousel
+                ? "-45px"
+                : "-20px"
+            };
+            ${
+              hasCarousel || hasPhotoCarousel
+                ? `overflow-x: scroll; width: 217%;`
+                : ``
+            }
+            ${hasPhotoCarousel ? "padding: 2em 0 0 0;" : ""}
           `
-          transform: ${
-            hasKnowledgePanel || hasWebAnswer ? "scale(0.65)" : "scale(0.75)"
-          };
-          position: relative;
-          left: ${
-            hasKnowledgePanel || hasWebAnswer
-              ? "-15%"
-              : hasCarousel && !hasPhotoCarousel
-              ? "-91%"
-              : hasPhotoCarousel
-              ? "-26%"
-              : "-10%"
-          };
-          top: ${
-            hasKnowledgePanel
-              ? "-40px"
-              : hasWebAnswer
-              ? "-35px"
-              : hasDefinition
-              ? "-70px"
-              : hasCarousel && !hasPhotoCarousel
-              ? "-45px"
-              : "-20px"
-          };
-          ${
-            hasCarousel || hasPhotoCarousel
-              ? `overflow-x: scroll; width: 217%;`
-              : ``
-          }
-          ${hasPhotoCarousel ? "padding: 2em 0 0 0;" : ""}
-        `
         );
       }
     } else {
       element.setAttribute(
-        "style",
+        "style", `
+          transform: scale(1.2);
+          position: relative;
+          left: 13%;
+          top: 60px;
         `
-        transform: scale(1.2);
-        position: relative;
-        left: 13%;
-        top: 60px;
-      `
       );
     }
   }
@@ -3058,14 +3107,13 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
   if (hasTextContainer) {
     // Includes Text Response and Google Images Response
 
-    main_area.innerHTML =
-      `
-    <img src="../res/Google_Assistant_logo.svg" style="
-      height: 25px;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    ">` + main_area.innerHTML;
+    main_area.innerHTML = `
+      <img src="../res/Google_Assistant_logo.svg" style="
+        height: 25px;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      ">` + main_area.innerHTML;
   }
 
   if (hasPlainText) {
@@ -3085,6 +3133,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
           let youtube_video_id = responseType["searchResultParts"][2]
             .match(/.*watch\?v=(.+)/)
             .pop();
+
           youtube_thumbnail_url = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
         }
 
@@ -3108,28 +3157,22 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
             }">
               ${
                 responseType["type"] == "youtube-result"
-                  ? `<img
-                      class="` +
-                    (getEffectiveTheme() == "light" ? "invert" : "") +
-                    `"
-                      src="` +
-                    youtube_thumbnail_url +
-                    `"
+                  ? `
+                    <img
+                      class="${(getEffectiveTheme() == 'light') ? 'invert' : ''}
+                      src="${youtube_thumbnail_url}"
                       style="
                         height: 131px;
                         margin-right: 15px;
                         border-radius: 10px;
                       "
                     >`
-                  : ``
+                  : ""
               }
               <div style="padding-top: 10px;">
                 ${
                   responseType["searchResultParts"][3]
-                    ? responseType["searchResultParts"][3].replace(
-                        /\\n/g,
-                        "<br>"
-                      )
+                    ? responseType["searchResultParts"][3].replace(/\\n/g, "<br>")
                     : ""
                 }
               </div>
@@ -3159,6 +3202,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
             await googleImagesResponse.text(),
             "text/html"
           );
+
           let allImages = googleImagesPage.querySelectorAll("table img");
 
           for (let i = 0; i < 20; i++) {
@@ -3176,29 +3220,31 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
         } else {
           console.error("Error: Response Object", googleImagesResponse);
 
-          let errorDetails =
-            "Assistant cannot fetch images due to malformed request";
+          let errorDetails = "Assistant cannot fetch images due to malformed request";
           let subdetails = `Error: HTTP status code ${googleImagesResponse.status}`;
 
           if (googleImagesResponse.status == 429) {
             // Rate limit exceeded
-            errorDetails =
-              "Too many requests sent in given time. Rate limit exceeded.";
+            errorDetails = "Too many requests sent in given time. Rate limit exceeded.";
             subdetails = `Error: 429 Too Many Requests`;
           } else {
             suggestion_area.querySelector(".suggestion-parent").innerHTML += `
-            <div class="suggestion" onclick="retryRecent(false)">
-              <span>
-                <img src="../res/refresh.svg" style="
-                  height: 20px;
-                  width: 20px;
-                  vertical-align: top;
-                  padding-right: 5px;
-                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
-                >
-              </span>
-              Retry
-            </div>
+              <div class="suggestion" onclick="retryRecent(false)">
+                <span>
+                  <img src="../res/refresh.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: top;
+                    padding-right: 5px;
+                    ${
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
+                    }"
+                  >
+                </span>
+                Retry
+              </div>
             `;
           }
 
@@ -3224,7 +3270,11 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
                 width: 20px;
                 vertical-align: top;
                 padding-right: 5px;
-                ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+                ${
+                  getEffectiveTheme() == "light"
+                    ? "filter: invert(1);"
+                    : ""
+                }"
               >
             </span>
             Retry
@@ -3335,9 +3385,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
 
     for (let i = 0; i < suggestionsDOM.children.length; i++) {
       let label = suggestionsDOM.children[i].innerHTML.trim();
-      let query = suggestionsDOM.children[i].getAttribute(
-        "data-follow-up-query"
-      );
+      let query = suggestionsDOM.children[i].getAttribute("data-follow-up-query");
       let action = query;
 
       if (
@@ -3414,7 +3462,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
  *
  * @returns Generated screen data
  */
-function generateScreenData(includePreventAutoScaleFlag = false) {
+function generateScreenData(includePreventAutoScaleFlag=false) {
   let screenData;
   let assistantMarkupResponse = document.querySelector(
     ".assistant-markup-response"
@@ -3502,7 +3550,7 @@ function _scrollHorizontally(e, el, smoothScroll) {
  * @param {boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
-function registerHorizontalScroll(element, smoothScroll = true) {
+function registerHorizontalScroll(element, smoothScroll=true) {
   if (element)
     element.onmousewheel = (e) => _scrollHorizontally(e, element, smoothScroll);
 }
@@ -3586,7 +3634,7 @@ function updateReleases(releases) {
  * @param {boolean} allowOlyOneMessage
  * Show the message only when no other quick message is showing up.
  */
-function displayQuickMessage(message, allowOlyOneMessage = false) {
+function displayQuickMessage(message, allowOlyOneMessage=false) {
   let nav_region = document.querySelector("#nav-region");
 
   // Show the message only when no other message is showing up.
@@ -3617,8 +3665,8 @@ function displayQuickMessage(message, allowOlyOneMessage = false) {
  */
 function markInputAsInvalid(
   inputElement,
-  addShakeAnimation = false,
-  scrollIntoView = true
+  addShakeAnimation=false,
+  scrollIntoView=true
 ) {
   inputElement.classList.add(["input-err"]);
 
@@ -3666,9 +3714,9 @@ function markInputAsValid(inputElement) {
  */
 function validatePathInput(
   inputElement,
-  addShakeAnimationOnError = false,
-  scrollIntoView = true,
-  trimSpaces = true
+  addShakeAnimationOnError=false,
+  scrollIntoView=true,
+  trimSpaces=true
 ) {
   let val = trimSpaces ? inputElement.value.trim() : inputElement.value;
 
@@ -3836,13 +3884,15 @@ function showGetTokenScreen(oauthValidationCallback) {
             displayErrorScreen({
               icon: {
                 path: "../res/refresh.svg",
-                style: `height: 100px;
-                          animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-                          ${
-                            getEffectiveTheme() == "light"
-                              ? "filter: invert(1);"
-                              : ""
-                          }`,
+                style: `
+                  height: 100px;
+                  animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+                  ${
+                    getEffectiveTheme() == "light"
+                      ? "filter: invert(1);"
+                      : ""
+                  }
+                `,
               },
               title: "Relaunch Required",
               details: "A relaunch is required for changes to take place",
@@ -3862,7 +3912,9 @@ function showGetTokenScreen(oauthValidationCallback) {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
+                      getEffectiveTheme() == "light"
+                        ? "filter: invert(1);"
+                        : ""
                     }"
                   >
                 </span>
@@ -3889,7 +3941,11 @@ function showGetTokenScreen(oauthValidationCallback) {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 10px;
-                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+                  ${
+                    getEffectiveTheme() == "light"
+                      ? "filter: invert(1);"
+                      : ""
+                  }"
                 >
               </span>
               Open Settings
@@ -3902,6 +3958,7 @@ function showGetTokenScreen(oauthValidationCallback) {
 
         document.querySelector("#oauth-retry-btn").onclick = () =>
           showGetTokenScreen(oauthValidationCallback);
+
         clearInterval(countdownIntervalId);
       }
 
@@ -4204,7 +4261,7 @@ function _stopAudioAndMic() {
  * @returns {string}
  * Effective theme based on config and system preferences
  */
-function getEffectiveTheme(theme = null) {
+function getEffectiveTheme(theme=null) {
   theme = theme ? theme : assistantConfig.theme;
 
   if (theme == "light" || theme == "dark") {
@@ -4230,7 +4287,7 @@ function getEffectiveTheme(theme = null) {
  * Change theme for Assistant Response screen.
  * _(Defaults to `true`)_
  */
-function setTheme(theme = null, forceAssistantResponseThemeChange = true) {
+function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
   let effectiveTheme =
     !theme || theme == "system" || assistantConfig.theme == "system"
       ? getEffectiveTheme()
@@ -4281,7 +4338,15 @@ function showAboutBox() {
     commitHash != null
       ? `Commit ID: ${commitHash}\nCommit Date: ${commitDate}\n`
       : "";
-  const info = `Version: ${appVersion}\n${commitInfo}Electron: ${electronVersion}\nChrome: ${chromeVersion}\nNode.js: ${nodeVersion}\nV8: ${v8Version}\nOS: ${osInfo}`;
+
+  const info = [
+    `Version: ${appVersion}`,
+    `${commitInfo}Electron: ${electronVersion}`,
+    `Chrome: ${chromeVersion}`,
+    `Node.js: ${nodeVersion}`,
+    `V8: ${v8Version}`,
+    `OS: ${osInfo}`,
+  ].join('\n');
 
   dialog
     .showMessageBox(assistantWindow, {
@@ -4598,7 +4663,7 @@ function _getMicPermEnableHelp() {
  * If set to `true`, the "Relaunch Required" screen will
  * be shown.
  */
-function _resetSavedTokensFile(showRelaunchScreen = true) {
+function _resetSavedTokensFile(showRelaunchScreen=true) {
   let savedTokensFilePath = assistantConfig.savedTokensPath;
   fs.unlinkSync(savedTokensFilePath);
 
@@ -4606,11 +4671,15 @@ function _resetSavedTokensFile(showRelaunchScreen = true) {
     displayErrorScreen({
       icon: {
         path: "../res/refresh.svg",
-        style: `height: 100px;
-                  animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-                  ${
-                    getEffectiveTheme() == "light" ? "filter: invert(1);" : ""
-                  }`,
+        style: `
+          height: 100px;
+          animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
+          ${
+            getEffectiveTheme() == "light"
+              ? "filter: invert(1);" 
+              : ""
+          }
+        `,
       },
       title: "Relaunch Required",
       details: "A relaunch is required for changes to take place",
@@ -4627,7 +4696,11 @@ function _resetSavedTokensFile(showRelaunchScreen = true) {
             width: 20px;
             vertical-align: top;
             padding-right: 5px;
-            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
+            ${
+              getEffectiveTheme() == "light"
+                ? "filter: invert(1);"
+                : ""
+            }"
           >
         </span>
         Relaunch Assistant
@@ -4659,7 +4732,7 @@ function _resetSavedTokensFile(showRelaunchScreen = true) {
  * console.error(error);
  * console.groupEnd();
  */
-function consoleMessage(message, type = "info") {
+function consoleMessage(message, type="info") {
   let labelColor = "";
 
   switch (type) {
