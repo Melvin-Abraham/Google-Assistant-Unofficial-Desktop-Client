@@ -23,6 +23,12 @@ let configFilePath = path.join(userDataPath, 'config.json');
 let logFilePath = path.join(userDataPath, 'main_process-debug.log');
 let assistantConfig = require('./app/src/common/initialConfig.js');
 
+// Quit the app when the system is about to shutdown
+// This would prevent shutdown interruption on MacOS
+electron.powerMonitor.on('shutdown', () => {
+    quitApp();
+});
+
 process.on('uncaughtException', async (err) => {
     let prelude = (app.isReady()) ? 'Uncaught Exception' : 'Uncaught Exception thrown before app was ready';
     let errorMessage = `\n${prelude}:\n\n${err.stack}\n\nLogs for this run is available here:\n    ${logFilePath}`;
