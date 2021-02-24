@@ -8,12 +8,12 @@ const expand_collapse_btn = document.querySelector("#expand-collapse-btn");
 let expanded = false;
 
 close_btn.onclick = () => {
-  _stopAudioAndMic();
-  close();
+    _stopAudioAndMic();
+    close();
 
-  if (!assistantConfig["alwaysCloseToTray"]) {
-    quitApp();
-  }
+    if (!assistantConfig["alwaysCloseToTray"]) {
+        quitApp();
+    }
 };
 
 min_btn.onclick = () => assistantWindow.minimize();
@@ -77,28 +77,28 @@ let isFirstTimeUser = true;
 let _canAccessMicrophone = true;
 
 navigator.mediaDevices
-  .getUserMedia({ audio: true })
-  .then((rawStream) => rawStream.getTracks().forEach((track) => track.stop()))
-  .catch((e) => {
-    console.group(...consoleMessage("Microphone not accessible", "warn"));
-    console.error(e);
-    console.groupEnd();
+    .getUserMedia({ audio: true })
+    .then((rawStream) => rawStream.getTracks().forEach((track) => track.stop()))
+    .catch((e) => {
+        console.group(...consoleMessage("Microphone not accessible", "warn"));
+        console.error(e);
+        console.groupEnd();
 
-    _canAccessMicrophone = false;
-    displayQuickMessage("Microphone is not accessible");
-  });
+        _canAccessMicrophone = false;
+        displayQuickMessage("Microphone is not accessible");
+    });
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
-  let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
-  Object.assign(assistantConfig, savedConfig);
-  console.log(...consoleMessage("Config loaded"));
+    let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
+    Object.assign(assistantConfig, savedConfig);
+    console.log(...consoleMessage("Config loaded"));
 
-  isFirstTimeUser = false;
+    isFirstTimeUser = false;
 } else {
-  // Assuming as first-time user
+    // Assuming as first-time user
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
     <div class="init">
       <center id="assistant-logo-main-parent">
         <img id="first-time-logo" src="../res/meet_google_assist.svg" alt="">
@@ -118,10 +118,10 @@ if (fs.existsSync(configFilePath)) {
     </div>
   `;
 
-  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-  let suggestion_parent = document.querySelector(".suggestion-parent");
+    suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+    let suggestion_parent = document.querySelector(".suggestion-parent");
 
-  suggestion_parent.innerHTML = `
+    suggestion_parent.innerHTML = `
     <div id="get-started-btn" class="suggestion" onclick="showNextScreen()">
       <span>
         <img src="../res/proceed.svg" style="
@@ -129,19 +129,15 @@ if (fs.existsSync(configFilePath)) {
           width: 16px;
           vertical-align: top;
           padding-right: 10px;
-          ${
-            getEffectiveTheme() == "light"
-              ? "filter: invert(1);"
-              : ""
-          }"
+          ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
         >
       </span>
       Get Started
     </div>
   `;
 
-  suggestion_parent.querySelector("#get-started-btn").onclick = () => {
-    main_area.innerHTML = `
+    suggestion_parent.querySelector("#get-started-btn").onclick = () => {
+        main_area.innerHTML = `
       <div class="init">
         <center id="assistant-logo-main-parent">
           <img id="first-time-logo" src="../res/assistant_sdk_client.svg" alt="">
@@ -162,10 +158,10 @@ if (fs.existsSync(configFilePath)) {
       </div>
     `;
 
-    suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div id="proceed-btn" class="suggestion">
         <span>
           <img src="../res/proceed.svg" style="
@@ -173,47 +169,43 @@ if (fs.existsSync(configFilePath)) {
             width: 16px;
             vertical-align: top;
             padding-right: 10px;
-            ${
-              getEffectiveTheme() == "light"
-                ? "filter: invert(1);"
-                : ""
-            }"
+            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
           >
         </span>
         Proceed
       </div>
     `;
 
-    suggestion_area.querySelector("#proceed-btn").onclick = () => {
-      // Set assistant's language to system language
-      let systemLanguage = navigator.language;
+        suggestion_area.querySelector("#proceed-btn").onclick = () => {
+            // Set assistant's language to system language
+            let systemLanguage = navigator.language;
 
-      if (Object.keys(supportedLanguages).includes(systemLanguage)) {
-        assistantConfig.language = systemLanguage;
-      }
+            if (Object.keys(supportedLanguages).includes(systemLanguage)) {
+                assistantConfig.language = systemLanguage;
+            }
 
-      // Write the config
-      fs.writeFile(configFilePath, JSON.stringify(assistantConfig), () =>
-        console.log("Config File was added to userData path")
-      );
+            // Write the config
+            fs.writeFile(configFilePath, JSON.stringify(assistantConfig), () =>
+                console.log("Config File was added to userData path")
+            );
 
-      relaunchAssistant();
+            relaunchAssistant();
+        };
     };
-  };
 
-  // If the user is opening the app for the first time,
-  // throw `Exception` to prevent Assistant initialization
+    // If the user is opening the app for the first time,
+    // throw `Exception` to prevent Assistant initialization
 
-  if (isFirstTimeUser) {
-    // Disable settings button
-    let settings_btn = document.querySelector("#settings-btn");
-    settings_btn.onclick = "";
-    settings_btn.classList.add("disabled");
+    if (isFirstTimeUser) {
+        // Disable settings button
+        let settings_btn = document.querySelector("#settings-btn");
+        settings_btn.onclick = "";
+        settings_btn.classList.add("disabled");
 
-    throw Error(
-      "First Time User: Halting Assistant Initialization. Click through the welcome screens to proceed."
-    );
-  }
+        throw Error(
+            "First Time User: Halting Assistant Initialization. Click through the welcome screens to proceed."
+        );
+    }
 }
 
 // Setup Assistant Window
@@ -222,94 +214,96 @@ setTheme();
 setAssistantWindowBorder();
 
 if (assistantConfig["startAsMaximized"]) {
-  toggleExpandWindow();
+    toggleExpandWindow();
 }
 
 if (assistantConfig["windowFloatBehavior"] === "close-on-blur") {
-  window.onblur = closeOnBlurCallback;
+    window.onblur = closeOnBlurCallback;
 }
 
 // Set microphone and speaker source
 
 (async () => {
-  // Initialize p5.js source list for `setSource` to work
-  await p5jsMic.getSources();
+    // Initialize p5.js source list for `setSource` to work
+    await p5jsMic.getSources();
 
-  let deviceList = await navigator.mediaDevices.enumerateDevices();
-  let audioInDeviceIndex = deviceList
-    .filter((device) => device.kind === "audioinput")
-    .map((device) => device.deviceId)
-    .indexOf(assistantConfig.microphoneSource);
+    let deviceList = await navigator.mediaDevices.enumerateDevices();
+    let audioInDeviceIndex = deviceList
+        .filter((device) => device.kind === "audioinput")
+        .map((device) => device.deviceId)
+        .indexOf(assistantConfig.microphoneSource);
 
-  let audioOutDeviceIndex = deviceList
-    .filter((device) => device.kind === "audiooutput")
-    .map((device) => device.deviceId)
-    .indexOf(assistantConfig.speakerSource);
+    let audioOutDeviceIndex = deviceList
+        .filter((device) => device.kind === "audiooutput")
+        .map((device) => device.deviceId)
+        .indexOf(assistantConfig.speakerSource);
 
-  if (audioInDeviceIndex !== -1) {
-    // If the audio-in Device ID exists
-    mic.setDeviceId(assistantConfig.microphoneSource);
-    p5jsMic.setSource(audioInDeviceIndex);
-  }
+    if (audioInDeviceIndex !== -1) {
+        // If the audio-in Device ID exists
+        mic.setDeviceId(assistantConfig.microphoneSource);
+        p5jsMic.setSource(audioInDeviceIndex);
+    }
 
-  if (audioOutDeviceIndex !== -1) {
-    // If the audio-out Device ID exists
-    audPlayer.setDeviceId(assistantConfig.speakerSource);
-  }
+    if (audioOutDeviceIndex !== -1) {
+        // If the audio-out Device ID exists
+        audPlayer.setDeviceId(assistantConfig.speakerSource);
+    }
 })();
 
 const config = {
-  auth: {
-    keyFilePath: assistantConfig["keyFilePath"],
-    // where you want the tokens to be saved
-    // will create the directory if not already there
-    // Initial launch of the assistant will not trigger token saving
-    savedTokensPath: !firstLaunch
-      ? assistantConfig["savedTokensPath"]
-      : undefined,
-    tokenInput: showGetTokenScreen,
-  },
-  // this param is optional, but all options will be shown
-  conversation: {
-    audio: {
-      encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
-      sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
-      encodingOut: "MP3", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
-      sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+    auth: {
+        keyFilePath: assistantConfig["keyFilePath"],
+        // where you want the tokens to be saved
+        // will create the directory if not already there
+        // Initial launch of the assistant will not trigger token saving
+        savedTokensPath: !firstLaunch
+            ? assistantConfig["savedTokensPath"]
+            : undefined,
+        tokenInput: showGetTokenScreen,
     },
-    lang: assistantConfig["language"], // language code for input/output (defaults to en-US)
-    deviceModelId: "", // use if you've gone through the Device Registration process
-    deviceId: "", // use if you've gone through the Device Registration process
-    // textQuery: "", // if this is set, audio input is ignored
-    isNew: assistantConfig["forceNewConversation"], // set this to true if you want to force a new conversation and ignore the old state
-    screen: {
-      isOn: true, // set this to true if you want to output results to a screen
+    // this param is optional, but all options will be shown
+    conversation: {
+        audio: {
+            encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
+            sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
+            encodingOut: "MP3", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
+            sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+        },
+        lang: assistantConfig["language"], // language code for input/output (defaults to en-US)
+        deviceModelId: "", // use if you've gone through the Device Registration process
+        deviceId: "", // use if you've gone through the Device Registration process
+        // textQuery: "", // if this is set, audio input is ignored
+        isNew: assistantConfig["forceNewConversation"], // set this to true if you want to force a new conversation and ignore the old state
+        screen: {
+            isOn: true, // set this to true if you want to output results to a screen
+        },
     },
-  },
 };
 
 let assistant;
 
 try {
-  assistant = new GoogleAssistant(config.auth);
+    assistant = new GoogleAssistant(config.auth);
 } catch (err) {
-  console.group(...consoleMessage("Assistant Initialization failed", "error"));
-  console.error(err);
+    console.group(
+        ...consoleMessage("Assistant Initialization failed", "error")
+    );
+    console.error(err);
 
-  if (err.message.startsWith("Cannot find module")) {
-    // Auth file does not exist
-    console.log("Auth does not exist!!");
+    if (err.message.startsWith("Cannot find module")) {
+        // Auth file does not exist
+        console.log("Auth does not exist!!");
 
-    displayErrorScreen({
-      title: "Authentication Failure",
-      details:
-        "The Key file provided either does not exist or is not accessible. Please check the path to the file.",
-      subdetails: "Error: Key file not found",
-    });
+        displayErrorScreen({
+            title: "Authentication Failure",
+            details:
+                "The Key file provided either does not exist or is not accessible. Please check the path to the file.",
+            subdetails: "Error: Key file not found",
+        });
 
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div class="suggestion" onclick="openConfig()">
         <span>
           <img src="../res/settings.svg" style="
@@ -317,30 +311,26 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 10px;
-            ${
-              getEffectiveTheme() == "light"
-                ? "filter: invert(1);"
-                : ""
-            }"
+            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
           >
         </span>
         Open Settings
       </div>
     `;
-  } else if (err.name == "TypeError") {
-    // Invalid Auth file
-    console.log("Auth is INVALID");
+    } else if (err.name == "TypeError") {
+        // Invalid Auth file
+        console.log("Auth is INVALID");
 
-    displayErrorScreen({
-      title: "Authentication Failure",
-      details:
-        'The Key file provided is not valid. Make sure the file is of the form "client_secret_&lt;your_id&gt;.apps.googleusercontent.com.json"',
-      subdetails: "Error: Invalid Key file",
-    });
+        displayErrorScreen({
+            title: "Authentication Failure",
+            details:
+                'The Key file provided is not valid. Make sure the file is of the form "client_secret_&lt;your_id&gt;.apps.googleusercontent.com.json"',
+            subdetails: "Error: Invalid Key file",
+        });
 
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div class="suggestion" onclick="openConfig()">
         <span>
           <img src="../res/settings.svg" style="
@@ -348,29 +338,25 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 10px;
-            ${
-              getEffectiveTheme() == "light"
-                ? "filter: invert(1);"
-                : ""
-            }"
+            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
           >
         </span>
         Open Settings
       </div>
     `;
-  } else {
-    // Unexpected Error
+    } else {
+        // Unexpected Error
 
-    displayErrorScreen({
-      title: "Unexpected Exception Occurred",
-      details:
-        "The Assistant failed to initialize due to some unexpected error. Try reloading the assistant.",
-      subdetails: "Error: Assistant init failed",
-    });
+        displayErrorScreen({
+            title: "Unexpected Exception Occurred",
+            details:
+                "The Assistant failed to initialize due to some unexpected error. Try reloading the assistant.",
+            subdetails: "Error: Assistant init failed",
+        });
 
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div class="suggestion" onclick="relaunchAssistant()">
         <span>
           <img src="../res/refresh.svg" style="
@@ -378,25 +364,21 @@ try {
             width: 20px;
             vertical-align: top;
             padding-right: 5px;
-            ${
-              getEffectiveTheme() == "light"
-                ? "filter: invert(1);"
-                : ""
-            }"
+            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
           >
         </span>
         Relaunch Assistant
       </div>
     `;
-  }
+    }
 
-  console.groupEnd();
+    console.groupEnd();
 }
 
 if (assistantConfig["keyFilePath"] == "") {
-  // If no Auth File is provided, show getting started screen
+    // If no Auth File is provided, show getting started screen
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
     <div class="fade-in-from-bottom">
       <div style="margin: 30px 10px 8px 10px;">
         <div style="
@@ -431,11 +413,11 @@ if (assistantConfig["keyFilePath"] == "") {
     </div>
   `;
 
-  let suggestion_parent = document.querySelector(".suggestion-parent");
-  let documentationLink =
-    "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client";
+    let suggestion_parent = document.querySelector(".suggestion-parent");
+    let documentationLink =
+        "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client";
 
-  suggestion_parent.innerHTML = `
+    suggestion_parent.innerHTML = `
     <span style="
       opacity: 0.502;
       margin-right: 5px;
@@ -455,48 +437,47 @@ if (assistantConfig["keyFilePath"] == "") {
           vertical-align: text-top;
           padding-right: 5px;
           padding-top: 2px;
-          ${
-            getEffectiveTheme() == "light"
-              ? "filter: invert(1);"
-              : ""
-          }"
+          ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
         >
       </span>
       Check out this wiki
     </div>
   `;
 
-  assistant_mic.id = "";
-  assistant_mic.classList.add("assistant-mic-disabled");
+    assistant_mic.id = "";
+    assistant_mic.classList.add("assistant-mic-disabled");
 }
 
 // starts a new conversation with the assistant
 const startConversation = (conversation) => {
-  conversation
-    .on("audio-data", (data) => {
-      // do stuff with the audio data from the server
-      // usually send it to some audio output / file
+    conversation
+        .on("audio-data", (data) => {
+            // do stuff with the audio data from the server
+            // usually send it to some audio output / file
 
-      if (assistantConfig["enableAudioOutput"] && assistantWindow.isVisible()) {
-        audPlayer.appendBuffer(Buffer.from(data));
-      }
-    })
-    .on("end-of-utterance", () => {
-      // do stuff when done speaking to the assistant
-      // usually just stop your audio input
-      stopMic();
+            if (
+                assistantConfig["enableAudioOutput"] &&
+                assistantWindow.isVisible()
+            ) {
+                audPlayer.appendBuffer(Buffer.from(data));
+            }
+        })
+        .on("end-of-utterance", () => {
+            // do stuff when done speaking to the assistant
+            // usually just stop your audio input
+            stopMic();
 
-      console.log("Loading results...");
-    })
-    .on("transcription", (data) => {
-      // do stuff with the words you are saying to the assistant
+            console.log("Loading results...");
+        })
+        .on("transcription", (data) => {
+            // do stuff with the words you are saying to the assistant
 
-      console.log(">", data, "\r");
-      let color_fg = getComputedStyle(
-        document.documentElement
-      ).getPropertyValue("--color-fg");
+            console.log(">", data, "\r");
+            let color_fg = getComputedStyle(
+                document.documentElement
+            ).getPropertyValue("--color-fg");
 
-      suggestion_area.innerHTML = `
+            suggestion_area.innerHTML = `
         <center>
           <span style="
             color: ${color_fg}${!data.done ? "80" : ""};
@@ -507,86 +488,95 @@ const startConversation = (conversation) => {
         </center>
       `;
 
-      if (data.done) {
-        setQueryTitle(data.transcription);
-        if (assistantConfig["enablePingSound"]) audPlayer.playPingSuccess();
-      }
-    })
-    .on("response", (text) => {
-      // do stuff with the text that the assistant said back
-    })
-    .on("volume-percent", (percent) => {
-      // do stuff with a volume percent change (range from 1-100)
-    })
-    .on("device-action", (action) => {
-      // if you've set this device up to handle actions, you'll get that here
-      console.group(...consoleMessage("Device Actions"));
-      console.log(action);
-      console.groupEnd();
-    })
-    .on("screen-data", (screen) => {
-      // if the screen.isOn flag was set to true, you'll get the format and data of the output
-      displayScreenData(screen, true);
-    })
-    .on("ended", (error, continueConversation) => {
-      // once the conversation is ended, see if we need to follow up
+            if (data.done) {
+                setQueryTitle(data.transcription);
+                if (assistantConfig["enablePingSound"])
+                    audPlayer.playPingSuccess();
+            }
+        })
+        .on("response", (text) => {
+            // do stuff with the text that the assistant said back
+        })
+        .on("volume-percent", (percent) => {
+            // do stuff with a volume percent change (range from 1-100)
+        })
+        .on("device-action", (action) => {
+            // if you've set this device up to handle actions, you'll get that here
+            console.group(...consoleMessage("Device Actions"));
+            console.log(action);
+            console.groupEnd();
+        })
+        .on("screen-data", (screen) => {
+            // if the screen.isOn flag was set to true, you'll get the format and data of the output
+            displayScreenData(screen, true);
+        })
+        .on("ended", (error, continueConversation) => {
+            // once the conversation is ended, see if we need to follow up
 
-      audPlayer.play();
+            audPlayer.play();
 
-      if (error) {
-        console.group(
-          ...consoleMessage("Error thrown after conversation ended", "error")
-        );
-        console.error(error);
-        console.groupEnd();
+            if (error) {
+                console.group(
+                    ...consoleMessage(
+                        "Error thrown after conversation ended",
+                        "error"
+                    )
+                );
+                console.error(error);
+                console.groupEnd();
 
-        displayErrorScreen({
-          title: "Unexpected Error",
-          details: "Unexpected Error occurred at the end of conversation",
-          subdetails: `Error: ${error.message}`,
-        });
-      }
+                displayErrorScreen({
+                    title: "Unexpected Error",
+                    details:
+                        "Unexpected Error occurred at the end of conversation",
+                    subdetails: `Error: ${error.message}`,
+                });
+            } else if (
+                continueConversation &&
+                assistantConfig["enableMicOnContinousConversation"] &&
+                !mic.isActive
+            ) {
+                audPlayer.audioPlayer.addEventListener("waiting", () =>
+                    startMic()
+                );
+            } else {
+                console.log(...consoleMessage("Conversation Complete"));
+            }
 
-      else if (
-        continueConversation &&
-        assistantConfig["enableMicOnContinousConversation"] &&
-        !mic.isActive
-      ) {
-        audPlayer.audioPlayer.addEventListener("waiting", () => startMic());
-      }
+            if (init_headline) {
+                init_headline.innerText =
+                    supportedLanguages[
+                        assistantConfig["language"]
+                    ].welcomeMessage;
+            }
+        })
+        .on("error", (error) => {
+            console.group(
+                ...consoleMessage("Error occurred during conversation", "error")
+            );
+            console.error(error);
+            console.groupEnd();
 
-      else {
-        console.log(...consoleMessage("Conversation Complete"));
-      }
+            if (error.details != "Service unavailable.") {
+                suggestion_area.innerHTML =
+                    '<div class="suggestion-parent"></div>';
+                let suggestion_parent = document.querySelector(
+                    ".suggestion-parent"
+                );
 
-      if (init_headline) {
-        init_headline.innerText =
-          supportedLanguages[assistantConfig["language"]].welcomeMessage;
-      }
-    })
-    .on("error", (error) => {
-      console.group(
-        ...consoleMessage("Error occurred during conversation", "error")
-      );
-      console.error(error);
-      console.groupEnd();
+                if (error.details.includes("invalid_grant")) {
+                    displayErrorScreen({
+                        icon: {
+                            path: "../res/offline_icon.svg",
+                            style: "margin-top: -5px;",
+                        },
+                        title: "Auth Error",
+                        details:
+                            "Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path",
+                        subdetails: `Error: ${error.details}`,
+                    });
 
-      if (error.details != "Service unavailable.") {
-        suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-        let suggestion_parent = document.querySelector(".suggestion-parent");
-
-        if (error.details.includes("invalid_grant")) {
-          displayErrorScreen({
-            icon: {
-              path: "../res/offline_icon.svg",
-              style: "margin-top: -5px;"
-            },
-            title: 'Auth Error',
-            details: 'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
-            subdetails: `Error: ${error.details}`
-          });
-
-          suggestion_parent.innerHTML += `
+                    suggestion_parent.innerHTML += `
             <div class="suggestion" onclick="_resetSavedTokensFile()">
               <span>
                 <img src="../res/refresh.svg" style="
@@ -594,11 +584,7 @@ const startConversation = (conversation) => {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 5px;
-                  ${
-                    getEffectiveTheme() == "light"
-                      ? "filter: invert(1);"
-                      : ""
-                  }"
+                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
                 >
               </span>
               Reset Tokens
@@ -610,39 +596,40 @@ const startConversation = (conversation) => {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 5px;
-                  ${
-                    getEffectiveTheme() == "light"
-                      ? "filter: invert(1);"
-                      : ""
-                  }"
+                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
                 >
               </span>
               Set Saved Tokens Path
             </div>
           `;
-        }
+                } else if (error.code === 14) {
+                    if (
+                        !error.details.includes(
+                            "No access or refresh token is set"
+                        )
+                    )
+                        displayErrorScreen({
+                            icon: {
+                                path: "../res/offline_icon.svg",
+                                style: "margin-top: -5px;",
+                            },
+                            title: "You are Offline!",
+                            details: "Please check your Internet Connection...",
+                            subdetails: `Error: ${error.details}`,
+                        });
 
-        else if (error.code === 14) {
-          if (!error.details.includes('No access or refresh token is set')) 
-            displayErrorScreen({
-              icon: {
-                path: "../res/offline_icon.svg",
-                style: "margin-top: -5px;",
-              },
-              title: "You are Offline!",
-              details: "Please check your Internet Connection...",
-              subdetails: `Error: ${error.details}`,
-            });
+                    let networkPrefURL =
+                        process.platform == "darwin"
+                            ? "x-apple.systempreferences:com.apple.preferences.sharing?Internet"
+                            : process.platform == "win32"
+                            ? "ms-settings:network-status"
+                            : "";
 
-            let networkPrefURL =
-              process.platform == "darwin"
-                ? "x-apple.systempreferences:com.apple.preferences.sharing?Internet"
-                : process.platform == "win32"
-                ? "ms-settings:network-status"
-                : "";
-
-            if (process.platform == "win32" || process.platform == "darwin") {
-              suggestion_parent.innerHTML += `
+                    if (
+                        process.platform == "win32" ||
+                        process.platform == "darwin"
+                    ) {
+                        suggestion_parent.innerHTML += `
                 <div class="suggestion" onclick="openLink('${networkPrefURL}')">
                   <span>
                     <img src="../res/troubleshoot.svg" style="
@@ -651,19 +638,19 @@ const startConversation = (conversation) => {
                       vertical-align: top;
                       padding-right: 5px;
                       ${
-                        getEffectiveTheme() == "light"
-                          ? "filter: invert(1);"
-                          : ""
+                          getEffectiveTheme() == "light"
+                              ? "filter: invert(1);"
+                              : ""
                       }"
                     >
                   </span>
                   Network Preferences
                 </div>
               `;
-            }
+                    }
 
-            suggestion_parent.innerHTML =
-              `
+                    suggestion_parent.innerHTML =
+                        `
               <div class="suggestion" onclick="retryRecent(false)">
                 <span>
                   <img src="../res/refresh.svg" style="
@@ -672,35 +659,33 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
                 Retry
               </div>
             ` + suggestion_parent.innerHTML;
-          }
+                } else {
+                    // Invalid Saved Tokens
 
-          else {
-            // Invalid Saved Tokens
+                    displayErrorScreen({
+                        title: "Invalid Tokens!",
+                        details: `${
+                            assistantConfig["savedTokensPath"] == ""
+                                ? "No Token file was provided. Please provide a Token file in the settings under 'Saved Token Path'."
+                                : "The Token file provided is not valid. Please check the path under 'Saved Token Path' in settings."
+                        }`,
+                        subdetails: "Error: No access or refresh token is set",
+                    });
 
-            displayErrorScreen({
-              title: "Invalid Tokens!",
-              details: `${
-                assistantConfig["savedTokensPath"] == ""
-                  ? "No Token file was provided. Please provide a Token file in the settings under 'Saved Token Path'."
-                  : "The Token file provided is not valid. Please check the path under 'Saved Token Path' in settings."
-              }`,
-              subdetails: "Error: No access or refresh token is set",
-            });
+                    let suggestion_parent = document.querySelector(
+                        ".suggestion-parent"
+                    );
 
-            let suggestion_parent = document.querySelector(
-              ".suggestion-parent"
-            );
-
-            suggestion_parent.innerHTML = `
+                    suggestion_parent.innerHTML = `
               <div class="suggestion" onclick="openConfig()">
                 <span>
                   <img src="../res/settings.svg" style="
@@ -709,29 +694,28 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 10px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
                 Open Settings
               </div>
             `;
-          }
-        }
+                }
+            } else if (error.code === 3) {
+                if (error.details.includes("unsupported language_code")) {
+                    // Unsupported language code
 
-        else if (error.code === 3) {
-          if (error.details.includes("unsupported language_code")) {
-            // Unsupported language code
+                    displayErrorScreen({
+                        title: "Invalid Language Code",
+                        details: `The language code "${assistantConfig.language}" is unsupported as of now.`,
+                        subdetails: `Error: ${error.details}`,
+                    });
 
-            displayErrorScreen({
-              title: "Invalid Language Code",
-              details: `The language code "${assistantConfig.language}" is unsupported as of now.`,
-              subdetails: `Error: ${error.details}`,
-            });
-
-            suggestion_parent.innerHTML = `
+                    suggestion_parent.innerHTML =
+                        `
               <div class="suggestion" onclick="openConfig('language')">
                 <span>
                   <img src="../res/troubleshoot.svg" style="
@@ -740,9 +724,9 @@ const startConversation = (conversation) => {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
@@ -756,50 +740,52 @@ const startConversation = (conversation) => {
                 Track language support
               </div>
             ` + suggestion_parent.innerHTML;
-          }
-        }
+                }
+            }
 
-        historyHead = history.length;
+            historyHead = history.length;
 
-        // Deactivate the `loading bar`
-        deactivateLoader();
+            // Deactivate the `loading bar`
+            deactivateLoader();
 
-        // Stop Microphone
-        stopMic();
-    })
-  };
+            // Stop Microphone
+            stopMic();
+        });
+};
 
 // will start a conversation and wait for audio data
 // as soon as it's ready
 assistant
-  .on("ready", () => (isAssistantReady = true))
-  .on("started", (conversation) => {
-    console.log(...consoleMessage("Assistant Started!"));
-    startConversation(conversation);
+    .on("ready", () => (isAssistantReady = true))
+    .on("started", (conversation) => {
+        console.log(...consoleMessage("Assistant Started!"));
+        startConversation(conversation);
 
-    // Stop Assistant Response Playback
-    audPlayer.stop();
+        // Stop Assistant Response Playback
+        audPlayer.stop();
 
-    // Mic Setup
-    if (config.conversation.textQuery === undefined) {
-      if (mic.isActive) {
-        console.log("Mic already enabled...");
-        return;
-      }
+        // Mic Setup
+        if (config.conversation.textQuery === undefined) {
+            if (mic.isActive) {
+                console.log("Mic already enabled...");
+                return;
+            }
 
-      console.log("STARTING MICROPHONE...");
-      if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
-      if (init_headline)
-        init_headline.innerText =
-          supportedLanguages[assistantConfig["language"]].listeningMessage;
+            console.log("STARTING MICROPHONE...");
+            if (assistantConfig["enablePingSound"]) audPlayer.playPingStart();
+            if (init_headline)
+                init_headline.innerText =
+                    supportedLanguages[
+                        assistantConfig["language"]
+                    ].listeningMessage;
 
-      // Set `p5jsMic` for visulaization
-      p5jsMic.start();
-      let assistant_mic_parent = document.querySelector(
-        "#assistant-mic-parent"
-      );
+            // Set `p5jsMic` for visulaization
+            p5jsMic.start();
+            let assistant_mic_parent = document.querySelector(
+                "#assistant-mic-parent"
+            );
 
-      assistant_mic_parent.outerHTML = `
+            assistant_mic_parent.outerHTML = `
         <div id="assistant-mic-parent" class="fade-scale">
           <div id="amp-bar-group">
               <div class="amp-bar" style="background-color: #4285F4;"></div>
@@ -810,119 +796,149 @@ assistant
         </div>
       `;
 
-      // Add Event Listener to Stop Mic
+            // Add Event Listener to Stop Mic
 
-      let amp_bar_group = document.querySelector("#assistant-mic-parent");
+            let amp_bar_group = document.querySelector("#assistant-mic-parent");
 
-      amp_bar_group.onclick = () => {
-        stopMic();
-        if (assistantConfig["enablePingSound"]) audPlayer.playPingStop();
-      };
+            amp_bar_group.onclick = () => {
+                stopMic();
+                if (assistantConfig["enablePingSound"])
+                    audPlayer.playPingStop();
+            };
 
-      // Setup mic for recording
+            // Setup mic for recording
 
-      let processConversation = (data) => {
-        const buffer = Buffer.from(data);
-        conversation.write(buffer);
+            let processConversation = (data) => {
+                const buffer = Buffer.from(data);
+                conversation.write(buffer);
 
-        const amp_threshold = 0.05;
-        let amp = p5jsMic.getLevel();
-        let amp_bar_list = document.querySelectorAll(".amp-bar");
+                const amp_threshold = 0.05;
+                let amp = p5jsMic.getLevel();
+                let amp_bar_list = document.querySelectorAll(".amp-bar");
 
-        amp_bar_list[0].setAttribute(
-          "style", [
-            `background-color: var(--color-blue);`,
-            `height: ${constrain(map(amp, 0, amp_threshold, 6, 25), 6, 25)}px;`
-          ].join("")
-        );
+                amp_bar_list[0].setAttribute(
+                    "style",
+                    [
+                        `background-color: var(--color-blue);`,
+                        `height: ${constrain(
+                            map(amp, 0, amp_threshold, 6, 25),
+                            6,
+                            25
+                        )}px;`,
+                    ].join("")
+                );
 
-        amp_bar_list[1].setAttribute(
-          "style", [
-            `background-color: var(--color-red);`,
-            `height: ${constrain(map(amp, 0, amp_threshold, 6, 15), 6, 15)}px;`
-          ].join("")
-        );
+                amp_bar_list[1].setAttribute(
+                    "style",
+                    [
+                        `background-color: var(--color-red);`,
+                        `height: ${constrain(
+                            map(amp, 0, amp_threshold, 6, 15),
+                            6,
+                            15
+                        )}px;`,
+                    ].join("")
+                );
 
-        amp_bar_list[2].setAttribute(
-          "style", [
-            `background-color: var(--color-yellow);`,
-            `height: ${constrain(map(amp, 0, amp_threshold, 6, 30), 6, 30)}px;`
-          ].join("")
-        );
+                amp_bar_list[2].setAttribute(
+                    "style",
+                    [
+                        `background-color: var(--color-yellow);`,
+                        `height: ${constrain(
+                            map(amp, 0, amp_threshold, 6, 30),
+                            6,
+                            30
+                        )}px;`,
+                    ].join("")
+                );
 
-        amp_bar_list[3].setAttribute(
-          "style", [
-            `background-color: var(--color-green);`,
-            `height: ${constrain(map(amp, 0, amp_threshold, 6, 20), 6, 20)}px;`
-          ].join("")
-        );
-      };
+                amp_bar_list[3].setAttribute(
+                    "style",
+                    [
+                        `background-color: var(--color-green);`,
+                        `height: ${constrain(
+                            map(amp, 0, amp_threshold, 6, 20),
+                            6,
+                            20
+                        )}px;`,
+                    ].join("")
+                );
+            };
 
-      let micStoppedListener = () => {
-        mic.off("data", processConversation);
-        mic.off("mic-stopped", micStoppedListener);
-        conversation.end();
-      };
+            let micStoppedListener = () => {
+                mic.off("data", processConversation);
+                mic.off("mic-stopped", micStoppedListener);
+                conversation.end();
+            };
 
-      mic.on("data", processConversation);
-      mic.on("mic-stopped", micStoppedListener);
-    }
-  })
-  .on("error", (err) => {
-    console.group(...consoleMessage("Error thrown by Assistant", "error"));
-    console.error(err);
-    console.groupEnd();
-
-    let currentHTML = document.querySelector("body").innerHTML;
-    let suggestionOnClickListeners = [
-      ...document.querySelectorAll(".suggestion-parent > .suggestion"),
-    ].map((btn) => btn.onclick);
-
-    if (assistantConfig["savedTokensPath"] != "") {
-      displayErrorScreen({
-        title: "Unexpected Exception Occurred",
-        details: "An unexpected error occurred.",
-        subdetails: `Error: ${err.message}`,
-      });
-
-      historyHead = history.length;
-
-      function closeCurrentScreen() {
-        let currentDOM = parser.parseFromString(currentHTML, "text/html");
-        console.log("Current DOM", currentDOM);
-
-        if (currentDOM.querySelector(".assistant-markup-response")) {
-          main_area.innerHTML = displayScreenData(
-            history[historyHead - 1]["screen-data"]
-          );
-        } else {
-          main_area.innerHTML = currentDOM.querySelector(
-            "#main-area"
-          ).innerHTML;
+            mic.on("data", processConversation);
+            mic.on("mic-stopped", micStoppedListener);
         }
+    })
+    .on("error", (err) => {
+        console.group(...consoleMessage("Error thrown by Assistant", "error"));
+        console.error(err);
+        console.groupEnd();
 
-        suggestion_area.innerHTML = currentDOM.querySelector(
-          "#suggestion-area"
-        ).innerHTML;
+        let currentHTML = document.querySelector("body").innerHTML;
+        let suggestionOnClickListeners = [
+            ...document.querySelectorAll(".suggestion-parent > .suggestion"),
+        ].map((btn) => btn.onclick);
 
-        let suggestions = [
-          ...document.querySelectorAll(".suggestion-parent > .suggestion"),
-        ];
+        if (assistantConfig["savedTokensPath"] != "") {
+            displayErrorScreen({
+                title: "Unexpected Exception Occurred",
+                details: "An unexpected error occurred.",
+                subdetails: `Error: ${err.message}`,
+            });
 
-        suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
-          suggestions[suggestionIndex].onclick = listener;
-        });
+            historyHead = history.length;
 
-        historyHead--;
+            function closeCurrentScreen() {
+                let currentDOM = parser.parseFromString(
+                    currentHTML,
+                    "text/html"
+                );
+                console.log("Current DOM", currentDOM);
 
-        if (historyHead == -1) {
-          document.querySelector(".app-title").innerText = "";
-        }
-      }
+                if (currentDOM.querySelector(".assistant-markup-response")) {
+                    main_area.innerHTML = displayScreenData(
+                        history[historyHead - 1]["screen-data"]
+                    );
+                } else {
+                    main_area.innerHTML = currentDOM.querySelector(
+                        "#main-area"
+                    ).innerHTML;
+                }
 
-      let suggestion_parent = document.querySelector(".suggestion-parent");
+                suggestion_area.innerHTML = currentDOM.querySelector(
+                    "#suggestion-area"
+                ).innerHTML;
 
-      suggestion_parent.innerHTML = `
+                let suggestions = [
+                    ...document.querySelectorAll(
+                        ".suggestion-parent > .suggestion"
+                    ),
+                ];
+
+                suggestionOnClickListeners.forEach(
+                    (listener, suggestionIndex) => {
+                        suggestions[suggestionIndex].onclick = listener;
+                    }
+                );
+
+                historyHead--;
+
+                if (historyHead == -1) {
+                    document.querySelector(".app-title").innerText = "";
+                }
+            }
+
+            let suggestion_parent = document.querySelector(
+                ".suggestion-parent"
+            );
+
+            suggestion_parent.innerHTML = `
         <div class="suggestion" onclick="relaunchAssistant()">
           <span>
             <img src="../res/refresh.svg" style="
@@ -930,11 +946,7 @@ assistant
               width: 20px;
               vertical-align: top;
               padding-right: 5px;
-              ${
-                getEffectiveTheme() == "light"
-                  ? "filter: invert(1);"
-                  : ""
-              }"
+              ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
             >
           </span>
           Relaunch Assistant
@@ -944,20 +956,22 @@ assistant
         </div>
       `;
 
-      document.querySelector("#ignore-btn").onclick = closeCurrentScreen;
-    } else {
-      // No tokens specified
+            document.querySelector("#ignore-btn").onclick = closeCurrentScreen;
+        } else {
+            // No tokens specified
 
-      displayErrorScreen({
-        title: "Tokens not found!",
-        details:
-          "No Token file was provided. Please provide a Token file in the settings under 'Saved Token Path'.",
-        subdetails: "Error: No access or refresh token is set",
-      });
+            displayErrorScreen({
+                title: "Tokens not found!",
+                details:
+                    "No Token file was provided. Please provide a Token file in the settings under 'Saved Token Path'.",
+                subdetails: "Error: No access or refresh token is set",
+            });
 
-      let suggestion_parent = document.querySelector(".suggestion-parent");
+            let suggestion_parent = document.querySelector(
+                ".suggestion-parent"
+            );
 
-      suggestion_parent.innerHTML = `
+            suggestion_parent.innerHTML = `
         <div class="suggestion" onclick="openConfig()">
           <span>
             <img src="../res/settings.svg" style="
@@ -965,20 +979,16 @@ assistant
               width: 20px;
               vertical-align: top;
               padding-right: 10px;
-              ${
-                getEffectiveTheme() == "light"
-                  ? "filter: invert(1);"
-                  : ""
-              }"
+              ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
             >
           </span>
           Open Settings
         </div>
       `;
-    }
+        }
 
-    setTimeout(deactivateLoader, 200);
-  });
+        setTimeout(deactivateLoader, 200);
+    });
 
 /* User-Defined Functions */
 
@@ -987,10 +997,10 @@ assistant
  * @param {string} string
  */
 function escapeQuotes(string) {
-  string = string.replace(/["]/g, "&quot;");
-  string = string.replace(/[']/g, "&#39;");
+    string = string.replace(/["]/g, "&quot;");
+    string = string.replace(/[']/g, "&#39;");
 
-  return string;
+    return string;
 }
 
 /**
@@ -1002,39 +1012,39 @@ function escapeQuotes(string) {
  * The response that has to be classified
  */
 function inspectResponseType(assistantResponseString) {
-  let googleTopResultRegex = /"(.*)" \(\s?(.+) - (.+?)\s?\)(?:\\n(.+))?/;
-  let youtubeResultRegex = /(.+) \[(.+)\] \(\s?(.+?)\s?\)(?:\n---\n([^]+))?/;
+    let googleTopResultRegex = /"(.*)" \(\s?(.+) - (.+?)\s?\)(?:\\n(.+))?/;
+    let youtubeResultRegex = /(.+) \[(.+)\] \(\s?(.+?)\s?\)(?:\n---\n([^]+))?/;
 
-  let searchResultMatch = assistantResponseString.match(googleTopResultRegex);
-  let youtubeMatch = assistantResponseString.match(youtubeResultRegex);
+    let searchResultMatch = assistantResponseString.match(googleTopResultRegex);
+    let youtubeMatch = assistantResponseString.match(youtubeResultRegex);
 
-  let isGoogleTopSearchResult =
-    searchResultMatch != null
-      ? assistantResponseString == searchResultMatch[0]
-      : false;
+    let isGoogleTopSearchResult =
+        searchResultMatch != null
+            ? assistantResponseString == searchResultMatch[0]
+            : false;
 
-  let isYoutubeResult =
-    youtubeMatch != null
-      ? youtubeMatch[3].startsWith("https://m.youtube.com/watch?v=")
-      : false;
+    let isYoutubeResult =
+        youtubeMatch != null
+            ? youtubeMatch[3].startsWith("https://m.youtube.com/watch?v=")
+            : false;
 
-  let dataObject = {
-    type: isYoutubeResult
-      ? "youtube-result"
-      : isGoogleTopSearchResult
-      ? "google-search-result"
-      : null,
+    let dataObject = {
+        type: isYoutubeResult
+            ? "youtube-result"
+            : isGoogleTopSearchResult
+            ? "google-search-result"
+            : null,
 
-    searchResultParts: isYoutubeResult
-      ? youtubeMatch.slice(1)
-      : isGoogleTopSearchResult
-      ? searchResultMatch.slice(1, 5)
-      : null,
+        searchResultParts: isYoutubeResult
+            ? youtubeMatch.slice(1)
+            : isGoogleTopSearchResult
+            ? searchResultMatch.slice(1, 5)
+            : null,
 
-    assistantResponseString: assistantResponseString,
-  };
+        assistantResponseString: assistantResponseString,
+    };
 
-  return dataObject;
+    return dataObject;
 }
 
 /**
@@ -1047,13 +1057,13 @@ function inspectResponseType(assistantResponseString) {
  * Minimize the Assistant Window after the link is opened.
  * _(Defaults to `true`)_
  */
-function openLink(link, autoMinimizeAssistantWindow=true) {
-  if (link === "") return;
-  electronShell.openExternal(link);
+function openLink(link, autoMinimizeAssistantWindow = true) {
+    if (link === "") return;
+    electronShell.openExternal(link);
 
-  if (autoMinimizeAssistantWindow) {
-    assistantWindow.minimize();
-  }
+    if (autoMinimizeAssistantWindow) {
+        assistantWindow.minimize();
+    }
 }
 
 /**
@@ -1061,14 +1071,14 @@ function openLink(link, autoMinimizeAssistantWindow=true) {
  * @param {number} historyIndex
  */
 function seekHistory(historyIndex) {
-  historyHead = historyIndex;
+    historyHead = historyIndex;
 
-  let historyItem = history[historyHead];
-  displayScreenData(historyItem["screen-data"]);
-  setQueryTitle(historyItem["query"]);
+    let historyItem = history[historyHead];
+    displayScreenData(historyItem["screen-data"]);
+    setQueryTitle(historyItem["query"]);
 
-  deactivateLoader();
-  updateNav();
+    deactivateLoader();
+    updateNav();
 }
 
 /**
@@ -1078,14 +1088,14 @@ function seekHistory(historyIndex) {
  * `true` if successfully jumps to previous result, `false` otherwise.
  */
 function jumpToPrevious() {
-  if (historyHead > 0) {
-    historyHead--;
-    seekHistory(historyHead);
+    if (historyHead > 0) {
+        historyHead--;
+        seekHistory(historyHead);
 
-    return true;
-  }
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -1095,14 +1105,14 @@ function jumpToPrevious() {
  * `true` if successfully jumps to next result, `false` otherwise.
  */
 function jumpToNext() {
-  if (historyHead < history.length - 1) {
-    historyHead++;
-    seekHistory(historyHead);
+    if (historyHead < history.length - 1) {
+        historyHead++;
+        seekHistory(historyHead);
 
-    return true;
-  }
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -1123,13 +1133,13 @@ function jumpToNext() {
  * The Title for the dialog box.
  */
 function openFileDialog(callback, openDialogTitle = null) {
-  dialog
-    .showOpenDialog(assistantWindow, {
-      title: openDialogTitle,
-      filters: [{ name: "JSON File", extensions: ["json"] }],
-      properties: ["openFile"],
-    })
-    .then((result, bookmarks) => callback(result, bookmarks));
+    dialog
+        .showOpenDialog(assistantWindow, {
+            title: openDialogTitle,
+            filters: [{ name: "JSON File", extensions: ["json"] }],
+            properties: ["openFile"],
+        })
+        .then((result, bookmarks) => callback(result, bookmarks));
 }
 
 /**
@@ -1139,17 +1149,20 @@ function openFileDialog(callback, openDialogTitle = null) {
  * @param {*} config
  * Pass config as an object or pass `null` to consider `asssistantConfig`
  */
-function saveConfig(config=null) {
-  fs.writeFile(
-    configFilePath,
-    JSON.stringify(!config ? assistantConfig : config),
-    () => {
-      console.log(...consoleMessage("Updated Config"));
-      displayQuickMessage(
-        `${supportedLanguages[assistantConfig["language"]].settingsUpdatedText}`
-      );
-    }
-  );
+function saveConfig(config = null) {
+    fs.writeFile(
+        configFilePath,
+        JSON.stringify(!config ? assistantConfig : config),
+        () => {
+            console.log(...consoleMessage("Updated Config"));
+            displayQuickMessage(
+                `${
+                    supportedLanguages[assistantConfig["language"]]
+                        .settingsUpdatedText
+                }`
+            );
+        }
+    );
 }
 
 /**
@@ -1159,19 +1172,19 @@ function saveConfig(config=null) {
  * Highlights and scrolls instantly to the requested
  * config item by ID
  */
-async function openConfig(configItem=null) {
-  if (!document.querySelector("#config-screen")) {
-    let currentHTML = document.querySelector("body").innerHTML;
+async function openConfig(configItem = null) {
+    if (!document.querySelector("#config-screen")) {
+        let currentHTML = document.querySelector("body").innerHTML;
 
-    let suggestionOnClickListeners = [
-      ...document.querySelectorAll(".suggestion-parent > .suggestion"),
-    ].map((btn) => btn.onclick);
+        let suggestionOnClickListeners = [
+            ...document.querySelectorAll(".suggestion-parent > .suggestion"),
+        ].map((btn) => btn.onclick);
 
-    if (!releases) {
-      getReleases();
-    }
+        if (!releases) {
+            getReleases();
+        }
 
-    main_area.innerHTML = `
+        main_area.innerHTML = `
       <div id="config-screen" class="fade-in-from-bottom">
         <div style="
           font-size: 35px;
@@ -1181,7 +1194,9 @@ async function openConfig(configItem=null) {
           Settings
         </div>
 
-        ${!_canAccessMicrophone ? `
+        ${
+            !_canAccessMicrophone
+                ? `
           <div
             class="setting-key accordion"
             style="
@@ -1202,9 +1217,9 @@ async function openConfig(configItem=null) {
                     vertical-align: sub;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? ""
-                        : "filter: invert(1);"
+                        getEffectiveTheme() == "light"
+                            ? ""
+                            : "filter: invert(1);"
                     }"
                   >
                 </span>
@@ -1216,9 +1231,7 @@ async function openConfig(configItem=null) {
                 <span
                   class="accordion-chevron"
                   style="${
-                    getEffectiveTheme() == "light"
-                      ? ""
-                      : "filter: invert(1);"
+                      getEffectiveTheme() == "light" ? "" : "filter: invert(1);"
                   }"
                 >
                   <img src="../res/chevron_down.svg" />
@@ -1245,7 +1258,8 @@ async function openConfig(configItem=null) {
                 </i>
               </div>
             </div>
-          </div>` : ""
+          </div>`
+                : ""
         }
 
         <div style="padding: 20px 0">
@@ -1316,14 +1330,14 @@ async function openConfig(configItem=null) {
             <div class="setting-value" style="height: 35px;">
               <select id="lang-selector" style="padding-right: 10px;">
                 ${Object.keys(supportedLanguages)
-                  .map((langCode) => {
-                    return `
+                    .map((langCode) => {
+                        return `
                       <option value="${langCode}">
                         ${supportedLanguages[langCode]["langName"]}
                       </option>
                     `;
-                  })
-                .join("")}
+                    })
+                    .join("")}
               </select>
               <label id="detect-lang-btn" class="button" style="margin-left: 6px;">
                 Detect Language
@@ -1542,19 +1556,18 @@ async function openConfig(configItem=null) {
             <div class="setting-value" style="height: 35px;">
               <select id="display-selector" style="padding-right: 50px;">
                 ${electron.remote.screen
-                  .getAllDisplays()
-                  .map((display, index) => {
-                    const { bounds, scaleFactor } = display;
+                    .getAllDisplays()
+                    .map((display, index) => {
+                        const { bounds, scaleFactor } = display;
 
-                    return `
+                        return `
                       <option value="${index + 1}">
-                        Display ${index + 1} - (${bounds.width * scaleFactor} x ${
-                          bounds.height * scaleFactor
-                        })
+                        Display ${index + 1} - (${
+                            bounds.width * scaleFactor
+                        } x ${bounds.height * scaleFactor})
                       </option>
                     `;
-                  })
-                }
+                    })}
               </select>
             </div>
           </div>
@@ -1685,8 +1698,7 @@ async function openConfig(configItem=null) {
               ">
                 <img
                   src="../res/help.svg"
-                  title="Configure what happens when '${
-                    assistantConfig.assistantHotkey
+                  title="Configure what happens when '${assistantConfig.assistantHotkey
                       .split("+")
                       .map(getNativeKeyName)
                       .join(" + ")}' is triggered"
@@ -1782,9 +1794,9 @@ async function openConfig(configItem=null) {
                     vertical-align: sub;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
@@ -1943,9 +1955,9 @@ async function openConfig(configItem=null) {
                         vertical-align: sub;
                         padding-right: 5px;
                         ${
-                          getEffectiveTheme() == "light"
-                            ? ""
-                            : "filter: invert(1);"
+                            getEffectiveTheme() == "light"
+                                ? ""
+                                : "filter: invert(1);"
                         }"
                       >
                     </span>
@@ -1957,9 +1969,9 @@ async function openConfig(configItem=null) {
                     <span
                       class="accordion-chevron"
                       style="${
-                        getEffectiveTheme() == "light"
-                          ? ""
-                          : "filter: invert(1);"
+                          getEffectiveTheme() == "light"
+                              ? ""
+                              : "filter: invert(1);"
                       }"
                     >
                       <img src="../res/chevron_down.svg" />
@@ -1970,9 +1982,9 @@ async function openConfig(configItem=null) {
                 <div class="accordion-content">
                   <div style="margin-top: 30px;">
                     ${
-                      releases && getReleaseObject(_getVersion())
-                        ? _markdownToHtml(getChangelog())
-                        : `
+                        releases && getReleaseObject(_getVersion())
+                            ? _markdownToHtml(getChangelog())
+                            : `
                           <span>
                             <img src="../res/error.svg" style="
                               height: 20px;
@@ -1993,7 +2005,9 @@ async function openConfig(configItem=null) {
                         `
                     }
 
-                    ${releases ? `
+                    ${
+                        releases
+                            ? `
                       <div style="padding-top: 25px; padding-bottom: 10px;">
                         <div class="button setting-item-button" onclick="openLink(getReleaseObject().html_url)">
                           <span>
@@ -2003,9 +2017,9 @@ async function openConfig(configItem=null) {
                               vertical-align: sub;
                               padding-right: 10px;
                               ${
-                                getEffectiveTheme() == "light"
-                                  ? "filter: invert(1);"
-                                  : ""
+                                  getEffectiveTheme() == "light"
+                                      ? "filter: invert(1);"
+                                      : ""
                               }"
                             >
                           </span>
@@ -2013,7 +2027,7 @@ async function openConfig(configItem=null) {
                           Show in GitHub
                         </div>
                       </div>`
-                      : ""
+                            : ""
                     }
                   </div>
                 </div>
@@ -2033,9 +2047,9 @@ async function openConfig(configItem=null) {
                       vertical-align: sub;
                       padding-right: 5px;
                       ${
-                        getEffectiveTheme() == "light"
-                          ? "filter: invert(1);"
-                          : ""
+                          getEffectiveTheme() == "light"
+                              ? "filter: invert(1);"
+                              : ""
                       }"
                     >
                   </span>
@@ -2048,274 +2062,307 @@ async function openConfig(configItem=null) {
       </div>
     `;
 
-    let keyFilePathInput = main_area.querySelector("#key-file-path");
-    let savedTokensPathInput = main_area.querySelector("#saved-tokens-path");
-    let languageSelector = document.querySelector("#lang-selector");
-    let forceNewConversationCheckbox = document.querySelector("#new-conversation");
-    let enableAudioOutput = document.querySelector("#audio-output");
-    let enableMicOnContinousConversation = document.querySelector("#continous-conv-mic");
-    let enableMicOnStartup = document.querySelector("#enable-mic-startup");
-    let startAsMaximized = document.querySelector("#start-maximized");
-    let hideOnFirstLaunch = document.querySelector("#hide-on-first-launch");
-    let winFloatBehaviorSelector = document.querySelector("#win-float-behavior-selector");
-    let escKeyBehaviorSelector = document.querySelector("#esc-key-behavior-selector");
-    let microphoneSourceSelector = document.querySelector("#mic-source-selector");
-    let speakerSourceSelector = document.querySelector("#speaker-source-selector");
-    let displayPreferenceSelector = document.querySelector("#display-selector");
-    let winBorderSelector = document.querySelector("#win-border-selector");
-    let launchAtStartUp = document.querySelector("#launch-at-startup");
-    let alwaysCloseToTray = document.querySelector("#close-to-tray");
-    let assistantHotkeyBar = document.querySelector("#hotkey-div");
-    let enablePingSound = document.querySelector("#ping-sound");
-    let enableAutoScaling = document.querySelector("#auto-scale");
-    let themeSelector = document.querySelector("#theme-selector");
-    let hotkeyBehaviorSelector = document.querySelector("#hotkey-behavior-selector");
-
-    keyFilePathInput.addEventListener("focusout", () =>
-      validatePathInput(keyFilePathInput)
-    );
-
-    // Assistant Hotkey
-    let keybindingListener = new KeyBindingListener();
-    let assistantHotkey = assistantConfig["assistantHotkey"];
-
-    if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
-      assistantHotkey = "Super+Shift+A";
-    }
-
-    // Mark input as valid/invalid based on hotkey
-    const validateAccelerator = () => {
-      if (isValidAccelerator(assistantHotkey)) {
-        markInputAsValid(assistantHotkeyBar);
-      } else {
-        markInputAsInvalid(assistantHotkeyBar);
-      }
-    };
-
-    const resetHotkey = () => {
-      assistantHotkey = assistantConfig["assistantHotkey"];
-      assistantHotkeyBar.innerText = assistantHotkey
-        .split("+")
-        .map((key) => getNativeKeyName(key))
-        .join(" + ");
-
-      main_area.querySelector("#hotkey-reset-btn").classList.add("disabled");
-      main_area.querySelector("#hotkey-reset-btn").onclick = null;
-      validateAccelerator();
-    };
-
-    /**
-     * Callback function to handle raw key combinations.
-     *
-     * @param {string[]} rawKeyCombinations
-     * Returns a list of keys pressed by the user.
-     * The keys returned are compliant with Electron and
-     * is cross-platform.
-     */
-    const keyCombinationCallback = (rawKeyCombinations) => {
-      assistantHotkey = rawKeyCombinations.join("+");
-      const keyCombinations = rawKeyCombinations.map((key) =>
-        getNativeKeyName(key)
-      );
-
-      assistantHotkeyBar.innerText = keyCombinations.join(" + ");
-      assistantHotkeyBar.classList.remove("input-active");
-
-      assistantHotkeyBar.removeEventListener(
-        "key-combination",
-        keyCombinationCallback
-      );
-
-      // Mark input as valid/invalid based on hotkey
-      validateAccelerator();
-
-      // Enable or disable reset button
-      if (assistantHotkey != assistantConfig["assistantHotkey"]) {
-        main_area
-          .querySelector("#hotkey-reset-btn")
-          .classList.remove("disabled");
-        main_area.querySelector("#hotkey-reset-btn").onclick = resetHotkey;
-      } else {
-        main_area.querySelector("#hotkey-reset-btn").classList.add("disabled");
-        main_area.querySelector("#hotkey-reset-btn").onclick = null;
-      }
-    };
-
-    assistantHotkeyBar.onclick = () => {
-      if (assistantHotkeyBar.classList.contains("input-active")) {
-        return;
-      }
-
-      keybindingListener.startListening(true);
-
-      assistantHotkeyBar.innerText =
-        "Listening for key combinations... ESC to cancel";
-      assistantHotkeyBar.classList.add("input-active");
-
-      keybindingListener.on("key-combination", keyCombinationCallback);
-
-      keybindingListener.on("cancel", () => {
-        assistantHotkeyBar.innerText = assistantHotkey
-          .split("+")
-          .map((key) => getNativeKeyName(key))
-          .join(" + ");
-
-        assistantHotkeyBar.classList.remove("input-active");
-        assistantHotkeyBar.removeEventListener(
-          "key-combination",
-          keyCombinationCallback
+        let keyFilePathInput = main_area.querySelector("#key-file-path");
+        let savedTokensPathInput = main_area.querySelector(
+            "#saved-tokens-path"
         );
-      });
-    };
-
-    // Populate microphone and speaker source selectors
-    let deviceList = await navigator.mediaDevices.enumerateDevices();
-
-    deviceList.forEach((device) => {
-      let selectItem = document.createElement("option");
-      selectItem.value = device.deviceId;
-      selectItem.text = device.label;
-
-      if (device.kind === "audioinput") {
-        microphoneSourceSelector.appendChild(selectItem);
-      } else if (device.kind === "audiooutput") {
-        speakerSourceSelector.appendChild(selectItem);
-      }
-    });
-
-    // Disable "Launch at system startup" option
-    // when running in development mode
-
-    if (process.env.DEV_MODE) {
-      let launchAtStartupConfigItem = document.querySelector(
-        "#config-item__launch-at-startup"
-      );
-      let launchAtStartupHelpElement = launchAtStartupConfigItem.querySelector(
-        ".setting-key img"
-      );
-      let launchAtStartupSwitchElement = launchAtStartupConfigItem.querySelector(
-        ".setting-value .switch"
-      );
-
-      launchAtStartUp.disabled = true;
-      launchAtStartupSwitchElement.setAttribute(
-        "title",
-        "Disabled in development mode"
-      );
-      launchAtStartupSwitchElement
-        .querySelector(".slider")
-        .classList.add("disabled");
-      launchAtStartupHelpElement.setAttribute(
-        "title", [
-          launchAtStartupHelpElement.getAttribute("title"),
-          "(This option is currently disabled due to development mode)"
-        ].join('\n')
-      );
-    }
-
-    keyFilePathInput.value = assistantConfig["keyFilePath"];
-    savedTokensPathInput.value = assistantConfig["savedTokensPath"];
-    languageSelector.value = assistantConfig["language"];
-    forceNewConversationCheckbox.checked = assistantConfig["forceNewConversation"];
-    enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
-    enableMicOnContinousConversation.checked = assistantConfig["enableMicOnContinousConversation"];
-    enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
-    startAsMaximized.checked = assistantConfig["startAsMaximized"];
-    hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
-    winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
-    escKeyBehaviorSelector.value = assistantConfig["escapeKeyBehavior"];
-    microphoneSourceSelector.value = assistantConfig["microphoneSource"];
-    speakerSourceSelector.value = assistantConfig["speakerSource"];
-    displayPreferenceSelector.value = assistantConfig["displayPreference"];
-    winBorderSelector.value = assistantConfig["windowBorder"];
-    launchAtStartUp.checked = assistantConfig["launchAtStartup"];
-    alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
-    enablePingSound.checked = assistantConfig["enablePingSound"];
-    enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
-    themeSelector.value = assistantConfig["theme"];
-    hotkeyBehaviorSelector.value = assistantConfig["hotkeyBehavior"];
-    assistantHotkeyBar.innerText = assistantHotkey
-      .split("+")
-      .map((key) => getNativeKeyName(key))
-      .join(" + ");
-
-    main_area.querySelector("#key-file-path-browse-btn").onclick = () => {
-      openFileDialog((result) => {
-        if (!result.canceled) keyFilePathInput.value = result.filePaths[0];
-      }, "Select Key File");
-    };
-
-    main_area.querySelector("#saved-tokens-path-browse-btn").onclick = () => {
-      openFileDialog((result) => {
-        if (!result.canceled) savedTokensPathInput.value = result.filePaths[0];
-      }, "Select Saved Token File");
-    };
-
-    main_area.querySelector("#detect-lang-btn").onclick = () => {
-      let languageNames = new Intl.DisplayNames(["en"], { type: "language" });
-      let systemLocale = navigator.language;
-      let systemLanguage = languageNames.of(systemLocale);
-
-      if (Object.keys(supportedLanguages).includes(systemLocale)) {
-        languageSelector.value = systemLocale;
-
-        languageSelector.classList.add("selector-active");
-        setTimeout(
-          () => languageSelector.classList.remove("selector-active"),
-          200
+        let languageSelector = document.querySelector("#lang-selector");
+        let forceNewConversationCheckbox = document.querySelector(
+            "#new-conversation"
         );
-      } else {
-        console.warn(
-          ...consoleMessage(
-            `Locale ${systemLocale} is not supported by API`,
-            "warn"
-          )
+        let enableAudioOutput = document.querySelector("#audio-output");
+        let enableMicOnContinousConversation = document.querySelector(
+            "#continous-conv-mic"
+        );
+        let enableMicOnStartup = document.querySelector("#enable-mic-startup");
+        let startAsMaximized = document.querySelector("#start-maximized");
+        let hideOnFirstLaunch = document.querySelector("#hide-on-first-launch");
+        let winFloatBehaviorSelector = document.querySelector(
+            "#win-float-behavior-selector"
+        );
+        let escKeyBehaviorSelector = document.querySelector(
+            "#esc-key-behavior-selector"
+        );
+        let microphoneSourceSelector = document.querySelector(
+            "#mic-source-selector"
+        );
+        let speakerSourceSelector = document.querySelector(
+            "#speaker-source-selector"
+        );
+        let displayPreferenceSelector = document.querySelector(
+            "#display-selector"
+        );
+        let winBorderSelector = document.querySelector("#win-border-selector");
+        let launchAtStartUp = document.querySelector("#launch-at-startup");
+        let alwaysCloseToTray = document.querySelector("#close-to-tray");
+        let assistantHotkeyBar = document.querySelector("#hotkey-div");
+        let enablePingSound = document.querySelector("#ping-sound");
+        let enableAutoScaling = document.querySelector("#auto-scale");
+        let themeSelector = document.querySelector("#theme-selector");
+        let hotkeyBehaviorSelector = document.querySelector(
+            "#hotkey-behavior-selector"
         );
 
-        let buttonId = dialog.showMessageBoxSync(assistantWindow, {
-          type: "error",
-          title: "Language unsupported",
-          message: "Language unsupported",
-          detail: `Your system seems to use "${systemLanguage}" [Locale: "${systemLocale}"].\nThis language is not supported by Google Assistant SDK at the moment.\n\nIf you happen to find this language in the Google Assistant SDK's "Language Support" page, please do open an issue regarding the same.`,
-          buttons: ["Track supported languages", "OK"],
-          cancelId: 1,
+        keyFilePathInput.addEventListener("focusout", () =>
+            validatePathInput(keyFilePathInput)
+        );
+
+        // Assistant Hotkey
+        let keybindingListener = new KeyBindingListener();
+        let assistantHotkey = assistantConfig["assistantHotkey"];
+
+        if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
+            assistantHotkey = "Super+Shift+A";
+        }
+
+        // Mark input as valid/invalid based on hotkey
+        const validateAccelerator = () => {
+            if (isValidAccelerator(assistantHotkey)) {
+                markInputAsValid(assistantHotkeyBar);
+            } else {
+                markInputAsInvalid(assistantHotkeyBar);
+            }
+        };
+
+        const resetHotkey = () => {
+            assistantHotkey = assistantConfig["assistantHotkey"];
+            assistantHotkeyBar.innerText = assistantHotkey
+                .split("+")
+                .map((key) => getNativeKeyName(key))
+                .join(" + ");
+
+            main_area
+                .querySelector("#hotkey-reset-btn")
+                .classList.add("disabled");
+            main_area.querySelector("#hotkey-reset-btn").onclick = null;
+            validateAccelerator();
+        };
+
+        /**
+         * Callback function to handle raw key combinations.
+         *
+         * @param {string[]} rawKeyCombinations
+         * Returns a list of keys pressed by the user.
+         * The keys returned are compliant with Electron and
+         * is cross-platform.
+         */
+        const keyCombinationCallback = (rawKeyCombinations) => {
+            assistantHotkey = rawKeyCombinations.join("+");
+            const keyCombinations = rawKeyCombinations.map((key) =>
+                getNativeKeyName(key)
+            );
+
+            assistantHotkeyBar.innerText = keyCombinations.join(" + ");
+            assistantHotkeyBar.classList.remove("input-active");
+
+            assistantHotkeyBar.removeEventListener(
+                "key-combination",
+                keyCombinationCallback
+            );
+
+            // Mark input as valid/invalid based on hotkey
+            validateAccelerator();
+
+            // Enable or disable reset button
+            if (assistantHotkey != assistantConfig["assistantHotkey"]) {
+                main_area
+                    .querySelector("#hotkey-reset-btn")
+                    .classList.remove("disabled");
+                main_area.querySelector(
+                    "#hotkey-reset-btn"
+                ).onclick = resetHotkey;
+            } else {
+                main_area
+                    .querySelector("#hotkey-reset-btn")
+                    .classList.add("disabled");
+                main_area.querySelector("#hotkey-reset-btn").onclick = null;
+            }
+        };
+
+        assistantHotkeyBar.onclick = () => {
+            if (assistantHotkeyBar.classList.contains("input-active")) {
+                return;
+            }
+
+            keybindingListener.startListening(true);
+
+            assistantHotkeyBar.innerText =
+                "Listening for key combinations... ESC to cancel";
+            assistantHotkeyBar.classList.add("input-active");
+
+            keybindingListener.on("key-combination", keyCombinationCallback);
+
+            keybindingListener.on("cancel", () => {
+                assistantHotkeyBar.innerText = assistantHotkey
+                    .split("+")
+                    .map((key) => getNativeKeyName(key))
+                    .join(" + ");
+
+                assistantHotkeyBar.classList.remove("input-active");
+                assistantHotkeyBar.removeEventListener(
+                    "key-combination",
+                    keyCombinationCallback
+                );
+            });
+        };
+
+        // Populate microphone and speaker source selectors
+        let deviceList = await navigator.mediaDevices.enumerateDevices();
+
+        deviceList.forEach((device) => {
+            let selectItem = document.createElement("option");
+            selectItem.value = device.deviceId;
+            selectItem.text = device.label;
+
+            if (device.kind === "audioinput") {
+                microphoneSourceSelector.appendChild(selectItem);
+            } else if (device.kind === "audiooutput") {
+                speakerSourceSelector.appendChild(selectItem);
+            }
         });
 
-        if (buttonId === 0) {
-          openLink(
-            "https://developers.google.com/assistant/sdk/reference/rpc/languages"
-          );
+        // Disable "Launch at system startup" option
+        // when running in development mode
+
+        if (process.env.DEV_MODE) {
+            let launchAtStartupConfigItem = document.querySelector(
+                "#config-item__launch-at-startup"
+            );
+            let launchAtStartupHelpElement = launchAtStartupConfigItem.querySelector(
+                ".setting-key img"
+            );
+            let launchAtStartupSwitchElement = launchAtStartupConfigItem.querySelector(
+                ".setting-value .switch"
+            );
+
+            launchAtStartUp.disabled = true;
+            launchAtStartupSwitchElement.setAttribute(
+                "title",
+                "Disabled in development mode"
+            );
+            launchAtStartupSwitchElement
+                .querySelector(".slider")
+                .classList.add("disabled");
+            launchAtStartupHelpElement.setAttribute(
+                "title",
+                [
+                    launchAtStartupHelpElement.getAttribute("title"),
+                    "(This option is currently disabled due to development mode)",
+                ].join("\n")
+            );
         }
-      }
-    };
 
-    validatePathInput(keyFilePathInput);
+        keyFilePathInput.value = assistantConfig["keyFilePath"];
+        savedTokensPathInput.value = assistantConfig["savedTokensPath"];
+        languageSelector.value = assistantConfig["language"];
+        forceNewConversationCheckbox.checked =
+            assistantConfig["forceNewConversation"];
+        enableAudioOutput.checked = assistantConfig["enableAudioOutput"];
+        enableMicOnContinousConversation.checked =
+            assistantConfig["enableMicOnContinousConversation"];
+        enableMicOnStartup.checked = assistantConfig["enableMicOnStartup"];
+        startAsMaximized.checked = assistantConfig["startAsMaximized"];
+        hideOnFirstLaunch.checked = assistantConfig["hideOnFirstLaunch"];
+        winFloatBehaviorSelector.value = assistantConfig["windowFloatBehavior"];
+        escKeyBehaviorSelector.value = assistantConfig["escapeKeyBehavior"];
+        microphoneSourceSelector.value = assistantConfig["microphoneSource"];
+        speakerSourceSelector.value = assistantConfig["speakerSource"];
+        displayPreferenceSelector.value = assistantConfig["displayPreference"];
+        winBorderSelector.value = assistantConfig["windowBorder"];
+        launchAtStartUp.checked = assistantConfig["launchAtStartup"];
+        alwaysCloseToTray.checked = assistantConfig["alwaysCloseToTray"];
+        enablePingSound.checked = assistantConfig["enablePingSound"];
+        enableAutoScaling.checked = assistantConfig["enableAutoScaling"];
+        themeSelector.value = assistantConfig["theme"];
+        hotkeyBehaviorSelector.value = assistantConfig["hotkeyBehavior"];
+        assistantHotkeyBar.innerText = assistantHotkey
+            .split("+")
+            .map((key) => getNativeKeyName(key))
+            .join(" + ");
 
-    function setCurrentThemeIcon() {
-      document.querySelector("#curr-theme-icon").innerHTML = `
+        main_area.querySelector("#key-file-path-browse-btn").onclick = () => {
+            openFileDialog((result) => {
+                if (!result.canceled)
+                    keyFilePathInput.value = result.filePaths[0];
+            }, "Select Key File");
+        };
+
+        main_area.querySelector(
+            "#saved-tokens-path-browse-btn"
+        ).onclick = () => {
+            openFileDialog((result) => {
+                if (!result.canceled)
+                    savedTokensPathInput.value = result.filePaths[0];
+            }, "Select Saved Token File");
+        };
+
+        main_area.querySelector("#detect-lang-btn").onclick = () => {
+            let languageNames = new Intl.DisplayNames(["en"], {
+                type: "language",
+            });
+            let systemLocale = navigator.language;
+            let systemLanguage = languageNames.of(systemLocale);
+
+            if (Object.keys(supportedLanguages).includes(systemLocale)) {
+                languageSelector.value = systemLocale;
+
+                languageSelector.classList.add("selector-active");
+                setTimeout(
+                    () => languageSelector.classList.remove("selector-active"),
+                    200
+                );
+            } else {
+                console.warn(
+                    ...consoleMessage(
+                        `Locale ${systemLocale} is not supported by API`,
+                        "warn"
+                    )
+                );
+
+                let buttonId = dialog.showMessageBoxSync(assistantWindow, {
+                    type: "error",
+                    title: "Language unsupported",
+                    message: "Language unsupported",
+                    detail: `Your system seems to use "${systemLanguage}" [Locale: "${systemLocale}"].\nThis language is not supported by Google Assistant SDK at the moment.\n\nIf you happen to find this language in the Google Assistant SDK's "Language Support" page, please do open an issue regarding the same.`,
+                    buttons: ["Track supported languages", "OK"],
+                    cancelId: 1,
+                });
+
+                if (buttonId === 0) {
+                    openLink(
+                        "https://developers.google.com/assistant/sdk/reference/rpc/languages"
+                    );
+                }
+            }
+        };
+
+        validatePathInput(keyFilePathInput);
+
+        function setCurrentThemeIcon() {
+            document.querySelector("#curr-theme-icon").innerHTML = `
         <span>
           <img
             src="../res/${
-              getEffectiveTheme(themeSelector.value) == "light"
-                ? "light_mode.svg"
-                : "dark_mode.svg"
+                getEffectiveTheme(themeSelector.value) == "light"
+                    ? "light_mode.svg"
+                    : "dark_mode.svg"
             }"
             style="height: 35px; width: 38px; vertical-align: bottom;"
           >
         </span>
       `;
-    }
+        }
 
-    setCurrentThemeIcon();
+        setCurrentThemeIcon();
 
-    document.querySelector("#theme-selector").onchange = () => {
-      setCurrentThemeIcon();
-    };
+        document.querySelector("#theme-selector").onchange = () => {
+            setCurrentThemeIcon();
+        };
 
-    suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div id="save-config" class="suggestion">
         <span>
           <img src="../res/done.svg" style="
@@ -2333,49 +2380,54 @@ async function openConfig(configItem=null) {
       </div>
     `;
 
-    historyHead++;
+        historyHead++;
 
-    function closeCurrentScreen() {
-      let currentDOM = parser.parseFromString(currentHTML, "text/html");
+        function closeCurrentScreen() {
+            let currentDOM = parser.parseFromString(currentHTML, "text/html");
 
-      if (currentDOM.querySelector(".assistant-markup-response")) {
-        displayScreenData(history[historyHead - 1]["screen-data"]);
-      } else {
-        main_area.innerHTML = currentDOM.querySelector("#main-area").innerHTML;
-      }
+            if (currentDOM.querySelector(".assistant-markup-response")) {
+                displayScreenData(history[historyHead - 1]["screen-data"]);
+            } else {
+                main_area.innerHTML = currentDOM.querySelector(
+                    "#main-area"
+                ).innerHTML;
+            }
 
-      suggestion_area.innerHTML = currentDOM.querySelector(
-        "#suggestion-area"
-      ).innerHTML;
+            suggestion_area.innerHTML = currentDOM.querySelector(
+                "#suggestion-area"
+            ).innerHTML;
 
-      let suggestions = [
-        ...document.querySelectorAll(".suggestion-parent > .suggestion"),
-      ];
+            let suggestions = [
+                ...document.querySelectorAll(
+                    ".suggestion-parent > .suggestion"
+                ),
+            ];
 
-      suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
-        suggestions[suggestionIndex].onclick = listener;
-      });
+            suggestionOnClickListeners.forEach((listener, suggestionIndex) => {
+                suggestions[suggestionIndex].onclick = listener;
+            });
 
-      historyHead--;
+            historyHead--;
 
-      if (historyHead == -1) {
-        document.querySelector(".app-title").innerText = "";
-      }
+            if (historyHead == -1) {
+                document.querySelector(".app-title").innerText = "";
+            }
 
-      // If the user is in welcome screen, show updated welcome message
-      init_headline = document.querySelector("#init-headline");
+            // If the user is in welcome screen, show updated welcome message
+            init_headline = document.querySelector("#init-headline");
 
-      if (init_headline) {
-        const welcomeMsg =
-          supportedLanguages[assistantConfig["language"]].welcomeMessage;
+            if (init_headline) {
+                const welcomeMsg =
+                    supportedLanguages[assistantConfig["language"]]
+                        .welcomeMessage;
 
-        init_headline.innerText = welcomeMsg;
+                init_headline.innerText = welcomeMsg;
 
-        suggestion_area.innerHTML = `
+                suggestion_area.innerHTML = `
           <div class="suggestion-parent">
             ${supportedLanguages[assistantConfig["language"]].initSuggestions
-              .map((suggestionObj) => {
-                return `
+                .map((suggestionObj) => {
+                    return `
                   <div
                     class="suggestion"
                     onclick="assistantTextQuery('${suggestionObj.query}')"
@@ -2383,19 +2435,19 @@ async function openConfig(configItem=null) {
                       ${suggestionObj.label}
                   </div>
                 `;
-              })
-              .join("")}
+                })
+                .join("")}
           </div>
         `;
-      }
-    }
+            }
+        }
 
-    async function checkForUpdates() {
-      const checkForUpdateSection = document.querySelector(
-        "#check-for-update-section"
-      );
+        async function checkForUpdates() {
+            const checkForUpdateSection = document.querySelector(
+                "#check-for-update-section"
+            );
 
-      checkForUpdateSection.innerHTML = `
+            checkForUpdateSection.innerHTML = `
         <div style="animation: fade_in_from_right_anim 300ms;">
           <div class="disabled" style="margin-bottom: 10px; font-size: 16px;">
             Cheking for updates...
@@ -2404,21 +2456,21 @@ async function openConfig(configItem=null) {
         </div>
       `;
 
-      try {
-        let releases = await getReleases();
+            try {
+                let releases = await getReleases();
 
-        if (releases) {
-          console.group(...consoleMessage("Fetched releases"));
-          console.log(releases);
+                if (releases) {
+                    console.group(...consoleMessage("Fetched releases"));
+                    console.log(releases);
 
-          if (releases[0] == "Error") {
-            throw Error(releases[1]);
-          }
+                    if (releases[0] == "Error") {
+                        throw Error(releases[1]);
+                    }
 
-          console.groupEnd();
+                    console.groupEnd();
 
-          if (releases[0].tag_name != "v" + app.getVersion()) {
-            checkForUpdateSection.innerHTML = `
+                    if (releases[0].tag_name != "v" + app.getVersion()) {
+                        checkForUpdateSection.innerHTML = `
               <div style="animation: fade_in_from_right_anim 300ms;">
                 <span>
                   <img src="../res/download.svg" style="
@@ -2446,8 +2498,8 @@ async function openConfig(configItem=null) {
                 </span>
               </div>
             `;
-          } else {
-            checkForUpdateSection.innerHTML = `
+                    } else {
+                        checkForUpdateSection.innerHTML = `
               <div style="animation: fade_in_from_right_anim 300ms;">
                 <span>
                   <img src="../res/checkmark.svg" style="
@@ -2469,16 +2521,16 @@ async function openConfig(configItem=null) {
                 </span>
               </div>
             `;
-          }
-        }
-      } catch (error) {
-        console.group(
-          ...consoleMessage("Error while fetching releases", "error")
-        );
-        console.error(error);
-        console.groupEnd();
+                    }
+                }
+            } catch (error) {
+                console.group(
+                    ...consoleMessage("Error while fetching releases", "error")
+                );
+                console.error(error);
+                console.groupEnd();
 
-        checkForUpdateSection.innerHTML = `
+                checkForUpdateSection.innerHTML = `
           <div style="animation: fade_in_from_right_anim 300ms;">
             <span>
               <img src="../res/error.svg" style="
@@ -2500,255 +2552,282 @@ async function openConfig(configItem=null) {
             </span>
           </div>
         `;
-      }
+            }
 
-      let checkForUpdateButton = document.querySelector(
-        "#check-for-update-btn"
-      );
-
-      if (checkForUpdateButton) checkForUpdateButton.onclick = checkForUpdates;
-    }
-
-    document.querySelector("#check-for-update-btn").onclick = checkForUpdates;
-
-    document.querySelector("#cancel-config-changes").onclick = () => {
-      closeCurrentScreen();
-      keybindingListener.stopListening();
-    };
-
-    document.querySelector("#save-config").onclick = () => {
-      if (
-        keyFilePathInput.value.trim() != "" &&
-        savedTokensPathInput.value.trim() == ""
-      ) {
-        // If `savedTokensPath` is empty
-
-        let res = dialog.showMessageBoxSync(assistantWindow, {
-          type: "question",
-          title: "Saved Tokens Path is empty",
-          message: `You have not specified any loaction for "Saved Tokens Path".\nAssistant can set a path automatically according to "Key File Path" and save them.`,
-          buttons: ["Automatically set a path", "Cancel"],
-          defaultId: 0,
-          cancelId: 1,
-        });
-
-        if (res == 1) {
-          return;
-        } else {
-          savedTokensPathInput.value = path.join(
-            path.dirname(keyFilePathInput.value),
-            "tokens.json"
-          );
-        }
-      } else if (
-        fs.existsSync(savedTokensPathInput.value) &&
-        fs.statSync(savedTokensPathInput.value).isDirectory()
-      ) {
-        // if `savedTokensPath` is a directory
-
-        let res = dialog.showMessageBoxSync(assistantWindow, {
-          type: "question",
-          title: "Saved Tokens Path is missing a filename",
-          message: `"Saved Tokens Path" is a directory and does not point to a file.\nAssistant can create a token file for you and save them.`,
-          buttons: ['Create a file "tokens.json"', "Cancel"],
-          defaultId: 0,
-          cancelId: 1,
-        });
-
-        if (res == 1) return;
-
-        savedTokensPathInput.value = path.join(
-          savedTokensPathInput.value,
-          "tokens.json"
-        );
-      } else if (
-        keyFilePathInput.value.trim() != "" &&
-        !fs.existsSync(path.dirname(savedTokensPathInput.value))
-      ) {
-        // `savedTokensPath` is not a existing path
-
-        let res = dialog.showMessageBoxSync(assistantWindow, {
-          type: "info",
-          title: "Saved Tokens Path does not exist",
-          message: `"Saved Tokens Path" is a non-existant path.\nAssistant can recursively create directories for you.`,
-          buttons: ["Recursively create directory", "Cancel"],
-          defaultId: 0,
-          cancelId: 1,
-        });
-
-        if (res == 1) {
-          return;
-        } else {
-          let savedTokensPathVal = savedTokensPathInput.value;
-
-          try {
-            fs.mkdirSync(path.dirname(savedTokensPathVal), { recursive: true });
-          } catch (error) {
-            console.group(
-              ...consoleMessage("EPERM Exception: mkdir failed", "error")
+            let checkForUpdateButton = document.querySelector(
+                "#check-for-update-btn"
             );
-            console.error(error);
-            console.groupEnd();
 
-            let errMsgContent =
-              `Assistant failed to create the following path:\n"${savedTokensPathVal}"` +
-              `\n\nEither the path is invalid or Assistant does not have enough permissions to create one.`;
-
-            dialog.showMessageBoxSync(assistantWindow, {
-              type: "error",
-              title: "Path Creation Failure",
-              message: "Path Creation Failure",
-              detail: errMsgContent,
-            });
-
-            return;
-          }
-        }
-      }
-
-      if (validatePathInput(keyFilePathInput, true)) {
-        // Determine if relaunch is required
-
-        let relaunchRequired = false;
-
-        if (
-          keyFilePathInput.value != assistantConfig["keyFilePath"] ||
-          savedTokensPathInput.value != assistantConfig["savedTokensPath"]
-        ) {
-          relaunchRequired = true;
+            if (checkForUpdateButton)
+                checkForUpdateButton.onclick = checkForUpdates;
         }
 
-        // Set display preference update flag before saving config
+        document.querySelector(
+            "#check-for-update-btn"
+        ).onclick = checkForUpdates;
 
-        let shouldUpdateDisplayPref = true;
+        document.querySelector("#cancel-config-changes").onclick = () => {
+            closeCurrentScreen();
+            keybindingListener.stopListening();
+        };
 
-        if (
-          assistantConfig["displayPreference"] ===
-          displayPreferenceSelector.value
-        ) {
-          shouldUpdateDisplayPref = false;
-        }
+        document.querySelector("#save-config").onclick = () => {
+            if (
+                keyFilePathInput.value.trim() != "" &&
+                savedTokensPathInput.value.trim() == ""
+            ) {
+                // If `savedTokensPath` is empty
 
-        if (assistantConfig["assistantHotkey"] !== assistantHotkey) {
-          if (isValidAccelerator(assistantHotkey)) {
-            ipcRenderer.send("update-hotkey", assistantHotkey);
-          } else {
-            let assistantHotkeyDiv = document.querySelector("#hotkey-div");
+                let res = dialog.showMessageBoxSync(assistantWindow, {
+                    type: "question",
+                    title: "Saved Tokens Path is empty",
+                    message: `You have not specified any loaction for "Saved Tokens Path".\nAssistant can set a path automatically according to "Key File Path" and save them.`,
+                    buttons: ["Automatically set a path", "Cancel"],
+                    defaultId: 0,
+                    cancelId: 1,
+                });
 
-            markInputAsInvalid(assistantHotkeyDiv, true);
-            return;
-          }
-        }
+                if (res == 1) {
+                    return;
+                } else {
+                    savedTokensPathInput.value = path.join(
+                        path.dirname(keyFilePathInput.value),
+                        "tokens.json"
+                    );
+                }
+            } else if (
+                fs.existsSync(savedTokensPathInput.value) &&
+                fs.statSync(savedTokensPathInput.value).isDirectory()
+            ) {
+                // if `savedTokensPath` is a directory
 
-        // Set the `assistantConfig` as per the settings
+                let res = dialog.showMessageBoxSync(assistantWindow, {
+                    type: "question",
+                    title: "Saved Tokens Path is missing a filename",
+                    message: `"Saved Tokens Path" is a directory and does not point to a file.\nAssistant can create a token file for you and save them.`,
+                    buttons: ['Create a file "tokens.json"', "Cancel"],
+                    defaultId: 0,
+                    cancelId: 1,
+                });
 
-        assistantConfig["keyFilePath"] = keyFilePathInput.value;
-        assistantConfig["savedTokensPath"] = savedTokensPathInput.value;
-        assistantConfig["language"] = languageSelector.value;
-        assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
-        assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
-        assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
-        assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
-        assistantConfig["startAsMaximized"] = startAsMaximized.checked;
-        assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
-        assistantConfig["windowFloatBehavior"] = winFloatBehaviorSelector.value;
-        assistantConfig["escapeKeyBehavior"] = escKeyBehaviorSelector.value;
-        assistantConfig["microphoneSource"] = microphoneSourceSelector.value;
-        assistantConfig["speakerSource"] = speakerSourceSelector.value;
-        assistantConfig["displayPreference"] = displayPreferenceSelector.value;
-        assistantConfig["windowBorder"] = winBorderSelector.value;
-        assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
-        assistantConfig["alwaysCloseToTray"] = alwaysCloseToTray.checked;
-        assistantConfig["enablePingSound"] = enablePingSound.checked;
-        assistantConfig["enableAutoScaling"] = enableAutoScaling.checked;
-        assistantConfig["theme"] = themeSelector.value;
-        assistantConfig["hotkeyBehavior"] = hotkeyBehaviorSelector.value;
-        assistantConfig["assistantHotkey"] = assistantHotkey;
+                if (res == 1) return;
 
-        // Apply settings for appropriate options
+                savedTokensPathInput.value = path.join(
+                    savedTokensPathInput.value,
+                    "tokens.json"
+                );
+            } else if (
+                keyFilePathInput.value.trim() != "" &&
+                !fs.existsSync(path.dirname(savedTokensPathInput.value))
+            ) {
+                // `savedTokensPath` is not a existing path
 
-        config.conversation.isNew = assistantConfig["forceNewConversation"];
-        config.conversation.lang = assistantConfig["language"];
-        assistant_input.placeholder =
-          supportedLanguages[assistantConfig["language"]].inputPlaceholder;
-        keybindingListener.stopListening();
+                let res = dialog.showMessageBoxSync(assistantWindow, {
+                    type: "info",
+                    title: "Saved Tokens Path does not exist",
+                    message: `"Saved Tokens Path" is a non-existant path.\nAssistant can recursively create directories for you.`,
+                    buttons: ["Recursively create directory", "Cancel"],
+                    defaultId: 0,
+                    cancelId: 1,
+                });
 
-        app.setLoginItemSettings({
-          openAtLogin: !process.env.DEV_MODE
-            ? assistantConfig["launchAtStartup"]
-            : false,
-          args: ["--sys-startup"],
-        });
+                if (res == 1) {
+                    return;
+                } else {
+                    let savedTokensPathVal = savedTokensPathInput.value;
 
-        if (assistantConfig["windowFloatBehavior"] !== "close-on-blur") {
-          assistantConfig["windowFloatBehavior"] === "always-on-top"
-            ? assistantWindow.setAlwaysOnTop(true, "floating")
-            : assistantWindow.setAlwaysOnTop(false, "normal");
+                    try {
+                        fs.mkdirSync(path.dirname(savedTokensPathVal), {
+                            recursive: true,
+                        });
+                    } catch (error) {
+                        console.group(
+                            ...consoleMessage(
+                                "EPERM Exception: mkdir failed",
+                                "error"
+                            )
+                        );
+                        console.error(error);
+                        console.groupEnd();
 
-          window.onblur = null;
-        } else {
-          window.onblur = closeOnBlurCallback;
-        }
+                        let errMsgContent =
+                            `Assistant failed to create the following path:\n"${savedTokensPathVal}"` +
+                            `\n\nEither the path is invalid or Assistant does not have enough permissions to create one.`;
 
-        setAssistantWindowBorder();
+                        dialog.showMessageBoxSync(assistantWindow, {
+                            type: "error",
+                            title: "Path Creation Failure",
+                            message: "Path Creation Failure",
+                            detail: errMsgContent,
+                        });
 
-        mic.setDeviceId(assistantConfig["microphoneSource"]);
+                        return;
+                    }
+                }
+            }
 
-        p5jsMic.getSources((sources) => {
-          p5jsMic.setSource(
-            sources
-              .filter((source) => source.kind === "audioinput")
-              .map((source) => source.deviceId)
-              .indexOf(assistantConfig["microphoneSource"])
-          );
-        });
+            if (validatePathInput(keyFilePathInput, true)) {
+                // Determine if relaunch is required
 
-        audPlayer.setDeviceId(assistantConfig["speakerSource"]);
+                let relaunchRequired = false;
 
-        // Notify about config changes to main process
-        ipcRenderer.send("update-config", assistantConfig);
+                if (
+                    keyFilePathInput.value != assistantConfig["keyFilePath"] ||
+                    savedTokensPathInput.value !=
+                        assistantConfig["savedTokensPath"]
+                ) {
+                    relaunchRequired = true;
+                }
 
-        // Save and exit screen
+                // Set display preference update flag before saving config
 
-        saveConfig();
-        closeCurrentScreen();
-        setTheme();
+                let shouldUpdateDisplayPref = true;
 
-        // Collapses and properly positions the window (if the display preferences change)
+                if (
+                    assistantConfig["displayPreference"] ===
+                    displayPreferenceSelector.value
+                ) {
+                    shouldUpdateDisplayPref = false;
+                }
 
-        if (shouldUpdateDisplayPref) {
-          console.log(
-            ...consoleMessage(
-              `Switching to \"Display ${assistantConfig["displayPreference"]}\"`
-            )
-          );
-          toggleExpandWindow(false);
-        }
+                if (assistantConfig["assistantHotkey"] !== assistantHotkey) {
+                    if (isValidAccelerator(assistantHotkey)) {
+                        ipcRenderer.send("update-hotkey", assistantHotkey);
+                    } else {
+                        let assistantHotkeyDiv = document.querySelector(
+                            "#hotkey-div"
+                        );
 
-        // Request user to relaunch assistant if necessary
+                        markInputAsInvalid(assistantHotkeyDiv, true);
+                        return;
+                    }
+                }
 
-        if (relaunchRequired) {
-          displayErrorScreen({
-            icon: {
-              path: "../res/refresh.svg",
-              style: `
+                // Set the `assistantConfig` as per the settings
+
+                assistantConfig["keyFilePath"] = keyFilePathInput.value;
+                assistantConfig["savedTokensPath"] = savedTokensPathInput.value;
+                assistantConfig["language"] = languageSelector.value;
+                assistantConfig["forceNewConversation"] =
+                    forceNewConversationCheckbox.checked;
+                assistantConfig["enableAudioOutput"] =
+                    enableAudioOutput.checked;
+                assistantConfig["enableMicOnContinousConversation"] =
+                    enableMicOnContinousConversation.checked;
+                assistantConfig["enableMicOnStartup"] =
+                    enableMicOnStartup.checked;
+                assistantConfig["startAsMaximized"] = startAsMaximized.checked;
+                assistantConfig["hideOnFirstLaunch"] =
+                    hideOnFirstLaunch.checked;
+                assistantConfig["windowFloatBehavior"] =
+                    winFloatBehaviorSelector.value;
+                assistantConfig["escapeKeyBehavior"] =
+                    escKeyBehaviorSelector.value;
+                assistantConfig["microphoneSource"] =
+                    microphoneSourceSelector.value;
+                assistantConfig["speakerSource"] = speakerSourceSelector.value;
+                assistantConfig["displayPreference"] =
+                    displayPreferenceSelector.value;
+                assistantConfig["windowBorder"] = winBorderSelector.value;
+                assistantConfig["launchAtStartup"] = launchAtStartUp.checked;
+                assistantConfig["alwaysCloseToTray"] =
+                    alwaysCloseToTray.checked;
+                assistantConfig["enablePingSound"] = enablePingSound.checked;
+                assistantConfig["enableAutoScaling"] =
+                    enableAutoScaling.checked;
+                assistantConfig["theme"] = themeSelector.value;
+                assistantConfig["hotkeyBehavior"] =
+                    hotkeyBehaviorSelector.value;
+                assistantConfig["assistantHotkey"] = assistantHotkey;
+
+                // Apply settings for appropriate options
+
+                config.conversation.isNew =
+                    assistantConfig["forceNewConversation"];
+                config.conversation.lang = assistantConfig["language"];
+                assistant_input.placeholder =
+                    supportedLanguages[
+                        assistantConfig["language"]
+                    ].inputPlaceholder;
+                keybindingListener.stopListening();
+
+                app.setLoginItemSettings({
+                    openAtLogin: !process.env.DEV_MODE
+                        ? assistantConfig["launchAtStartup"]
+                        : false,
+                    args: ["--sys-startup"],
+                });
+
+                if (
+                    assistantConfig["windowFloatBehavior"] !== "close-on-blur"
+                ) {
+                    assistantConfig["windowFloatBehavior"] === "always-on-top"
+                        ? assistantWindow.setAlwaysOnTop(true, "floating")
+                        : assistantWindow.setAlwaysOnTop(false, "normal");
+
+                    window.onblur = null;
+                } else {
+                    window.onblur = closeOnBlurCallback;
+                }
+
+                setAssistantWindowBorder();
+
+                mic.setDeviceId(assistantConfig["microphoneSource"]);
+
+                p5jsMic.getSources((sources) => {
+                    p5jsMic.setSource(
+                        sources
+                            .filter((source) => source.kind === "audioinput")
+                            .map((source) => source.deviceId)
+                            .indexOf(assistantConfig["microphoneSource"])
+                    );
+                });
+
+                audPlayer.setDeviceId(assistantConfig["speakerSource"]);
+
+                // Notify about config changes to main process
+                ipcRenderer.send("update-config", assistantConfig);
+
+                // Save and exit screen
+
+                saveConfig();
+                closeCurrentScreen();
+                setTheme();
+
+                // Collapses and properly positions the window (if the display preferences change)
+
+                if (shouldUpdateDisplayPref) {
+                    console.log(
+                        ...consoleMessage(
+                            `Switching to \"Display ${assistantConfig["displayPreference"]}\"`
+                        )
+                    );
+                    toggleExpandWindow(false);
+                }
+
+                // Request user to relaunch assistant if necessary
+
+                if (relaunchRequired) {
+                    displayErrorScreen({
+                        icon: {
+                            path: "../res/refresh.svg",
+                            style: `
                 height: 100px;
                 animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-                ${
-                  getEffectiveTheme() == "light"
-                    ? "filter: invert(1);"
-                    : ""
-                }
+                ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}
               `,
-            },
-            title: "Relaunch Required",
-            details: "A relaunch is required for changes to take place",
-            subdetails: "Info: Settings changed",
-          });
+                        },
+                        title: "Relaunch Required",
+                        details:
+                            "A relaunch is required for changes to take place",
+                        subdetails: "Info: Settings changed",
+                    });
 
-          let suggestion_parent = document.querySelector(".suggestion-parent");
+                    let suggestion_parent = document.querySelector(
+                        ".suggestion-parent"
+                    );
 
-          suggestion_parent.innerHTML = `
+                    suggestion_parent.innerHTML = `
             <div class="suggestion" onclick="relaunchAssistant()">
               <span>
                 <img src="../res/refresh.svg" style="
@@ -2756,41 +2835,37 @@ async function openConfig(configItem=null) {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 5px;
-                  ${
-                    getEffectiveTheme() == "light"
-                      ? "filter: invert(1);"
-                      : ""
-                  }"
+                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
                 >
               </span>
               Relaunch Assistant
             </div>
           `;
-        }
-      }
-    };
-  }
+                }
+            }
+        };
+    }
 
-  // Scroll to requested config item
+    // Scroll to requested config item
 
-  if (configItem) {
-    let configItemId = `#config-item__${configItem}`;
-    let configItemElement = document.querySelector(configItemId);
+    if (configItem) {
+        let configItemId = `#config-item__${configItem}`;
+        let configItemElement = document.querySelector(configItemId);
 
-    configItemElement.classList.add("config-item-highlight");
+        configItemElement.classList.add("config-item-highlight");
 
-    setTimeout(
-      () => configItemElement.scrollIntoView({ behavior: "smooth" }),
-      150
-    );
-  }
+        setTimeout(
+            () => configItemElement.scrollIntoView({ behavior: "smooth" }),
+            150
+        );
+    }
 }
 
 /**
  * Updates the Navigation: 'Next' and 'Previous' buttons
  */
 function updateNav() {
-  let newNav = `
+    let newNav = `
     <img
       id="prev-btn"
       class="${historyHead <= 0 ? "disabled" : "ico-btn "}"
@@ -2816,10 +2891,10 @@ function updateNav() {
     >
   `;
 
-  document.querySelector("#nav-region").innerHTML = newNav;
-  document.querySelector("#prev-btn").onclick = jumpToPrevious;
-  document.querySelector("#next-btn").onclick = jumpToNext;
-  document.querySelector("#settings-btn").onclick = openConfig;
+    document.querySelector("#nav-region").innerHTML = newNav;
+    document.querySelector("#prev-btn").onclick = jumpToPrevious;
+    document.querySelector("#next-btn").onclick = jumpToNext;
+    document.querySelector("#settings-btn").onclick = openConfig;
 }
 
 /**
@@ -2827,17 +2902,17 @@ function updateNav() {
  * @param {string} query
  */
 function assistantTextQuery(query) {
-  if (query.trim()) {
-    audPlayer.stop();
+    if (query.trim()) {
+        audPlayer.stop();
 
-    config.conversation["textQuery"] = query;
-    assistant.start(config.conversation);
-    setQueryTitle(query);
-    assistant_input.value = "";
-    currentTypedQuery = "";
+        config.conversation["textQuery"] = query;
+        assistant.start(config.conversation);
+        setQueryTitle(query);
+        assistant_input.value = "";
+        currentTypedQuery = "";
 
-    stopMic();
-  }
+        stopMic();
+    }
 }
 
 /**
@@ -2845,21 +2920,21 @@ function assistantTextQuery(query) {
  * @param {string} query
  */
 function setQueryTitle(query) {
-  let init = document.querySelector(".init");
+    let init = document.querySelector(".init");
 
-  if (init != null) {
-    init.innerHTML = `
+    if (init != null) {
+        init.innerHTML = `
       <center id="assistant-logo-main-parent" style="margin-top: 80px;">
         <img id="assistant-logo-main" src="../res/Google_Assistant_logo.svg" alt="">
       </center>`;
-  }
+    }
 
-  document.querySelector(".app-title").innerHTML = `
+    document.querySelector(".app-title").innerHTML = `
     <span class="fade-in-from-bottom">
       ${query}
     </span>`;
 
-  activateLoader();
+    activateLoader();
 }
 
 /**
@@ -2867,7 +2942,7 @@ function setQueryTitle(query) {
  * @returns {string} Title
  */
 function getCurrentQuery() {
-  return document.querySelector(".app-title").innerText;
+    return document.querySelector(".app-title").innerText;
 }
 
 /**
@@ -2877,9 +2952,9 @@ function getCurrentQuery() {
  * Remove the recent result from history and replace it with the refreshed one.
  * _(Defaults to `true`)_
  */
-function retryRecent(popHistory=true) {
-  popHistory ? history.pop() : null;
-  assistantTextQuery(getCurrentQuery());
+function retryRecent(popHistory = true) {
+    popHistory ? history.pop() : null;
+    assistantTextQuery(getCurrentQuery());
 }
 
 /**
@@ -2887,8 +2962,8 @@ function retryRecent(popHistory=true) {
  * user that a task is being performed.
  */
 function activateLoader() {
-  let loader_area = document.querySelector("#loader-area");
-  loader_area.classList.value = "loader";
+    let loader_area = document.querySelector("#loader-area");
+    loader_area.classList.value = "loader";
 }
 
 /**
@@ -2896,8 +2971,8 @@ function activateLoader() {
  * once the task is completed.
  */
 function deactivateLoader() {
-  let loader_area = document.querySelector("#loader-area");
-  loader_area.classList.value = "";
+    let loader_area = document.querySelector("#loader-area");
+    loader_area.classList.value = "";
 }
 
 /**
@@ -2930,30 +3005,30 @@ function deactivateLoader() {
  * @param {string=} opts.customStyle
  * Any custom styles that you want to apply
  */
-function displayErrorScreen(opts={}) {
-  let options = {
-    errContainerId: "",
-    icon: {
-      path: "",
-      style: "",
-    },
-    title: "Error",
-    details: "No error description was provided.",
-    subdetails: "",
-    customStyle: "",
-  };
+function displayErrorScreen(opts = {}) {
+    let options = {
+        errContainerId: "",
+        icon: {
+            path: "",
+            style: "",
+        },
+        title: "Error",
+        details: "No error description was provided.",
+        subdetails: "",
+        customStyle: "",
+    };
 
-  Object.assign(options, opts);
+    Object.assign(options, opts);
 
-  let iconObj = {
-    path: "../res/warning.svg",
-    style: "",
-  };
+    let iconObj = {
+        path: "../res/warning.svg",
+        style: "",
+    };
 
-  Object.assign(iconObj, opts.icon);
-  options.icon = iconObj;
+    Object.assign(iconObj, opts.icon);
+    options.icon = iconObj;
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
     <div id="${options.errContainerId}" class="error-area fade-in-from-bottom" style="${options.customStyle}">
       <img class="err-icon" style="${options.icon.style}" src="${options.icon.path}">
 
@@ -2986,181 +3061,188 @@ function displayErrorScreen(opts={}) {
  * Theme to be applied on screen data.
  * Leave this parameter to infer from `assistantConfig.theme`
  */
-async function displayScreenData(screen, pushToHistory=false, theme=null) {
-  deactivateLoader();
+async function displayScreenData(screen, pushToHistory = false, theme = null) {
+    deactivateLoader();
 
-  let htmlString = screen.data.toString();
-  let htmlDocument = parser.parseFromString(htmlString, "text/html");
-  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+    let htmlString = screen.data.toString();
+    let htmlDocument = parser.parseFromString(htmlString, "text/html");
+    suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
 
-  console.group(...consoleMessage("Processing Screen Data"));
-  console.log(htmlDocument);
-  console.groupEnd();
+    console.group(...consoleMessage("Processing Screen Data"));
+    console.log(htmlDocument);
+    console.groupEnd();
 
-  let mainContentDOM = htmlDocument.querySelector("#assistant-card-content");
+    let mainContentDOM = htmlDocument.querySelector("#assistant-card-content");
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
     <div class="assistant-markup-response fade-in-from-bottom">
       ${mainContentDOM.innerHTML}
     </div>`;
 
-  if ((theme && theme == "light") || getEffectiveTheme() == "light") {
-    let emojiRegex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])*/g;
-    let assistantMarkupResponse = main_area.querySelector(
-      ".assistant-markup-response"
+    if ((theme && theme == "light") || getEffectiveTheme() == "light") {
+        let emojiRegex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])*/g;
+        let assistantMarkupResponse = main_area.querySelector(
+            ".assistant-markup-response"
+        );
+        let emojis = assistantMarkupResponse.innerHTML
+            .match(emojiRegex)
+            .filter((x) => x);
+
+        console.log("Emojis:", emojis);
+
+        emojis.forEach((emoji) => {
+            assistantMarkupResponse.innerHTML = assistantMarkupResponse.innerHTML.replace(
+                emoji,
+                `<span style="filter: invert(1);">${emoji}</span>`
+            );
+        });
+
+        assistantMarkupResponse.classList.add("invert");
+        assistantMarkupResponse.querySelectorAll("img").forEach((el) => {
+            el.classList.add("invert");
+        });
+    }
+
+    let element = main_area.querySelector(".assistant-markup-response")
+        .lastElementChild;
+
+    let hasWebAnswer = main_area.querySelector("#tv_web_answer_root");
+    let hasKnowledgePanel = main_area.querySelector(
+        "#tv_knowledge_panel_source"
     );
-    let emojis = assistantMarkupResponse.innerHTML
-      .match(emojiRegex)
-      .filter((x) => x);
+    let hasCarousel = main_area.querySelector("#selection-carousel-tv");
+    let hasPhotoCarousel = main_area.querySelector("#photo-carousel-tv");
+    let hasTextContainer = element.classList.contains("show_text_container");
+    let hasPlainText =
+        hasTextContainer && element.querySelector(".show_text_content");
+    let hasDefinition = main_area.querySelector("#flex_text_audio_icon_chunk");
+    let elementFlag = element.getAttribute("data-flag");
+    let isGoogleImagesContent;
 
-    console.log("Emojis:", emojis);
+    if (hasCarousel && !hasPhotoCarousel) {
+        // Only when there is carousel other than "Photo Carousel"
+        document.querySelector(
+            ".assistant-markup-response"
+        ).lastElementChild.innerHTML = hasCarousel.outerHTML;
+    }
 
-    emojis.forEach((emoji) => {
-      assistantMarkupResponse.innerHTML = assistantMarkupResponse.innerHTML.replace(
-        emoji,
-        `<span style="filter: invert(1);">${emoji}</span>`
-      );
-    });
-
-    assistantMarkupResponse.classList.add("invert");
-    assistantMarkupResponse.querySelectorAll("img").forEach((el) => {
-      el.classList.add("invert");
-    });
-  }
-
-  let element = main_area
-    .querySelector(".assistant-markup-response")
-    .lastElementChild;
-
-  let hasWebAnswer = main_area.querySelector("#tv_web_answer_root");
-  let hasKnowledgePanel = main_area.querySelector("#tv_knowledge_panel_source");
-  let hasCarousel = main_area.querySelector("#selection-carousel-tv");
-  let hasPhotoCarousel = main_area.querySelector("#photo-carousel-tv");
-  let hasTextContainer = element.classList.contains("show_text_container");
-  let hasPlainText = hasTextContainer && element.querySelector(".show_text_content");
-  let hasDefinition = main_area.querySelector("#flex_text_audio_icon_chunk");
-  let elementFlag = element.getAttribute("data-flag");
-  let isGoogleImagesContent;
-
-  if (hasCarousel && !hasPhotoCarousel) {
-    // Only when there is carousel other than "Photo Carousel"
-    document.querySelector(
-      ".assistant-markup-response"
-    ).lastElementChild.innerHTML = hasCarousel.outerHTML;
-  }
-
-  if (elementFlag == null || elementFlag != "prevent-auto-scale") {
-    if (!hasPlainText) {
-      if (assistantConfig["enableAutoScaling"]) {
-        element.setAttribute(
-          "style", `
+    if (elementFlag == null || elementFlag != "prevent-auto-scale") {
+        if (!hasPlainText) {
+            if (assistantConfig["enableAutoScaling"]) {
+                element.setAttribute(
+                    "style",
+                    `
             transform: ${
-              hasKnowledgePanel || hasWebAnswer ? "scale(0.65)" : "scale(0.75)"
+                hasKnowledgePanel || hasWebAnswer
+                    ? "scale(0.65)"
+                    : "scale(0.75)"
             };
             position: relative;
             left: ${
-              hasKnowledgePanel || hasWebAnswer
-                ? "-15%"
-                : hasCarousel && !hasPhotoCarousel
-                ? "-91%"
-                : hasPhotoCarousel
-                ? "-26%"
-                : "-10%"
+                hasKnowledgePanel || hasWebAnswer
+                    ? "-15%"
+                    : hasCarousel && !hasPhotoCarousel
+                    ? "-91%"
+                    : hasPhotoCarousel
+                    ? "-26%"
+                    : "-10%"
             };
             top: ${
-              hasKnowledgePanel
-                ? "-40px"
-                : hasWebAnswer
-                ? "-35px"
-                : hasDefinition
-                ? "-70px"
-                : hasCarousel && !hasPhotoCarousel
-                ? "-45px"
-                : "-20px"
+                hasKnowledgePanel
+                    ? "-40px"
+                    : hasWebAnswer
+                    ? "-35px"
+                    : hasDefinition
+                    ? "-70px"
+                    : hasCarousel && !hasPhotoCarousel
+                    ? "-45px"
+                    : "-20px"
             };
             ${
-              hasCarousel || hasPhotoCarousel
-                ? `overflow-x: scroll; width: 217%;`
-                : ``
+                hasCarousel || hasPhotoCarousel
+                    ? `overflow-x: scroll; width: 217%;`
+                    : ``
             }
             ${hasPhotoCarousel ? "padding: 2em 0 0 0;" : ""}
           `
-        );
-      }
-    } else {
-      element.setAttribute(
-        "style", `
+                );
+            }
+        } else {
+            element.setAttribute(
+                "style",
+                `
           transform: scale(1.2);
           position: relative;
           left: 13%;
           top: 60px;
         `
-      );
+            );
+        }
     }
-  }
 
-  if (assistantConfig["enableAutoScaling"] || hasPlainText)
-    main_area
-      .querySelector(".assistant-markup-response")
-      .classList.add("no-x-scroll");
+    if (assistantConfig["enableAutoScaling"] || hasPlainText)
+        main_area
+            .querySelector(".assistant-markup-response")
+            .classList.add("no-x-scroll");
 
-  if (hasDefinition) {
-    hasDefinition.setAttribute(
-      "onclick",
-      "document.querySelector('audio').play()"
-    );
-    hasDefinition.setAttribute("style", "cursor: pointer;");
-  }
-
-  let existingStyle;
-
-  if (assistantConfig["enableAutoScaling"] || hasPlainText) {
-    while (element != null && !hasPhotoCarousel) {
-      existingStyle = element.getAttribute("style");
-      element.setAttribute(
-        "style",
-        (existingStyle ? existingStyle : "") + "padding: 0;"
-      );
-      element = element.lastElementChild;
+    if (hasDefinition) {
+        hasDefinition.setAttribute(
+            "onclick",
+            "document.querySelector('audio').play()"
+        );
+        hasDefinition.setAttribute("style", "cursor: pointer;");
     }
-  }
 
-  let responseType;
+    let existingStyle;
 
-  if (hasTextContainer) {
-    // Includes Text Response and Google Images Response
+    if (assistantConfig["enableAutoScaling"] || hasPlainText) {
+        while (element != null && !hasPhotoCarousel) {
+            existingStyle = element.getAttribute("style");
+            element.setAttribute(
+                "style",
+                (existingStyle ? existingStyle : "") + "padding: 0;"
+            );
+            element = element.lastElementChild;
+        }
+    }
 
-    main_area.innerHTML = `
+    let responseType;
+
+    if (hasTextContainer) {
+        // Includes Text Response and Google Images Response
+
+        main_area.innerHTML =
+            `
       <img src="../res/Google_Assistant_logo.svg" style="
         height: 25px;
         position: absolute;
         top: 20px;
         left: 20px;
       ">` + main_area.innerHTML;
-  }
+    }
 
-  if (hasPlainText) {
-    let innerText = document.querySelector(".show_text_content").innerText;
-    responseType = inspectResponseType(innerText);
+    if (hasPlainText) {
+        let innerText = document.querySelector(".show_text_content").innerText;
+        responseType = inspectResponseType(innerText);
 
-    let textContainer = document.querySelector(".show_text_container");
+        let textContainer = document.querySelector(".show_text_container");
 
-    if (responseType["type"]) {
-      if (
-        responseType["type"] == "google-search-result" ||
-        responseType["type"] == "youtube-result"
-      ) {
-        let youtube_thumbnail_url;
+        if (responseType["type"]) {
+            if (
+                responseType["type"] == "google-search-result" ||
+                responseType["type"] == "youtube-result"
+            ) {
+                let youtube_thumbnail_url;
 
-        if (responseType["type"] == "youtube-result") {
-          let youtube_video_id = responseType["searchResultParts"][2]
-            .match(/.*watch\?v=(.+)/)
-            .pop();
+                if (responseType["type"] == "youtube-result") {
+                    let youtube_video_id = responseType["searchResultParts"][2]
+                        .match(/.*watch\?v=(.+)/)
+                        .pop();
 
-          youtube_thumbnail_url = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
-        }
+                    youtube_thumbnail_url = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
+                }
 
-        textContainer.innerHTML = `
+                textContainer.innerHTML = `
           <div
             class="google-search-result"
             data-url="${responseType["searchResultParts"][2]}"
@@ -3176,13 +3258,13 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
             <hr color="#ffffff" style="opacity: 0.25;">
 
             <div style="${
-              responseType["type"] == "youtube-result" ? "display: flex;" : ""
+                responseType["type"] == "youtube-result" ? "display: flex;" : ""
             }">
               ${
-                responseType["type"] == "youtube-result"
-                  ? `
+                  responseType["type"] == "youtube-result"
+                      ? `
                     <img
-                      class="${(getEffectiveTheme() == 'light') ? 'invert' : ''}
+                      class="${getEffectiveTheme() == "light" ? "invert" : ""}
                       src="${youtube_thumbnail_url}"
                       style="
                         height: 131px;
@@ -3190,48 +3272,53 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
                         border-radius: 10px;
                       "
                     >`
-                  : ""
+                      : ""
               }
               <div style="padding-top: 10px;">
                 ${
-                  responseType["searchResultParts"][3]
-                    ? responseType["searchResultParts"][3].replace(/\\n/g, "<br>")
-                    : ""
+                    responseType["searchResultParts"][3]
+                        ? responseType["searchResultParts"][3].replace(
+                              /\\n/g,
+                              "<br>"
+                          )
+                        : ""
                 }
               </div>
             </div>
           </div>
         `;
-      }
-    }
+            }
+        }
 
-    if (innerText.indexOf("https://www.google.com/search?tbm=isch") != -1) {
-      // Google Images
-      isGoogleImagesContent = true;
-      textContainer.innerHTML = `<div id="google-images-carousel"></div>`;
+        if (innerText.indexOf("https://www.google.com/search?tbm=isch") != -1) {
+            // Google Images
+            isGoogleImagesContent = true;
+            textContainer.innerHTML = `<div id="google-images-carousel"></div>`;
 
-      let imageSubject = encodeURIComponent(getCurrentQuery());
-      let googleImagesUrl = `https://images.google.com/search?tbm=isch&q=${imageSubject}&sfr=gws&gbv=1&sei=n37GXpmUFviwz7sP4KmZuA0`;
-      let googleImagesCarousel = main_area.querySelector(
-        "#google-images-carousel"
-      );
+            let imageSubject = encodeURIComponent(getCurrentQuery());
+            let googleImagesUrl = `https://images.google.com/search?tbm=isch&q=${imageSubject}&sfr=gws&gbv=1&sei=n37GXpmUFviwz7sP4KmZuA0`;
+            let googleImagesCarousel = main_area.querySelector(
+                "#google-images-carousel"
+            );
 
-      try {
-        let googleImagesResponse = await window.fetch(googleImagesUrl);
+            try {
+                let googleImagesResponse = await window.fetch(googleImagesUrl);
 
-        if (googleImagesResponse.ok) {
-          // Page loaded
-          let googleImagesPage = parser.parseFromString(
-            await googleImagesResponse.text(),
-            "text/html"
-          );
+                if (googleImagesResponse.ok) {
+                    // Page loaded
+                    let googleImagesPage = parser.parseFromString(
+                        await googleImagesResponse.text(),
+                        "text/html"
+                    );
 
-          let allImages = googleImagesPage.querySelectorAll("table img");
+                    let allImages = googleImagesPage.querySelectorAll(
+                        "table img"
+                    );
 
-          for (let i = 0; i < 20; i++) {
-            let currentImage = allImages[i];
+                    for (let i = 0; i < 20; i++) {
+                        let currentImage = allImages[i];
 
-            googleImagesCarousel.innerHTML += `
+                        googleImagesCarousel.innerHTML += `
               <span>
                 <img
                   style="height: 40vh; margin-right: 5px;"
@@ -3239,19 +3326,26 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
                 />
               </span>
             `;
-          }
-        } else {
-          console.error("Error: Response Object", googleImagesResponse);
+                    }
+                } else {
+                    console.error(
+                        "Error: Response Object",
+                        googleImagesResponse
+                    );
 
-          let errorDetails = "Assistant cannot fetch images due to malformed request";
-          let subdetails = `Error: HTTP status code ${googleImagesResponse.status}`;
+                    let errorDetails =
+                        "Assistant cannot fetch images due to malformed request";
+                    let subdetails = `Error: HTTP status code ${googleImagesResponse.status}`;
 
-          if (googleImagesResponse.status == 429) {
-            // Rate limit exceeded
-            errorDetails = "Too many requests sent in given time. Rate limit exceeded.";
-            subdetails = `Error: 429 Too Many Requests`;
-          } else {
-            suggestion_area.querySelector(".suggestion-parent").innerHTML += `
+                    if (googleImagesResponse.status == 429) {
+                        // Rate limit exceeded
+                        errorDetails =
+                            "Too many requests sent in given time. Rate limit exceeded.";
+                        subdetails = `Error: 429 Too Many Requests`;
+                    } else {
+                        suggestion_area.querySelector(
+                            ".suggestion-parent"
+                        ).innerHTML += `
               <div class="suggestion" onclick="retryRecent(false)">
                 <span>
                   <img src="../res/refresh.svg" style="
@@ -3260,32 +3354,35 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
                 Retry
               </div>
             `;
-          }
+                    }
 
-          displayErrorScreen({
-            title: "Failed to fetch images",
-            details: errorDetails,
-            subdetails: subdetails,
-          });
-        }
-      } catch (e) {
-        if (e.name == TypeError.name) {
-          displayErrorScreen({
-            title: "Failed to fetch images",
-            details: "Assistant cannot fetch images due to internet issues.",
-            subdetails: "Error: Internet not available",
-          });
+                    displayErrorScreen({
+                        title: "Failed to fetch images",
+                        details: errorDetails,
+                        subdetails: subdetails,
+                    });
+                }
+            } catch (e) {
+                if (e.name == TypeError.name) {
+                    displayErrorScreen({
+                        title: "Failed to fetch images",
+                        details:
+                            "Assistant cannot fetch images due to internet issues.",
+                        subdetails: "Error: Internet not available",
+                    });
 
-          suggestion_area.querySelector(".suggestion-parent").innerHTML += `
+                    suggestion_area.querySelector(
+                        ".suggestion-parent"
+                    ).innerHTML += `
           <div class="suggestion" onclick="retryRecent(false)">
             <span>
               <img src="../res/refresh.svg" style="
@@ -3293,53 +3390,49 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
                 width: 20px;
                 vertical-align: top;
                 padding-right: 5px;
-                ${
-                  getEffectiveTheme() == "light"
-                    ? "filter: invert(1);"
-                    : ""
-                }"
+                ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
               >
             </span>
             Retry
           </div>
           `;
+                }
+            }
+        } else {
+            isGoogleImagesContent = false;
         }
-      }
     } else {
-      isGoogleImagesContent = false;
+        responseType = inspectResponseType("");
     }
-  } else {
-    responseType = inspectResponseType("");
-  }
 
-  if (hasPhotoCarousel) {
-    let imgs = element.querySelectorAll("img[data-src]");
+    if (hasPhotoCarousel) {
+        let imgs = element.querySelectorAll("img[data-src]");
 
-    for (let i = 0; i < imgs.length; i++) {
-      let img = imgs[i];
-      img.setAttribute("src", img.getAttribute("data-src"));
+        for (let i = 0; i < imgs.length; i++) {
+            let img = imgs[i];
+            img.setAttribute("src", img.getAttribute("data-src"));
+        }
     }
-  }
 
-  let externalLinks = main_area.querySelectorAll("[data-url]");
+    let externalLinks = main_area.querySelectorAll("[data-url]");
 
-  for (let i = 0; i < externalLinks.length; i++) {
-    let temp = externalLinks[i];
-    temp.setAttribute(
-      "onclick",
-      `openLink("${temp.getAttribute("data-url")}")`
-    );
-    temp.setAttribute("style", "cursor: pointer;");
-  }
+    for (let i = 0; i < externalLinks.length; i++) {
+        let temp = externalLinks[i];
+        temp.setAttribute(
+            "onclick",
+            `openLink("${temp.getAttribute("data-url")}")`
+        );
+        temp.setAttribute("style", "cursor: pointer;");
+    }
 
-  // Set Suggestion Area
+    // Set Suggestion Area
 
-  let suggestionsDOM = htmlDocument.querySelector("#assistant-scroll-bar");
-  let suggestion_parent = document.querySelector(".suggestion-parent");
+    let suggestionsDOM = htmlDocument.querySelector("#assistant-scroll-bar");
+    let suggestion_parent = document.querySelector(".suggestion-parent");
 
-  if (suggestionsDOM != null) {
-    if (responseType["type"] || hasWebAnswer || hasKnowledgePanel) {
-      suggestion_parent.innerHTML += `
+    if (suggestionsDOM != null) {
+        if (responseType["type"] || hasWebAnswer || hasKnowledgePanel) {
+            suggestion_parent.innerHTML += `
         <div class="suggestion" onclick="openLink('https://google.com/search?q=${getCurrentQuery()}')" data-flag="action-btn">
           <span>
             <img src="../res/google-logo.png" style="
@@ -3352,12 +3445,12 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
           Search
         </div>
       `;
-    }
+        }
 
-    if (isGoogleImagesContent) {
-      suggestion_parent.innerHTML += `
+        if (isGoogleImagesContent) {
+            suggestion_parent.innerHTML += `
         <div class="suggestion" onclick="openLink('https://www.google.com/search?tbm=isch&q=${encodeURIComponent(
-          getCurrentQuery()
+            getCurrentQuery()
         )}')" data-flag="action-btn">
           <span>
             <img src="../res/google-logo.png" style="
@@ -3370,28 +3463,28 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
           Google Images
         </div>
       `;
-    }
+        }
 
-    if (hasPhotoCarousel) {
-      let currentQuery = getCurrentQuery();
-      let seperatorIndex = Math.min(
-        currentQuery.indexOf("of") != -1
-          ? currentQuery.indexOf("of")
-          : Infinity,
-        currentQuery.indexOf("from") != -1
-          ? currentQuery.indexOf("from")
-          : Infinity
-      );
-      let subject = currentQuery
-        .slice(seperatorIndex)
-        .replace(/(^of|^from)\s/, "");
-      let photosUrl = "https://photos.google.com/";
+        if (hasPhotoCarousel) {
+            let currentQuery = getCurrentQuery();
+            let seperatorIndex = Math.min(
+                currentQuery.indexOf("of") != -1
+                    ? currentQuery.indexOf("of")
+                    : Infinity,
+                currentQuery.indexOf("from") != -1
+                    ? currentQuery.indexOf("from")
+                    : Infinity
+            );
+            let subject = currentQuery
+                .slice(seperatorIndex)
+                .replace(/(^of|^from)\s/, "");
+            let photosUrl = "https://photos.google.com/";
 
-      if (subject) {
-        photosUrl += `search/${subject}`;
-      }
+            if (subject) {
+                photosUrl += `search/${subject}`;
+            }
 
-      suggestion_parent.innerHTML += `
+            suggestion_parent.innerHTML += `
         <div class="suggestion" onclick="openLink('${photosUrl}')" data-flag="action-btn">
           <span>
             <img src="../res/google-photos.svg" style="
@@ -3404,76 +3497,79 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
           Google Photos
         </div>
       `;
-    }
+        }
 
-    for (let i = 0; i < suggestionsDOM.children.length; i++) {
-      let label = suggestionsDOM.children[i].innerHTML.trim();
-      let query = suggestionsDOM.children[i].getAttribute("data-follow-up-query");
-      let action = query;
+        for (let i = 0; i < suggestionsDOM.children.length; i++) {
+            let label = suggestionsDOM.children[i].innerHTML.trim();
+            let query = suggestionsDOM.children[i].getAttribute(
+                "data-follow-up-query"
+            );
+            let action = query;
 
-      if (
-        suggestionsDOM.children[i].getAttribute("data-flag") != "action-btn"
-      ) {
-        action = `assistantTextQuery(\`${escapeQuotes(query)}\`)`;
-      }
+            if (
+                suggestionsDOM.children[i].getAttribute("data-flag") !=
+                "action-btn"
+            ) {
+                action = `assistantTextQuery(\`${escapeQuotes(query)}\`)`;
+            }
 
-      suggestion_parent.innerHTML += `
+            suggestion_parent.innerHTML += `
         <div class="suggestion" onclick="${action}">${label}</div>
       `;
-    }
-  } else {
-    suggestion_parent.innerHTML = `
+        }
+    } else {
+        suggestion_parent.innerHTML = `
       <span style="opacity: 0.502;">
         ${supportedLanguages[assistantConfig["language"]].noSuggestionsText}
       </span>
     `;
-  }
-
-  // Register horizontal scrolling for suggestion area
-  registerHorizontalScroll(suggestion_area);
-
-  // Apply horizontal scrolling behavior for carousels
-
-  let carouselDOM;
-
-  if (hasCarousel || hasPhotoCarousel) {
-    carouselDOM = document.querySelector(".assistant-markup-response")
-      .lastElementChild;
-  } else if (document.querySelector("#google-images-carousel")) {
-    carouselDOM = document.querySelector(".assistant-markup-response")
-      .lastElementChild.lastElementChild;
-  } else if (document.querySelector("#tv-item-container")) {
-    carouselDOM = document.querySelector(
-      ".assistant-markup-response #tv-item-container"
-    );
-  }
-
-  registerHorizontalScroll(carouselDOM, false);
-
-  // Push to History
-
-  if (pushToHistory && main_area.querySelector(".error-area") == null) {
-    let screenData;
-
-    if (isGoogleImagesContent) {
-      screenData = generateScreenData(true);
-    } else {
-      screenData = screen;
     }
 
-    history.push({
-      query: getCurrentQuery(),
-      "screen-data": screenData,
-    });
+    // Register horizontal scrolling for suggestion area
+    registerHorizontalScroll(suggestion_area);
 
-    historyHead = history.length - 1;
-    queryHistoryHead = history.length;
-    updateNav();
-  }
+    // Apply horizontal scrolling behavior for carousels
 
-  if (isGoogleImagesContent && getEffectiveTheme() == "light") {
-    seekHistory(historyHead);
-  }
+    let carouselDOM;
+
+    if (hasCarousel || hasPhotoCarousel) {
+        carouselDOM = document.querySelector(".assistant-markup-response")
+            .lastElementChild;
+    } else if (document.querySelector("#google-images-carousel")) {
+        carouselDOM = document.querySelector(".assistant-markup-response")
+            .lastElementChild.lastElementChild;
+    } else if (document.querySelector("#tv-item-container")) {
+        carouselDOM = document.querySelector(
+            ".assistant-markup-response #tv-item-container"
+        );
+    }
+
+    registerHorizontalScroll(carouselDOM, false);
+
+    // Push to History
+
+    if (pushToHistory && main_area.querySelector(".error-area") == null) {
+        let screenData;
+
+        if (isGoogleImagesContent) {
+            screenData = generateScreenData(true);
+        } else {
+            screenData = screen;
+        }
+
+        history.push({
+            query: getCurrentQuery(),
+            "screen-data": screenData,
+        });
+
+        historyHead = history.length - 1;
+        queryHistoryHead = history.length;
+        updateNav();
+    }
+
+    if (isGoogleImagesContent && getEffectiveTheme() == "light") {
+        seekHistory(historyHead);
+    }
 }
 
 /**
@@ -3485,58 +3581,58 @@ async function displayScreenData(screen, pushToHistory=false, theme=null) {
  *
  * @returns Generated screen data
  */
-function generateScreenData(includePreventAutoScaleFlag=false) {
-  let screenData;
-  let assistantMarkupResponse = document.querySelector(
-    ".assistant-markup-response"
-  );
-
-  if (includePreventAutoScaleFlag) {
-    assistantMarkupResponse.lastElementChild.setAttribute(
-      "data-flag",
-      "prevent-auto-scale"
+function generateScreenData(includePreventAutoScaleFlag = false) {
+    let screenData;
+    let assistantMarkupResponse = document.querySelector(
+        ".assistant-markup-response"
     );
-  }
 
-  let screenDataMainContent = `
+    if (includePreventAutoScaleFlag) {
+        assistantMarkupResponse.lastElementChild.setAttribute(
+            "data-flag",
+            "prevent-auto-scale"
+        );
+    }
+
+    let screenDataMainContent = `
     <div id="assistant-card-content">
       ${assistantMarkupResponse.innerHTML}
     </div>
   `;
 
-  let suggestions = document.querySelector(".suggestion-parent").children;
-  let suggestionsDOM = "";
+    let suggestions = document.querySelector(".suggestion-parent").children;
+    let suggestionsDOM = "";
 
-  for (let i = 0; i < suggestions.length; i++) {
-    let flag = suggestions[i].getAttribute("data-flag");
-    let flagAttrib = flag ? `data-flag="${flag}"` : "";
-    let label = suggestions[i].innerHTML.trim();
+    for (let i = 0; i < suggestions.length; i++) {
+        let flag = suggestions[i].getAttribute("data-flag");
+        let flagAttrib = flag ? `data-flag="${flag}"` : "";
+        let label = suggestions[i].innerHTML.trim();
 
-    let followUpQuery = suggestions[i]
-      .getAttribute("onclick")
-      .replace(/assistantTextQuery\(`(.*)`\)/, "$1");
+        let followUpQuery = suggestions[i]
+            .getAttribute("onclick")
+            .replace(/assistantTextQuery\(`(.*)`\)/, "$1");
 
-    suggestionsDOM += `
+        suggestionsDOM += `
     <button data-follow-up-query="${followUpQuery}" ${flagAttrib}>
       ${label}
     </button>
     `;
-  }
+    }
 
-  let screenDataSuggestionsHTML = `
+    let screenDataSuggestionsHTML = `
     <div id="assistant-scroll-bar">
       ${suggestionsDOM}
     </div>
   `;
 
-  let finalMarkup =
-    "<html><body>" +
-    screenDataMainContent +
-    screenDataSuggestionsHTML +
-    "</body></html>";
+    let finalMarkup =
+        "<html><body>" +
+        screenDataMainContent +
+        screenDataSuggestionsHTML +
+        "</body></html>";
 
-  screenData = { format: "HTML", data: Buffer.from(finalMarkup, "utf-8") };
-  return screenData;
+    screenData = { format: "HTML", data: Buffer.from(finalMarkup, "utf-8") };
+    return screenData;
 }
 
 /**
@@ -3552,15 +3648,18 @@ function generateScreenData(includePreventAutoScaleFlag=false) {
  * Whether to set `scrollBehavior` to "smooth"
  */
 function _scrollHorizontally(e, el, smoothScroll) {
-  // Does not accept trackpad horizontal scroll
-  if (e.wheelDeltaX == 0) {
-    let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
-    let scrollBehavior = smoothScroll ? "smooth" : "auto";
-    let scrollOffset = 125;
+    // Does not accept trackpad horizontal scroll
+    if (e.wheelDeltaX == 0) {
+        let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+        let scrollBehavior = smoothScroll ? "smooth" : "auto";
+        let scrollOffset = 125;
 
-    el.scrollBy({ left: -(delta * scrollOffset), behavior: scrollBehavior });
-    e.preventDefault();
-  }
+        el.scrollBy({
+            left: -(delta * scrollOffset),
+            behavior: scrollBehavior,
+        });
+        e.preventDefault();
+    }
 }
 
 /**
@@ -3573,32 +3672,37 @@ function _scrollHorizontally(e, el, smoothScroll) {
  * @param {boolean} smoothScroll
  * Whether to set `scrollBehavior` to "smooth"
  */
-function registerHorizontalScroll(element, smoothScroll=true) {
-  if (element)
-    element.onmousewheel = (e) => _scrollHorizontally(e, element, smoothScroll);
+function registerHorizontalScroll(element, smoothScroll = true) {
+    if (element)
+        element.onmousewheel = (e) =>
+            _scrollHorizontally(e, element, smoothScroll);
 }
 
 /**
  * Position the Assistant Window in bottom-center of the screen.
  */
 function setAssistantWindowPosition() {
-  ipcRenderer.send("set-assistant-window-position");
+    ipcRenderer.send("set-assistant-window-position");
 }
 
 function setAssistantWindowBorder() {
-  if (assistantConfig["windowBorder"] === "prominent") {
-    document
-      .querySelector("#master-bg")
-      .setAttribute("data-border", "prominent");
-  } else if (assistantConfig["windowBorder"] === "minimal") {
-    document.querySelector("#master-bg").setAttribute("data-border", "minimal");
-  } else if (assistantConfig["windowBorder"] === "color-shift") {
-    document
-      .querySelector("#master-bg")
-      .setAttribute("data-border", "color-shift");
-  } else {
-    document.querySelector("#master-bg").setAttribute("data-border", "none");
-  }
+    if (assistantConfig["windowBorder"] === "prominent") {
+        document
+            .querySelector("#master-bg")
+            .setAttribute("data-border", "prominent");
+    } else if (assistantConfig["windowBorder"] === "minimal") {
+        document
+            .querySelector("#master-bg")
+            .setAttribute("data-border", "minimal");
+    } else if (assistantConfig["windowBorder"] === "color-shift") {
+        document
+            .querySelector("#master-bg")
+            .setAttribute("data-border", "color-shift");
+    } else {
+        document
+            .querySelector("#master-bg")
+            .setAttribute("data-border", "none");
+    }
 }
 
 /**
@@ -3610,33 +3714,33 @@ function setAssistantWindowBorder() {
  * the size automatically.
  */
 function toggleExpandWindow(shouldExpandWindow) {
-  if (shouldExpandWindow != null) expanded = !shouldExpandWindow;
+    if (shouldExpandWindow != null) expanded = !shouldExpandWindow;
 
-  if (!expanded) {
-    assistantWindow.setSize(screen.availWidth - 20, 450);
-    expand_collapse_btn.setAttribute("src", "../res/collapse_btn.svg"); // Change to 'collapse' icon after expanding
-  } else {
-    assistantWindow.setSize(1000, 420);
-    expand_collapse_btn.setAttribute("src", "../res/expand_btn.svg"); // Change to 'expand' icon after collapsing
-  }
+    if (!expanded) {
+        assistantWindow.setSize(screen.availWidth - 20, 450);
+        expand_collapse_btn.setAttribute("src", "../res/collapse_btn.svg"); // Change to 'collapse' icon after expanding
+    } else {
+        assistantWindow.setSize(1000, 420);
+        expand_collapse_btn.setAttribute("src", "../res/expand_btn.svg"); // Change to 'expand' icon after collapsing
+    }
 
-  setAssistantWindowPosition();
-  expanded = !expanded;
+    setAssistantWindowPosition();
+    expanded = !expanded;
 }
 
 /**
  * Relaunch Google Assistant Window.
  */
 function relaunchAssistant() {
-  ipcRenderer.send("relaunch-assistant");
-  console.log("Sent request for relaunch...");
+    ipcRenderer.send("relaunch-assistant");
+    console.log("Sent request for relaunch...");
 }
 
 /**
  * Quits the application from tray.
  */
 function quitApp() {
-  ipcRenderer.send("quit-app");
+    ipcRenderer.send("quit-app");
 }
 
 /**
@@ -3644,8 +3748,8 @@ function quitApp() {
  * @param {*} releases
  */
 function updateReleases(releases) {
-  console.log(...consoleMessage("Temporarily caching releases..."));
-  ipcRenderer.send("update-releases", releases);
+    console.log(...consoleMessage("Temporarily caching releases..."));
+    ipcRenderer.send("update-releases", releases);
 }
 
 /**
@@ -3657,19 +3761,19 @@ function updateReleases(releases) {
  * @param {boolean} allowOlyOneMessage
  * Show the message only when no other quick message is showing up.
  */
-function displayQuickMessage(message, allowOlyOneMessage=false) {
-  let nav_region = document.querySelector("#nav-region");
+function displayQuickMessage(message, allowOlyOneMessage = false) {
+    let nav_region = document.querySelector("#nav-region");
 
-  // Show the message only when no other message is showing up.
-  // If `allowOlyOneMessage` is `true`
-  if (allowOlyOneMessage && nav_region.querySelector(".quick-msg")) return;
+    // Show the message only when no other message is showing up.
+    // If `allowOlyOneMessage` is `true`
+    if (allowOlyOneMessage && nav_region.querySelector(".quick-msg")) return;
 
-  let elt = document.createElement("div");
-  elt.innerHTML = message;
+    let elt = document.createElement("div");
+    elt.innerHTML = message;
 
-  nav_region.appendChild(elt);
-  elt.className = "quick-msg";
-  setTimeout(() => nav_region.removeChild(elt), 5000);
+    nav_region.appendChild(elt);
+    elt.className = "quick-msg";
+    setTimeout(() => nav_region.removeChild(elt), 5000);
 }
 
 /**
@@ -3687,20 +3791,20 @@ function displayQuickMessage(message, allowOlyOneMessage=false) {
  * Scrolls the element into view. _(Defaults to `true`)_
  */
 function markInputAsInvalid(
-  inputElement,
-  addShakeAnimation=false,
-  scrollIntoView=true
+    inputElement,
+    addShakeAnimation = false,
+    scrollIntoView = true
 ) {
-  inputElement.classList.add(["input-err"]);
+    inputElement.classList.add(["input-err"]);
 
-  if (addShakeAnimation) {
-    inputElement.classList.add(["shake"]);
-    setTimeout(() => inputElement.classList.remove(["shake"]), 300);
-  }
+    if (addShakeAnimation) {
+        inputElement.classList.add(["shake"]);
+        setTimeout(() => inputElement.classList.remove(["shake"]), 300);
+    }
 
-  if (scrollIntoView) {
-    inputElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
+    if (scrollIntoView) {
+        inputElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
 }
 
 /**
@@ -3711,7 +3815,7 @@ function markInputAsInvalid(
  * The target `input` DOM Element
  */
 function markInputAsValid(inputElement) {
-  inputElement.classList.remove(["input-err"]);
+    inputElement.classList.remove(["input-err"]);
 }
 
 /**
@@ -3736,20 +3840,24 @@ function markInputAsValid(inputElement) {
  * Returns boolean value (true/false) based on the validity of path
  */
 function validatePathInput(
-  inputElement,
-  addShakeAnimationOnError=false,
-  scrollIntoView=true,
-  trimSpaces=true
+    inputElement,
+    addShakeAnimationOnError = false,
+    scrollIntoView = true,
+    trimSpaces = true
 ) {
-  let val = trimSpaces ? inputElement.value.trim() : inputElement.value;
+    let val = trimSpaces ? inputElement.value.trim() : inputElement.value;
 
-  if (val != "" && !fs.existsSync(val)) {
-    markInputAsInvalid(inputElement, addShakeAnimationOnError, scrollIntoView);
-    return false;
-  } else {
-    markInputAsValid(inputElement);
-    return true;
-  }
+    if (val != "" && !fs.existsSync(val)) {
+        markInputAsInvalid(
+            inputElement,
+            addShakeAnimationOnError,
+            scrollIntoView
+        );
+        return false;
+    } else {
+        markInputAsValid(inputElement);
+        return true;
+    }
 }
 
 /**
@@ -3761,9 +3869,9 @@ function validatePathInput(
  * The callback to process the OAuth Code.
  */
 function showGetTokenScreen(oauthValidationCallback) {
-  initScreenFlag = 0;
+    initScreenFlag = 0;
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
     <div class="fade-in-from-bottom">
       <span
         style="
@@ -3772,7 +3880,7 @@ function showGetTokenScreen(oauthValidationCallback) {
           font-size: 17px;
           padding: 5px 10px;
           background: ${getComputedStyle(
-            document.documentElement
+              document.documentElement
           ).getPropertyValue("--color-fg")}22;
           opacity: 0.502;
           vertical-align: middle;
@@ -3814,10 +3922,10 @@ function showGetTokenScreen(oauthValidationCallback) {
     </div>
   `;
 
-  suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
-  let suggestion_parent = document.querySelector(".suggestion-parent");
+    suggestion_area.innerHTML = '<div class="suggestion-parent"></div>';
+    let suggestion_parent = document.querySelector(".suggestion-parent");
 
-  suggestion_parent.innerHTML = `
+    suggestion_parent.innerHTML = `
     <div id="submit-btn" class="suggestion">
       <span>
         <img src="../res/done.svg" style="
@@ -3835,98 +3943,102 @@ function showGetTokenScreen(oauthValidationCallback) {
     </div>
   `;
 
-  suggestion_area.querySelector("#submit-btn").onclick = () => {
-    if (
-      document.querySelector(".no-auth-grid").classList.contains("disabled")
-    ) {
-      console.log("Can't submit while receiving tokens...");
-      return;
-    }
+    suggestion_area.querySelector("#submit-btn").onclick = () => {
+        if (
+            document
+                .querySelector(".no-auth-grid")
+                .classList.contains("disabled")
+        ) {
+            console.log("Can't submit while receiving tokens...");
+            return;
+        }
 
-    let oauthInput = main_area.querySelector("#auth-code-input");
-    let oauthCode = oauthInput.value;
+        let oauthInput = main_area.querySelector("#auth-code-input");
+        let oauthCode = oauthInput.value;
 
-    oauthInput.onchange = () => {
-      markInputAsValid(oauthInput);
-    };
+        oauthInput.onchange = () => {
+            markInputAsValid(oauthInput);
+        };
 
-    if (!oauthCode) {
-      markInputAsInvalid(oauthInput, true);
-      return;
-    }
+        if (!oauthCode) {
+            markInputAsInvalid(oauthInput, true);
+            return;
+        }
 
-    document.querySelector("#loader-area").innerHTML = `
+        document.querySelector("#loader-area").innerHTML = `
       <div class="determinate-progress"></div>
     `;
 
-    // Disable suggestions
+        // Disable suggestions
 
-    document.querySelector(".no-auth-grid").classList.add("disabled");
-    document.querySelector("#submit-btn").classList.add("disabled");
-    document.querySelector("#open-settings-btn").classList.add("disabled");
-    document.querySelector("#open-settings-btn").onclick = "";
+        document.querySelector(".no-auth-grid").classList.add("disabled");
+        document.querySelector("#submit-btn").classList.add("disabled");
+        document.querySelector("#open-settings-btn").classList.add("disabled");
+        document.querySelector("#open-settings-btn").onclick = "";
 
-    // Init. Countdown
+        // Init. Countdown
 
-    document.querySelector("#countdown").style.display = "unset";
-    document.querySelector("#countdown").innerHTML = `Please wait for 10s`;
-    let secs = 9;
+        document.querySelector("#countdown").style.display = "unset";
+        document.querySelector("#countdown").innerHTML = `Please wait for 10s`;
+        let secs = 9;
 
-    let countdownIntervalId = setInterval(() => {
-      if (secs == 0) {
-        document.querySelector("#loader-area").innerHTML = "";
-        document.querySelector(".no-auth-grid").classList.remove("disabled");
-        document.querySelector("#countdown").style.display = "none";
+        let countdownIntervalId = setInterval(() => {
+            if (secs == 0) {
+                document.querySelector("#loader-area").innerHTML = "";
+                document
+                    .querySelector(".no-auth-grid")
+                    .classList.remove("disabled");
+                document.querySelector("#countdown").style.display = "none";
 
-        let tokensString;
+                let tokensString;
 
-        try {
-          tokensString = fs.readFileSync(config.auth.savedTokensPath);
-        } catch (error) {
-          // If file doesn't exist
+                try {
+                    tokensString = fs.readFileSync(config.auth.savedTokensPath);
+                } catch (error) {
+                    // If file doesn't exist
 
-          console.group(
-            ...consoleMessage("Error occurred while saving tokens", "error")
-          );
-          console.error(error);
-          console.groupEnd();
+                    console.group(
+                        ...consoleMessage(
+                            "Error occurred while saving tokens",
+                            "error"
+                        )
+                    );
+                    console.error(error);
+                    console.groupEnd();
 
-          tokensString = "";
-        }
+                    tokensString = "";
+                }
 
-        if (tokensString.length) {
-          // Tokens were saved
+                if (tokensString.length) {
+                    // Tokens were saved
 
-          console.groupCollapsed(...consoleMessage("Tokens saved"));
-          console.log(tokensString);
-          console.groupEnd();
+                    console.groupCollapsed(...consoleMessage("Tokens saved"));
+                    console.log(tokensString);
+                    console.groupEnd();
 
-          displayQuickMessage("Tokens saved", true);
+                    displayQuickMessage("Tokens saved", true);
 
-          setTimeout(() => {
-            displayErrorScreen({
-              icon: {
-                path: "../res/refresh.svg",
-                style: `
+                    setTimeout(() => {
+                        displayErrorScreen({
+                            icon: {
+                                path: "../res/refresh.svg",
+                                style: `
                   height: 100px;
                   animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-                  ${
-                    getEffectiveTheme() == "light"
-                      ? "filter: invert(1);"
-                      : ""
-                  }
+                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}
                 `,
-              },
-              title: "Relaunch Required",
-              details: "A relaunch is required for changes to take place",
-              subdetails: "Info: Tokens saved",
-            });
+                            },
+                            title: "Relaunch Required",
+                            details:
+                                "A relaunch is required for changes to take place",
+                            subdetails: "Info: Tokens saved",
+                        });
 
-            let suggestion_parent = document.querySelector(
-              ".suggestion-parent"
-            );
+                        let suggestion_parent = document.querySelector(
+                            ".suggestion-parent"
+                        );
 
-            suggestion_parent.innerHTML = `
+                        suggestion_parent.innerHTML = `
               <div class="suggestion" onclick="relaunchAssistant()">
                 <span>
                   <img src="../res/refresh.svg" style="
@@ -3935,28 +4047,28 @@ function showGetTokenScreen(oauthValidationCallback) {
                     vertical-align: top;
                     padding-right: 5px;
                     ${
-                      getEffectiveTheme() == "light"
-                        ? "filter: invert(1);"
-                        : ""
+                        getEffectiveTheme() == "light"
+                            ? "filter: invert(1);"
+                            : ""
                     }"
                   >
                 </span>
                 Relaunch Assistant
               </div>
             `;
-          }, 1000);
-        } else {
-          // Failed to save tokens
+                    }, 1000);
+                } else {
+                    // Failed to save tokens
 
-          displayErrorScreen({
-            title: "Failed to get Tokens",
-            details:
-              "Assistant failed to fetch the tokens from server. Either the auth code is invalid or the rate limit might have exceeded.<br>Try selecting a different Google Account.",
-            subdetails: "Error: Error getting tokens",
-            customStyle: "top: 80px;",
-          });
+                    displayErrorScreen({
+                        title: "Failed to get Tokens",
+                        details:
+                            "Assistant failed to fetch the tokens from server. Either the auth code is invalid or the rate limit might have exceeded.<br>Try selecting a different Google Account.",
+                        subdetails: "Error: Error getting tokens",
+                        customStyle: "top: 80px;",
+                    });
 
-          suggestion_parent.innerHTML = `
+                    suggestion_parent.innerHTML = `
             <div class="suggestion" onclick="openConfig()">
               <span>
                 <img src="../res/settings.svg" style="
@@ -3964,11 +4076,7 @@ function showGetTokenScreen(oauthValidationCallback) {
                   width: 20px;
                   vertical-align: top;
                   padding-right: 10px;
-                  ${
-                    getEffectiveTheme() == "light"
-                      ? "filter: invert(1);"
-                      : ""
-                  }"
+                  ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
                 >
               </span>
               Open Settings
@@ -3977,44 +4085,44 @@ function showGetTokenScreen(oauthValidationCallback) {
               Retry
             </div>
           `;
-        }
+                }
 
-        document.querySelector("#oauth-retry-btn").onclick = () =>
-          showGetTokenScreen(oauthValidationCallback);
+                document.querySelector("#oauth-retry-btn").onclick = () =>
+                    showGetTokenScreen(oauthValidationCallback);
 
-        clearInterval(countdownIntervalId);
-      }
+                clearInterval(countdownIntervalId);
+            }
 
-      document.querySelector(
-        "#countdown"
-      ).innerHTML = `Please wait for ${secs}s`;
-      secs--;
-    }, 1000);
+            document.querySelector(
+                "#countdown"
+            ).innerHTML = `Please wait for ${secs}s`;
+            secs--;
+        }, 1000);
 
-    try {
-      oauthValidationCallback(oauthCode);
-    } catch (error) {
-      console.group(...consoleMessage("Error fetching tokens", "error"));
-      console.error(error);
-      console.groupEnd();
+        try {
+            oauthValidationCallback(oauthCode);
+        } catch (error) {
+            console.group(...consoleMessage("Error fetching tokens", "error"));
+            console.error(error);
+            console.groupEnd();
 
-      displayErrorScreen({
-        title: "Failed to get Tokens",
-        details:
-          "Due to some unexpected exception, assistant failed to get the tokens from server.",
-        subdetails: "Error: Error getting tokens",
-      });
+            displayErrorScreen({
+                title: "Failed to get Tokens",
+                details:
+                    "Due to some unexpected exception, assistant failed to get the tokens from server.",
+                subdetails: "Error: Error getting tokens",
+            });
 
-      suggestion_parent.innerHTML = `
+            suggestion_parent.innerHTML = `
         <div class="suggestion" id="oauth-retry-btn">
           Retry
         </div>
       `;
 
-      document.querySelector("#oauth-retry-btn").onclick = () =>
-        showGetTokenScreen(oauthValidationCallback);
-    }
-  };
+            document.querySelector("#oauth-retry-btn").onclick = () =>
+                showGetTokenScreen(oauthValidationCallback);
+        }
+    };
 }
 
 /**
@@ -4024,28 +4132,28 @@ function showGetTokenScreen(oauthValidationCallback) {
  * List of objects containing details about each release
  */
 async function getReleases() {
-  try {
-    let releasesFetchResult = await window.fetch(
-      "https://api.github.com/repos/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases",
+    try {
+        let releasesFetchResult = await window.fetch(
+            "https://api.github.com/repos/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases",
 
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-        },
-      }
-    );
+            {
+                method: "GET",
+                headers: {
+                    Accept: "application/vnd.github.v3+json",
+                },
+            }
+        );
 
-    if (releasesFetchResult.ok) {
-      releases = await releasesFetchResult.json();
-      updateReleases(releases);
-      return releases;
-    } else {
-      throw new Error(response.status);
+        if (releasesFetchResult.ok) {
+            releases = await releasesFetchResult.json();
+            updateReleases(releases);
+            return releases;
+        } else {
+            throw new Error(response.status);
+        }
+    } catch (error) {
+        return ["Error", error.message];
     }
-  } catch (error) {
-    return ["Error", error.message];
-  }
 }
 
 /**
@@ -4060,175 +4168,179 @@ async function getReleases() {
  * based on the platform (Windows, MacOS, Linux)
  */
 function getAssetDownloadUrl(releaseObject) {
-  const platform = process.platform;
-  let downloadUrl;
+    const platform = process.platform;
+    let downloadUrl;
 
-  if (releaseObject) {
-    releaseObject["assets"].forEach((asset) => {
-      switch (platform) {
-        case "win32":
-          if (asset["name"].endsWith(".exe")) {
-            downloadUrl = asset["browser_download_url"];
-          }
+    if (releaseObject) {
+        releaseObject["assets"].forEach((asset) => {
+            switch (platform) {
+                case "win32":
+                    if (asset["name"].endsWith(".exe")) {
+                        downloadUrl = asset["browser_download_url"];
+                    }
 
-          break;
+                    break;
 
-        case "darwin":
-          if (asset["name"].endsWith(".dmg")) {
-            downloadUrl = asset["browser_download_url"];
-          }
+                case "darwin":
+                    if (asset["name"].endsWith(".dmg")) {
+                        downloadUrl = asset["browser_download_url"];
+                    }
 
-          break;
+                    break;
 
-        default:
-          if (_isSnap()) {
-            if (asset["name"].endsWith(".snap")) {
-              downloadUrl = asset["browser_download_url"];
+                default:
+                    if (_isSnap()) {
+                        if (asset["name"].endsWith(".snap")) {
+                            downloadUrl = asset["browser_download_url"];
+                        }
+                    } else if (asset["name"].endsWith(".AppImage")) {
+                        downloadUrl = asset["browser_download_url"];
+                    }
+
+                    break;
             }
-          } else if (asset["name"].endsWith(".AppImage")) {
-            downloadUrl = asset["browser_download_url"];
-          }
 
-          break;
-      }
+            if (downloadUrl) return;
+        });
 
-      if (downloadUrl) return;
-    });
-
-    return downloadUrl;
-  }
+        return downloadUrl;
+    }
 }
 
 /**
  * Performs necessary action(s) to update the assistant.
  */
 function downloadAssistant() {
-  let downloadUrl = getAssetDownloadUrl(releases[0]);
+    let downloadUrl = getAssetDownloadUrl(releases[0]);
 
-  if (!_isSnap()) {
-    openLink(downloadUrl);
-  } else {
-    let optIndex = dialog.showMessageBoxSync(assistantWindow, {
-      title: "Snap Download",
-      message: "Snap Download",
-      detail:
-        "Snap package can be updated via terminal with the following command:\nsudo snap refresh g-assist\n\nDo you want to update using the shell command?",
-      buttons: [
-        "Run snap refresh (Recommended)",
-        "Download file from repo",
-        "Cancel",
-      ],
-      cancelId: 2,
-    });
+    if (!_isSnap()) {
+        openLink(downloadUrl);
+    } else {
+        let optIndex = dialog.showMessageBoxSync(assistantWindow, {
+            title: "Snap Download",
+            message: "Snap Download",
+            detail:
+                "Snap package can be updated via terminal with the following command:\nsudo snap refresh g-assist\n\nDo you want to update using the shell command?",
+            buttons: [
+                "Run snap refresh (Recommended)",
+                "Download file from repo",
+                "Cancel",
+            ],
+            cancelId: 2,
+        });
 
-    if (optIndex === 0) {
-      // Add a throbber inside download button and update button text
-
-      let updateDownloadBtn = document.querySelector("#download-update-btn");
-
-      if (updateDownloadBtn) {
-        updateDownloadBtn.innerHTML = `<img src="../res/throbber.svg" style="vertical-align: text-top; margin-right: 10px;" /> Updating...`;
-
-        updateDownloadBtn.classList.add("disabled");
-        updateDownloadBtn.onclick = "";
-      }
-
-      // snap refresh g-assist
-
-      let childProcess = exec(
-        "/usr/bin/pkexec --disable-internal-agent snap refresh g-assist",
-        (err, stdout, stderr) => {
-          if (stderr) console.log("[STDERR]:", stderr);
-          if (stdout) console.log("[STDOUT]:", stdout);
-
-          if (err) {
-            console.log("ERROR:");
-            console.log(err);
+        if (optIndex === 0) {
+            // Add a throbber inside download button and update button text
 
             let updateDownloadBtn = document.querySelector(
-              "#download-update-btn"
+                "#download-update-btn"
             );
 
             if (updateDownloadBtn) {
-              updateDownloadBtn.innerHTML = "Download update";
-              updateDownloadBtn.classList.remove("disabled");
-              updateDownloadBtn.onclick = downloadAssistant;
+                updateDownloadBtn.innerHTML = `<img src="../res/throbber.svg" style="vertical-align: text-top; margin-right: 10px;" /> Updating...`;
+
+                updateDownloadBtn.classList.add("disabled");
+                updateDownloadBtn.onclick = "";
             }
 
-            dialog.showMessageBoxSync(assistantWindow, {
-              title: "Error while running update command",
-              message: "Error while running update command",
-              detail: err.toString(),
-              type: "error",
-              buttons: ["OK"],
-              cancelId: 0,
-            });
+            // snap refresh g-assist
 
-            dialog
-              .showMessageBox(assistantWindow, {
-                title: "Snap Update",
-                message: "Copy Update Command",
-                detail:
-                  "You can paste the following command on your terminal to update this application:\n\nsudo snap refresh g-assist",
-                type: "info",
-                buttons: ["Copy command", "OK"],
-                cancelId: 1,
-              })
-              .then((result) => {
-                if (result.response === 0) {
-                  electron.clipboard.writeText("sudo snap refresh g-assist");
+            let childProcess = exec(
+                "/usr/bin/pkexec --disable-internal-agent snap refresh g-assist",
+                (err, stdout, stderr) => {
+                    if (stderr) console.log("[STDERR]:", stderr);
+                    if (stdout) console.log("[STDOUT]:", stdout);
+
+                    if (err) {
+                        console.log("ERROR:");
+                        console.log(err);
+
+                        let updateDownloadBtn = document.querySelector(
+                            "#download-update-btn"
+                        );
+
+                        if (updateDownloadBtn) {
+                            updateDownloadBtn.innerHTML = "Download update";
+                            updateDownloadBtn.classList.remove("disabled");
+                            updateDownloadBtn.onclick = downloadAssistant;
+                        }
+
+                        dialog.showMessageBoxSync(assistantWindow, {
+                            title: "Error while running update command",
+                            message: "Error while running update command",
+                            detail: err.toString(),
+                            type: "error",
+                            buttons: ["OK"],
+                            cancelId: 0,
+                        });
+
+                        dialog
+                            .showMessageBox(assistantWindow, {
+                                title: "Snap Update",
+                                message: "Copy Update Command",
+                                detail:
+                                    "You can paste the following command on your terminal to update this application:\n\nsudo snap refresh g-assist",
+                                type: "info",
+                                buttons: ["Copy command", "OK"],
+                                cancelId: 1,
+                            })
+                            .then((result) => {
+                                if (result.response === 0) {
+                                    electron.clipboard.writeText(
+                                        "sudo snap refresh g-assist"
+                                    );
+                                }
+                            });
+                    }
                 }
-              });
-          }
+            );
+
+            childProcess.on("exit", (exitCode) => {
+                // Successful update
+                if (exitCode === 0) {
+                    let updateDownloadBtn = document.querySelector(
+                        "#download-update-btn"
+                    );
+
+                    if (updateDownloadBtn) {
+                        updateDownloadBtn.innerHTML = "Relaunch";
+                        updateDownloadBtn.classList.remove("disabled");
+                        updateDownloadBtn.onclick = () => {
+                            dialog
+                                .showMessageBox(assistantWindow, {
+                                    title: "Hard Relaunch Required",
+                                    message: "Hard Relaunch Required",
+                                    detail:
+                                        "Assistant has to perform hard relaunch to finish updating. Press Relaunch to continue.",
+                                    type: "info",
+                                    buttons: ["Relaunch", "Not Now"],
+                                    cancelId: 1,
+                                })
+                                .then((result) => {
+                                    console.log("DIALOG OPTION:", result);
+
+                                    if (result.response === 0) {
+                                        app.relaunch();
+                                        quitApp();
+                                    }
+                                });
+                        };
+                    }
+                }
+            });
+        } else if (optIndex === 1) {
+            openLink(downloadUrl);
         }
-      );
-
-      childProcess.on("exit", (exitCode) => {
-        // Successful update
-        if (exitCode === 0) {
-          let updateDownloadBtn = document.querySelector(
-            "#download-update-btn"
-          );
-
-          if (updateDownloadBtn) {
-            updateDownloadBtn.innerHTML = "Relaunch";
-            updateDownloadBtn.classList.remove("disabled");
-            updateDownloadBtn.onclick = () => {
-              dialog
-                .showMessageBox(assistantWindow, {
-                  title: "Hard Relaunch Required",
-                  message: "Hard Relaunch Required",
-                  detail:
-                    "Assistant has to perform hard relaunch to finish updating. Press Relaunch to continue.",
-                  type: "info",
-                  buttons: ["Relaunch", "Not Now"],
-                  cancelId: 1,
-                })
-                .then((result) => {
-                  console.log("DIALOG OPTION:", result);
-
-                  if (result.response === 0) {
-                    app.relaunch();
-                    quitApp();
-                  }
-                });
-            };
-          }
-        }
-      });
-    } else if (optIndex === 1) {
-      openLink(downloadUrl);
     }
-  }
 }
 
 /**
  * Sets the initial screen.
  */
 function setInitScreen() {
-  if (!initScreenFlag) return;
+    if (!initScreenFlag) return;
 
-  main_area.innerHTML = `
+    main_area.innerHTML = `
   <div class="init">
     <center id="assistant-logo-main-parent">
       <img id="assistant-logo-main" src="../res/Google_Assistant_logo.svg" alt="">
@@ -4241,11 +4353,11 @@ function setInitScreen() {
     </div>
   </div>`;
 
-  suggestion_area.innerHTML = `
+    suggestion_area.innerHTML = `
   <div class="suggestion-parent">
     ${supportedLanguages[assistantConfig["language"]].initSuggestions
-      .map((suggestionObj) => {
-        return `
+        .map((suggestionObj) => {
+            return `
           <div
             class="suggestion"
             onclick="assistantTextQuery('${suggestionObj.query}')"
@@ -4253,13 +4365,13 @@ function setInitScreen() {
               ${suggestionObj.label}
           </div>
         `;
-        }).join("")
-      }
+        })
+        .join("")}
   </div>`;
 
-  init_headline = document.querySelector("#init-headline");
-  assistant_input.placeholder =
-    supportedLanguages[assistantConfig["language"]].inputPlaceholder;
+    init_headline = document.querySelector("#init-headline");
+    assistant_input.placeholder =
+        supportedLanguages[assistantConfig["language"]].inputPlaceholder;
 }
 
 /**
@@ -4267,8 +4379,8 @@ function setInitScreen() {
  * Typically called before the window is closed.
  */
 function _stopAudioAndMic() {
-  mic.stop();
-  audPlayer.stop();
+    mic.stop();
+    audPlayer.stop();
 }
 
 /**
@@ -4284,18 +4396,18 @@ function _stopAudioAndMic() {
  * @returns {string}
  * Effective theme based on config and system preferences
  */
-function getEffectiveTheme(theme=null) {
-  theme = theme ? theme : assistantConfig.theme;
+function getEffectiveTheme(theme = null) {
+    theme = theme ? theme : assistantConfig.theme;
 
-  if (theme == "light" || theme == "dark") {
-    return theme;
-  } else if (theme == "system") {
-    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      return "light";
+    if (theme == "light" || theme == "dark") {
+        return theme;
+    } else if (theme == "system") {
+        if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+            return "light";
+        }
     }
-  }
 
-  return "dark";
+    return "dark";
 }
 
 /**
@@ -4310,103 +4422,103 @@ function getEffectiveTheme(theme=null) {
  * Change theme for Assistant Response screen.
  * _(Defaults to `true`)_
  */
-function setTheme(theme=null, forceAssistantResponseThemeChange=true) {
-  let effectiveTheme =
-    !theme || theme == "system" || assistantConfig.theme == "system"
-      ? getEffectiveTheme()
-      : assistantConfig.theme;
+function setTheme(theme = null, forceAssistantResponseThemeChange = true) {
+    let effectiveTheme =
+        !theme || theme == "system" || assistantConfig.theme == "system"
+            ? getEffectiveTheme()
+            : assistantConfig.theme;
 
-  let themeLabel = effectiveTheme == "light" ? "light-theme" : "dark-theme";
+    let themeLabel = effectiveTheme == "light" ? "light-theme" : "dark-theme";
 
-  Object.keys(themes[themeLabel]).forEach((variable) => {
-    document.documentElement.style.setProperty(
-      variable,
-      themes[themeLabel][variable]
+    Object.keys(themes[themeLabel]).forEach((variable) => {
+        document.documentElement.style.setProperty(
+            variable,
+            themes[themeLabel][variable]
+        );
+    });
+
+    console.log(
+        ...consoleMessage(
+            `Setting theme: ${effectiveTheme} (${assistantConfig.theme})`
+        )
     );
-  });
 
-  console.log(
-    ...consoleMessage(
-      `Setting theme: ${effectiveTheme} (${assistantConfig.theme})`
-    )
-  );
+    if (
+        forceAssistantResponseThemeChange &&
+        document.querySelector(".assistant-markup-response")
+    ) {
+        displayScreenData(history[historyHead]["screen-data"]);
+    }
 
-  if (
-    forceAssistantResponseThemeChange &&
-    document.querySelector(".assistant-markup-response")
-  ) {
-    displayScreenData(history[historyHead]["screen-data"]);
-  }
-
-  document
-    .querySelector("#master-bg")
-    .setAttribute("data-theme", effectiveTheme);
+    document
+        .querySelector("#master-bg")
+        .setAttribute("data-theme", effectiveTheme);
 }
 
 /**
  * Display "About" Dialog Box.
  */
 function showAboutBox() {
-  const { commitHash, commitDate } = _getCommitInfo();
-  const appVersion = app.getVersion();
-  const nodeVersion = process.versions.node;
-  const v8Version = process.versions.v8;
-  const electronVersion = process.versions.electron;
-  const chromeVersion = process.versions.chrome;
-  const osInfo = `${os.type()} ${os.arch()} ${os.release()}${
-    _isSnap() ? " snap" : ""
-  }`;
+    const { commitHash, commitDate } = _getCommitInfo();
+    const appVersion = app.getVersion();
+    const nodeVersion = process.versions.node;
+    const v8Version = process.versions.v8;
+    const electronVersion = process.versions.electron;
+    const chromeVersion = process.versions.chrome;
+    const osInfo = `${os.type()} ${os.arch()} ${os.release()}${
+        _isSnap() ? " snap" : ""
+    }`;
 
-  const commitInfo =
-    commitHash != null
-      ? `Commit ID: ${commitHash}\nCommit Date: ${commitDate}\n`
-      : "";
+    const commitInfo =
+        commitHash != null
+            ? `Commit ID: ${commitHash}\nCommit Date: ${commitDate}\n`
+            : "";
 
-  const info = [
-    `Version: ${appVersion}`,
-    `${commitInfo}Electron: ${electronVersion}`,
-    `Chrome: ${chromeVersion}`,
-    `Node.js: ${nodeVersion}`,
-    `V8: ${v8Version}`,
-    `OS: ${osInfo}`,
-  ].join('\n');
+    const info = [
+        `Version: ${appVersion}`,
+        `${commitInfo}Electron: ${electronVersion}`,
+        `Chrome: ${chromeVersion}`,
+        `Node.js: ${nodeVersion}`,
+        `V8: ${v8Version}`,
+        `OS: ${osInfo}`,
+    ].join("\n");
 
-  dialog
-    .showMessageBox(assistantWindow, {
-      type: "info",
-      title: "Google Assistant Unofficial Desktop Client",
-      message: "Google Assistant Unofficial Desktop Client",
-      detail: info,
-      buttons: ["OK", "Copy"],
-    })
-    .then((result) => {
-      if (result.response === 1) {
-        // If "Copy" is pressed
-        electron.clipboard.writeText(info);
-      }
-    });
+    dialog
+        .showMessageBox(assistantWindow, {
+            type: "info",
+            title: "Google Assistant Unofficial Desktop Client",
+            message: "Google Assistant Unofficial Desktop Client",
+            detail: info,
+            buttons: ["OK", "Copy"],
+        })
+        .then((result) => {
+            if (result.response === 1) {
+                // If "Copy" is pressed
+                electron.clipboard.writeText(info);
+            }
+        });
 }
 
 /**
  * Display "Command Line Arguments" Dialog Box.
  */
 function showArgsDialog() {
-  const content = process.argv.join("\n    ");
+    const content = process.argv.join("\n    ");
 
-  dialog
-    .showMessageBox(assistantWindow, {
-      type: "info",
-      title: "Google Assistant Unofficial Desktop Client",
-      message: "Command Line Arguments",
-      detail: content,
-      buttons: ["OK", "Copy"],
-    })
-    .then((result) => {
-      if (result.response === 1) {
-        // If "Copy" is pressed
-        electron.clipboard.writeText(content);
-      }
-    });
+    dialog
+        .showMessageBox(assistantWindow, {
+            type: "info",
+            title: "Google Assistant Unofficial Desktop Client",
+            message: "Command Line Arguments",
+            detail: content,
+            buttons: ["OK", "Copy"],
+        })
+        .then((result) => {
+            if (result.response === 1) {
+                // If "Copy" is pressed
+                electron.clipboard.writeText(content);
+            }
+        });
 }
 
 /**
@@ -4419,12 +4531,12 @@ function showArgsDialog() {
  * be defaulted to currently installed version.
  */
 function getReleaseObject(version) {
-  const ver = _getVersion(version);
+    const ver = _getVersion(version);
 
-  const releaseObject = releases.filter(
-    (releaseObject) => releaseObject.name == ver
-  )[0];
-  return releaseObject;
+    const releaseObject = releases.filter(
+        (releaseObject) => releaseObject.name == ver
+    )[0];
+    return releaseObject;
 }
 
 /**
@@ -4440,65 +4552,65 @@ function getReleaseObject(version) {
  * Changelog as a string of Markdown.
  */
 function getChangelog(version) {
-  const ver = _getVersion(version);
-  console.log(...consoleMessage(`Getting Changelog for "${ver}"`));
+    const ver = _getVersion(version);
+    console.log(...consoleMessage(`Getting Changelog for "${ver}"`));
 
-  const releaseObject = getReleaseObject(ver);
-  const content = releaseObject.body.trim();
+    const releaseObject = getReleaseObject(ver);
+    const content = releaseObject.body.trim();
 
-  return content;
+    return content;
 }
 
 /**
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
-  if (_canAccessMicrophone) {
-    if (!mic) mic = new Microphone();
-  } else {
-    audPlayer.playPingStop();
-    stopMic();
-    displayQuickMessage("Microphone is not accessible", true);
-    return;
-  }
+    if (_canAccessMicrophone) {
+        if (!mic) mic = new Microphone();
+    } else {
+        audPlayer.playPingStop();
+        stopMic();
+        displayQuickMessage("Microphone is not accessible", true);
+        return;
+    }
 
-  if (config.conversation["textQuery"] !== undefined) {
-    delete config.conversation["textQuery"];
-  }
+    if (config.conversation["textQuery"] !== undefined) {
+        delete config.conversation["textQuery"];
+    }
 
-  // Prevent triggering microphone when assistant
-  // has not been initialized.
-  if (!isAssistantReady) return;
+    // Prevent triggering microphone when assistant
+    // has not been initialized.
+    if (!isAssistantReady) return;
 
-  mic.start();
-  assistant.start(config.conversation);
+    mic.start();
+    assistant.start(config.conversation);
 }
 
 /**
  * Stops the microphone for transcription and visualization.
  */
 function stopMic() {
-  console.log("STOPPING MICROPHONE...");
-  mic ? mic.stop() : null;
-  p5jsMic.stop();
+    console.log("STOPPING MICROPHONE...");
+    mic ? mic.stop() : null;
+    p5jsMic.stop();
 
-  if (init_headline)
-    init_headline.innerText =
-      supportedLanguages[assistantConfig["language"]].welcomeMessage;
+    if (init_headline)
+        init_headline.innerText =
+            supportedLanguages[assistantConfig["language"]].welcomeMessage;
 
-  // Set the `Assistant Mic` icon
+    // Set the `Assistant Mic` icon
 
-  let assistant_mic_parent = document.querySelector("#assistant-mic-parent");
-  assistant_mic_parent.outerHTML = `
+    let assistant_mic_parent = document.querySelector("#assistant-mic-parent");
+    assistant_mic_parent.outerHTML = `
     <div id="assistant-mic-parent" class="fade-scale">
         <img id="assistant-mic" src="../res/Google_mic.svg" type="icon" alt="Speak">
     </div>
   `;
 
-  // Add Event Listener to the `Assistant Mic`
+    // Add Event Listener to the `Assistant Mic`
 
-  assistant_mic = document.querySelector("#assistant-mic");
-  assistant_mic.onclick = startMic;
+    assistant_mic = document.querySelector("#assistant-mic");
+    assistant_mic.onclick = startMic;
 }
 
 /**
@@ -4506,14 +4618,14 @@ function stopMic() {
  * requests to close the window when out of focus.
  */
 function closeOnBlurCallback() {
-  let isDevToolsFocused = assistantWindow.webContents.isDevToolsFocused();
+    let isDevToolsFocused = assistantWindow.webContents.isDevToolsFocused();
 
-  // Only close when not focusing DevTools and
-  // the application is initialized properly
-  if (!isDevToolsFocused && initScreenFlag) {
-    _stopAudioAndMic();
-    close();
-  }
+    // Only close when not focusing DevTools and
+    // the application is initialized properly
+    if (!isDevToolsFocused && initScreenFlag) {
+        _stopAudioAndMic();
+        close();
+    }
 }
 
 /**
@@ -4521,7 +4633,7 @@ function closeOnBlurCallback() {
  * snap application (linux).
  */
 function _isSnap() {
-  return app.getAppPath().startsWith("/snap");
+    return app.getAppPath().startsWith("/snap");
 }
 
 /**
@@ -4531,30 +4643,30 @@ function _isSnap() {
  * (**Requires GIT**)
  */
 function _getCommitInfo() {
-  let commitHash;
-  let commitDate;
+    let commitHash;
+    let commitDate;
 
-  try {
-    commitHash = execSync("git rev-parse HEAD").toString().trim();
-    commitDate = execSync("git log -1 --format=%cd").toString().trim();
-  } catch (err) {
-    console.error(err);
+    try {
+        commitHash = execSync("git rev-parse HEAD").toString().trim();
+        commitDate = execSync("git log -1 --format=%cd").toString().trim();
+    } catch (err) {
+        console.error(err);
 
-    if (app.getAppPath().endsWith(".asar")) {
-      // User is running the release version
-      commitHash = null;
-      commitDate = null;
-    } else {
-      // Either git is not installed or is not found in the path
-      commitHash = "[Git not found in the path]";
-      commitDate = "Unknown";
+        if (app.getAppPath().endsWith(".asar")) {
+            // User is running the release version
+            commitHash = null;
+            commitDate = null;
+        } else {
+            // Either git is not installed or is not found in the path
+            commitHash = "[Git not found in the path]";
+            commitDate = "Unknown";
+        }
     }
-  }
 
-  return {
-    commitHash,
-    commitDate,
-  };
+    return {
+        commitHash,
+        commitDate,
+    };
 }
 
 /**
@@ -4566,47 +4678,55 @@ function _getCommitInfo() {
  * String containing Markdown
  */
 function _markdownToHtml(markdownString) {
-  // Put sibling blockquotes as a single blockquote element
-  const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm);
+    // Put sibling blockquotes as a single blockquote element
+    const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm);
 
-  if (multiBlockquotes) {
-    multiBlockquotes.map((str) => {
-      const newSubStr = str.replace(/^>[ \t]*/gm, "").replace(/\n/gm, "<br />");
+    if (multiBlockquotes) {
+        multiBlockquotes.map((str) => {
+            const newSubStr = str
+                .replace(/^>[ \t]*/gm, "")
+                .replace(/\n/gm, "<br />");
 
-      markdownString = markdownString.replace(str, "> " + newSubStr + "\n");
-    });
-  }
+            markdownString = markdownString.replace(
+                str,
+                "> " + newSubStr + "\n"
+            );
+        });
+    }
 
-  // Parse markdown and replace them with HTML
-  const htmlString = markdownString
-    .replace(/href=['"](.*?)['"]/gm, "onclick=\"openLink('$1')\"")
-    .replace(/^\s*>\s*(.+)/gm, "<blockquote>$1</blockquote>")
-    .replace(
-      /(\W*?)- \[ \] (.+)/gm,
-      '$1<li class="markdown-list-checkbox"><input type="checkbox" disabled /> $2</li>'
-    )
-    .replace(
-      /(\W*?)- \[x\] (.+)/gm,
-      '$1<li class="markdown-list-checkbox"><input type="checkbox" checked disabled /> $2</li>'
-    )
-    .replace(/^-{3,}/gm, "<hr />")
-    .replace(/^={3,}/gm, "<hr />")
-    .replace(/^- (.+)/gm, '<li style="margin-top: 5px;">$1</li>')
-    .replace(/^# (.+)/gm, "<h1>$1</h1>")
-    .replace(/^## (.+)/gm, "<h2>$1</h2>")
-    .replace(/^### (.+)/gm, "<h3>$1</h3>")
-    .replace(/^#### (.+)/gm, "<h4>$1</h4>")
-    .replace(/^##### (.+)/gm, "<h5>$1</h5>")
-    .replace(/^###### (.+)/gm, "<h6>$1</h6>")
-    .replace(/^\[(.+?)\]\((.+?)\)/gm, "<a onclick=\"openLink('$2')\">$1</a>")
-    .replace(/__(.+?)__/gm, "<strong>$1</strong>")
-    .replace(/_(.+?)_/gm, "<i>$1</i>")
-    .replace(/\*\*(.+?)\*\*/gm, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/gm, "<i>$1</i>")
-    .replace(/\`(.+?)\`/gm, "<code>$1</code>")
-    .replace(/\n\n/g, "<br />");
+    // Parse markdown and replace them with HTML
+    const htmlString = markdownString
+        .replace(/href=['"](.*?)['"]/gm, "onclick=\"openLink('$1')\"")
+        .replace(/^\s*>\s*(.+)/gm, "<blockquote>$1</blockquote>")
+        .replace(
+            /(\W*?)- \[ \] (.+)/gm,
+            '$1<li class="markdown-list-checkbox"><input type="checkbox" disabled /> $2</li>'
+        )
+        .replace(
+            /(\W*?)- \[x\] (.+)/gm,
+            '$1<li class="markdown-list-checkbox"><input type="checkbox" checked disabled /> $2</li>'
+        )
+        .replace(/^-{3,}/gm, "<hr />")
+        .replace(/^={3,}/gm, "<hr />")
+        .replace(/^- (.+)/gm, '<li style="margin-top: 5px;">$1</li>')
+        .replace(/^# (.+)/gm, "<h1>$1</h1>")
+        .replace(/^## (.+)/gm, "<h2>$1</h2>")
+        .replace(/^### (.+)/gm, "<h3>$1</h3>")
+        .replace(/^#### (.+)/gm, "<h4>$1</h4>")
+        .replace(/^##### (.+)/gm, "<h5>$1</h5>")
+        .replace(/^###### (.+)/gm, "<h6>$1</h6>")
+        .replace(
+            /^\[(.+?)\]\((.+?)\)/gm,
+            "<a onclick=\"openLink('$2')\">$1</a>"
+        )
+        .replace(/__(.+?)__/gm, "<strong>$1</strong>")
+        .replace(/_(.+?)_/gm, "<i>$1</i>")
+        .replace(/\*\*(.+?)\*\*/gm, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/gm, "<i>$1</i>")
+        .replace(/\`(.+?)\`/gm, "<code>$1</code>")
+        .replace(/\n\n/g, "<br />");
 
-  return htmlString;
+    return htmlString;
 }
 
 /**
@@ -4619,10 +4739,10 @@ function _markdownToHtml(markdownString) {
  * Version
  */
 function _getVersion(version) {
-  if (version == null) version = app.getVersion();
-  const ver = "v" + version.replace(/^v*/, "");
+    if (version == null) version = app.getVersion();
+    const ver = "v" + version.replace(/^v*/, "");
 
-  return ver;
+    return ver;
 }
 
 /**
@@ -4630,13 +4750,13 @@ function _getVersion(version) {
  * HTML string.
  */
 function _getMicPermEnableHelp() {
-  let defaultMsg =
-    'Manually enable the microphone permissions for "Google Assistant" in the system settings';
+    let defaultMsg =
+        'Manually enable the microphone permissions for "Google Assistant" in the system settings';
 
-  if (process.platform === "darwin") {
-    // If platform is "MacOS"
+    if (process.platform === "darwin") {
+        // If platform is "MacOS"
 
-    return `
+        return `
       You can follow either of the steps:
       <br />
 
@@ -4654,10 +4774,10 @@ function _getMicPermEnableHelp() {
         </li>
       </ul>
     `;
-  } else if (process.platform !== "win32" && _isSnap()) {
-    // If platform is any type of linux distro and application is a snap package.
+    } else if (process.platform !== "win32" && _isSnap()) {
+        // If platform is any type of linux distro and application is a snap package.
 
-    return `
+        return `
       You can follow either of the steps:
       <br />
 
@@ -4669,11 +4789,11 @@ function _getMicPermEnableHelp() {
         </li>
       </ul>
     `;
-  } else {
-    // If platform is "Windows" or any linux distro (application not a snap package)
+    } else {
+        // If platform is "Windows" or any linux distro (application not a snap package)
 
-    return `You can ${defaultMsg.replace(/^M/, "m")}`;
-  }
+        return `You can ${defaultMsg.replace(/^M/, "m")}`;
+    }
 }
 
 /**
@@ -4684,32 +4804,28 @@ function _getMicPermEnableHelp() {
  * If set to `true`, the "Relaunch Required" screen will
  * be shown.
  */
-function _resetSavedTokensFile(showRelaunchScreen=true) {
-  let savedTokensFilePath = assistantConfig.savedTokensPath;
-  fs.unlinkSync(savedTokensFilePath);
+function _resetSavedTokensFile(showRelaunchScreen = true) {
+    let savedTokensFilePath = assistantConfig.savedTokensPath;
+    fs.unlinkSync(savedTokensFilePath);
 
-  if (showRelaunchScreen) {
-    displayErrorScreen({
-      icon: {
-        path: "../res/refresh.svg",
-        style: `
+    if (showRelaunchScreen) {
+        displayErrorScreen({
+            icon: {
+                path: "../res/refresh.svg",
+                style: `
           height: 100px;
           animation: rotate_anim 600ms cubic-bezier(0.48, -0.4, 0.26, 1.3);
-          ${
-            getEffectiveTheme() == "light"
-              ? "filter: invert(1);" 
-              : ""
-          }
+          ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}
         `,
-      },
-      title: "Relaunch Required",
-      details: "A relaunch is required for changes to take place",
-      subdetails: "Info: Tokens file reset",
-    });
+            },
+            title: "Relaunch Required",
+            details: "A relaunch is required for changes to take place",
+            subdetails: "Info: Tokens file reset",
+        });
 
-    let suggestion_parent = document.querySelector(".suggestion-parent");
+        let suggestion_parent = document.querySelector(".suggestion-parent");
 
-    suggestion_parent.innerHTML = `
+        suggestion_parent.innerHTML = `
       <div class="suggestion" onclick="relaunchAssistant()">
         <span>
           <img src="../res/refresh.svg" style="
@@ -4717,17 +4833,13 @@ function _resetSavedTokensFile(showRelaunchScreen=true) {
             width: 20px;
             vertical-align: top;
             padding-right: 5px;
-            ${
-              getEffectiveTheme() == "light"
-                ? "filter: invert(1);"
-                : ""
-            }"
+            ${getEffectiveTheme() == "light" ? "filter: invert(1);" : ""}"
           >
         </span>
         Relaunch Assistant
       </div>
     `;
-  }
+    }
 }
 
 /**
@@ -4753,28 +4865,28 @@ function _resetSavedTokensFile(showRelaunchScreen=true) {
  * console.error(error);
  * console.groupEnd();
  */
-function consoleMessage(message, type="info") {
-  let labelColor = "";
+function consoleMessage(message, type = "info") {
+    let labelColor = "";
 
-  switch (type) {
-    case "error":
-      labelColor = "#EA4335";
-      break;
+    switch (type) {
+        case "error":
+            labelColor = "#EA4335";
+            break;
 
-    case "warn":
-      labelColor = "#E1A804";
-      break;
+        case "warn":
+            labelColor = "#E1A804";
+            break;
 
-    default:
-      labelColor = "#4285F4";
-      break;
-  }
+        default:
+            labelColor = "#4285F4";
+            break;
+    }
 
-  return [
-    `%c[${type.toUpperCase()}]%c ${message}`,
-    `color: ${labelColor}`,
-    "color: unset",
-  ];
+    return [
+        `%c[${type.toUpperCase()}]%c ${message}`,
+        `color: ${labelColor}`,
+        "color: unset",
+    ];
 }
 
 /**
@@ -4788,7 +4900,7 @@ function consoleMessage(message, type="info") {
  * @param {number} stop2
  */
 function map(n, start1, stop1, start2, stop2) {
-  return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
+    return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
 }
 
 /**
@@ -4799,57 +4911,57 @@ function map(n, start1, stop1, start2, stop2) {
  * @param {number} high
  */
 function constrain(n, low, high) {
-  return n < low ? low : n > high ? high : n;
+    return n < low ? low : n > high ? high : n;
 }
 
 assistant_mic.onclick = startMic;
 
 assistant_input.addEventListener("keyup", (event) => {
-  if (event.keyCode === 13) {
-    assistantTextQuery(assistant_input.value);
-  }
+    if (event.keyCode === 13) {
+        assistantTextQuery(assistant_input.value);
+    }
 });
 
 // Check updates
 
 function updateAvailable(releases_data) {
-  return (
-    releases_data &&
-    releases_data[0] != "Error" &&
-    releases_data[0]["tag_name"] != "v" + app.getVersion()
-  );
+    return (
+        releases_data &&
+        releases_data[0] != "Error" &&
+        releases_data[0]["tag_name"] != "v" + app.getVersion()
+    );
 }
 
 function displayUpdateAvailable() {
-  displayQuickMessage("Update Available!");
+    displayQuickMessage("Update Available!");
 }
 
 function fetchReleasesAndCheckUpdates() {
-  if (!releases) {
-    // API request is only done once to avaoid Error 403 (Rate Limit Exceeded)
-    // when Assistant is launched many times...
+    if (!releases) {
+        // API request is only done once to avaoid Error 403 (Rate Limit Exceeded)
+        // when Assistant is launched many times...
 
-    (async () => {
-      let releases_data = await getReleases();
+        (async () => {
+            let releases_data = await getReleases();
 
-      if (updateAvailable(releases_data)) {
-        displayUpdateAvailable();
-      } else {
-        console.log(...consoleMessage("No Updates Available!"));
-      }
-    })();
-  } else {
-    console.group(...consoleMessage("Fetched releases"));
-    console.log("RELEASES:", releases);
-    console.groupEnd();
-
-    if (updateAvailable(releases)) {
-      displayUpdateAvailable();
-      console.log(...consoleMessage("Updates Available"));
+            if (updateAvailable(releases_data)) {
+                displayUpdateAvailable();
+            } else {
+                console.log(...consoleMessage("No Updates Available!"));
+            }
+        })();
     } else {
-      console.log(...consoleMessage("No updates avaiable"));
+        console.group(...consoleMessage("Fetched releases"));
+        console.log("RELEASES:", releases);
+        console.groupEnd();
+
+        if (updateAvailable(releases)) {
+            displayUpdateAvailable();
+            console.log(...consoleMessage("Updates Available"));
+        } else {
+            console.log(...consoleMessage("No updates avaiable"));
+        }
     }
-  }
 }
 
 // Fetch releases and check for updates initially
@@ -4860,11 +4972,11 @@ fetchReleasesAndCheckUpdates();
 document.querySelector("#init-loading").style.opacity = 0;
 
 setTimeout(() => {
-  setInitScreen();
+    setInitScreen();
 
-  if (assistantConfig.enableMicOnStartup && !firstLaunch) {
-    startMic();
-  }
+    if (assistantConfig.enableMicOnStartup && !firstLaunch) {
+        startMic();
+    }
 }, 200);
 
 /**
@@ -4872,28 +4984,28 @@ setTimeout(() => {
  * @param {KeyboardEvent} e
  */
 assistant_input.onkeydown = (e) => {
-  switch (e.key) {
-    case "ArrowUp":
-      if (queryHistoryHead > 0) {
-        queryHistoryHead--;
-        assistant_input.value = history[queryHistoryHead].query;
-      }
+    switch (e.key) {
+        case "ArrowUp":
+            if (queryHistoryHead > 0) {
+                queryHistoryHead--;
+                assistant_input.value = history[queryHistoryHead].query;
+            }
 
-      break;
+            break;
 
-    case "ArrowDown":
-      if (queryHistoryHead <= history.length - 1) {
-        queryHistoryHead++;
+        case "ArrowDown":
+            if (queryHistoryHead <= history.length - 1) {
+                queryHistoryHead++;
 
-        if (queryHistoryHead === history.length) {
-          assistant_input.value = currentTypedQuery;
-        } else {
-          assistant_input.value = history[queryHistoryHead].query;
-        }
-      }
+                if (queryHistoryHead === history.length) {
+                    assistant_input.value = currentTypedQuery;
+                } else {
+                    assistant_input.value = history[queryHistoryHead].query;
+                }
+            }
 
-      break;
-  }
+            break;
+    }
 };
 
 /**
@@ -4903,67 +5015,64 @@ assistant_input.onkeydown = (e) => {
  * @param {InputEvent} e
  */
 assistant_input.oninput = (e) => {
-  queryHistoryHead = history.length;
-  currentTypedQuery = e.target.value;
+    queryHistoryHead = history.length;
+    currentTypedQuery = e.target.value;
 };
 
 // Auto-focus Assistant Input box when '/' is pressed
 
 window.onkeypress = (e) => {
-  if (e.key == "/") {
-    if (document.activeElement.tagName != "INPUT") {
-      e.preventDefault();
-      assistant_input.focus();
+    if (e.key == "/") {
+        if (document.activeElement.tagName != "INPUT") {
+            e.preventDefault();
+            assistant_input.focus();
+        }
     }
-  }
 };
 
 window.onkeydown = (e) => {
-  if (document.querySelector('#config-screen')) {
-    let isHotkeyBarActive = document.querySelector(
-      '#hotkey-div'
-    );
+    if (document.querySelector("#config-screen")) {
+        let isHotkeyBarActive = document.querySelector("#hotkey-div");
 
-    if (isHotkeyBarActive.classList.contains("input-active")) {
-      return;
+        if (isHotkeyBarActive.classList.contains("input-active")) {
+            return;
+        }
     }
-  }
 
-  if (e.key === 'Escape') {
-    if (assistantConfig["escapeKeyBehavior"] === "minimize") {
-      assistantWindow.minimize();
+    if (e.key === "Escape") {
+        if (assistantConfig["escapeKeyBehavior"] === "minimize") {
+            assistantWindow.minimize();
+        } else if (assistantConfig["escapeKeyBehavior"] === "close") {
+            _stopAudioAndMic();
+            close();
+        }
     }
-    else if (assistantConfig["escapeKeyBehavior"] === "close") {
-      _stopAudioAndMic();
-      close();
-    }
-  }
-}
+};
 
 // Change theme when system theme changes
 
 window.matchMedia("(prefers-color-scheme: light)").onchange = (e) => {
-  if (assistantConfig.theme == "system") {
-    if (e.matches) {
-      setTheme("light");
-    } else {
-      setTheme("dark");
+    if (assistantConfig.theme == "system") {
+        if (e.matches) {
+            setTheme("light");
+        } else {
+            setTheme("dark");
+        }
     }
-  }
 };
 
 // Listen for 'mic start' request from main process
 ipcRenderer.on("request-mic-toggle", () => {
-  if (mic.isActive) {
-    audPlayer.playPingStop();
-    stopMic();
-  } else {
-    startMic();
-  }
+    if (mic.isActive) {
+        audPlayer.playPingStop();
+        stopMic();
+    } else {
+        startMic();
+    }
 });
 
 // Stop mic and audio before closing window from main
 // process.
 ipcRenderer.on("window-will-close", () => {
-  _stopAudioAndMic();
+    _stopAudioAndMic();
 });

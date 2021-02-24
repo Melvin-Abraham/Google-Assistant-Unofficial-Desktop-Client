@@ -32,7 +32,7 @@ let themes = {
         "--color-select-bg": "transparent",
         "--color-select-bg-hover": "#ffffff0d",
         "--color-select-border": "#ffffff40",
-        "--color-option-bg": "#000000"
+        "--color-option-bg": "#000000",
     },
 
     "light-theme": {
@@ -68,8 +68,8 @@ let themes = {
         "--color-select-bg": "transparent",
         "--color-select-bg-hover": "#0000000d",
         "--color-select-border": "#00000040",
-        "--color-option-bg": "inherit"
-    }
-}
+        "--color-option-bg": "inherit",
+    },
+};
 
 module.exports = themes;

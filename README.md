@@ -41,6 +41,17 @@ If you want to use a CLI tool to complete the **Device Registration** and **Auth
 
 After you have registered your device and downloaded the required authentication files, you can head on to _Settings_ and set the _"Key File Path"_ and _"Saved Tokens Path"_ to the location where the respective files are located.
 
+## Want to Contribute?
+
+You are more than welcome to contribute to all kinda of contributions:
+
+* 🤔 Request/Suggest a feature
+* 🐛 Report a bug
+* 📖 Make this documentation better
+* 💻 Contribute with the code
+
+Before start, it's heavily recommended to check the Google Assistant Unofficial Desktop Client's [guidelines](./.github/CONTRIBUTING.md).
+
 ## How to Build?
 
 ### Using `npm`
