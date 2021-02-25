@@ -63,24 +63,30 @@ How to submit a pull request?
     $ git checkout -b feature/<some-feature-name>
     ```
 
-8. Make appropriate changes to the code. Stage the files that you want to commit and then commit the changes with a proper commit message (you may refer [Commit Messages](#Commit-Messages)):
+7. Make appropriate changes to the code. Stage the files that you want to commit and then commit the changes with a proper commit message (you may refer [Commit Messages](#Commit-Messages)):
 
    ```console
    $ git commit -m "<Your-Commit-Message>"
    ```
 
-9. Pull lastest changes from the upstream repository as specified in _Step 5_.
+8. Pull lastest changes from the upstream repository as specified in _Step 5_.
 
-10. For the most part the previous step will automatically merge all the changes from upstream. If it doesn't, it will give you Merge Conflict error wherein you need to manually resolve those conflicts.
+9. For the most part the previous step will automatically merge all the changes from upstream. If it doesn't, it will give you Merge Conflict error wherein you need to manually resolve those conflicts.
 
-11. Finally, make a pull request from your fork to this repository.
+10. Finally, make a pull request from your fork to this repository.
 
 ### Coding Styles
 
 Thinking about the contributors, Google Assistant Unofficial Desktop Client follows some coding rules to enforce/keep the linting and code simple, readable, and understandable. Also, it's essential to:
 
-1. Follow the `.editorconfig` file rules on your Editor.
-2. Check the [AirBnb JavaScript style guide](https://github.com/airbnb/javascript)
+1. Have the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension installed in your Editor/IDLE.
+2. Make sure you have this piece of code in your `settings.json` file to enforce and apply the `.prettierrc` formatting file:
+
+    ```json
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    ```
+
+3. Check the [AirBnb JavaScript style guide](https://github.com/airbnb/javascript)
 
 ### Commit Messages
 
