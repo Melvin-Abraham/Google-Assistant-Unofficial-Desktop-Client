@@ -8,9 +8,13 @@ Every contribution counts! 🔥
 
 If you find a bug, you can contribute by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=Type%3A+Bug&template=bug-report.md&title=%F0%9F%90%9B+BUG%3A+)
 
-## 💡 Had a Great Idea?
+**Note:** Before creating a bug report issue, check if someone else has already submitted the particular issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues). If you do find one, give it a thumbs up to let us know the serverity of the bug. If you have additional info related to the bug, you may comment within the same issue.
 
-Feel like you know what feature is missing, share your thoughts with us by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=Type%3A+Feature&template=feature-request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+).
+## 💡 Have a Great Idea?
+
+Have a feature in your mind that is missing? Share your thoughts with us by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=Type%3A+Feature&template=feature-request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+).
+
+**Note:** Before creating a suggestion issue, check if someone else has already submitted the particular suggestion [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues). If you do find one, give it a thumbs up to let us know the priority of the feature.
 
 ## 📙 Contribution Guideline
 
@@ -79,8 +83,9 @@ How to submit a pull request?
 
 Thinking about the contributors, Google Assistant Unofficial Desktop Client follows some coding rules to enforce/keep the linting and code simple, readable, and understandable. Also, it's essential to:
 
-1. Have the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension installed in your Editor/IDLE.
-2. Make sure you have this piece of code in your `settings.json` file to enforce and apply the `.prettierrc` formatting file:
+1. Have the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension installed in your Editor.
+
+2. Make sure you have this line in your `settings.json` file to set the Prettier extension as default formatter. This would enforce the `.prettierrc` formatting to your code when you format:
 
     ```json
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -114,8 +119,7 @@ Or, if you are using Yarn:
 Now that you are ready with the pre-requisites, you can type the following to get up and running.
 
 #### Using `npm`
-
----
+----------------
 
 ```bash
 # Get dependencies from npm (mandatory)
@@ -129,8 +133,7 @@ npm run dist
 ```
 
 #### Using `yarn`
-
----
+-----------------
 
 ```bash
 # Get dependencies from npm registry (mandatory)
