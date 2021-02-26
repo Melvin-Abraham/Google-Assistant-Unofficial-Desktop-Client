@@ -43,14 +43,14 @@ After you have registered your device and downloaded the required authentication
 
 ## Want to Contribute?
 
-You are more than welcome to contribute to all kinda of contributions:
+You are more than welcome to contribute to all kinds of contributions:
 
 * 🤔 Request/Suggest a feature
 * 🐛 Report a bug
 * 📖 Make this documentation better
 * 💻 Contribute with the code
 
-Before start, it's heavily recommended to check the Google Assistant Unofficial Desktop Client's [guidelines](./.github/CONTRIBUTING.md).
+Before you start, we highly recommend you check the Google Assistant Unofficial Desktop Client's [contributing guidelines](./CONTRIBUTING.md).
 
 ## How to Build?
 
@@ -126,7 +126,7 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 
 ## Other Libraries Used
 
-* **p5.js:** 
+* **p5.js:**
   * For visualization purpose when the user speaks through mic.
   * Link: https://p5js.org/
 
