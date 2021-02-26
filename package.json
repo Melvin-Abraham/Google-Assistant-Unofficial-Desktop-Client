@@ -91,7 +91,9 @@
             "category": "Productivity",
             "target": [
                 "AppImage",
-                "snap"
+                "snap",
+                "deb",
+                "rpm"
             ],
             "icon": "./app/res/icons/icon.png"
         },
