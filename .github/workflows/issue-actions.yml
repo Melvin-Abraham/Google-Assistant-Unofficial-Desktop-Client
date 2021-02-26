@@ -14,4 +14,4 @@ jobs:
         with:
           title-or-body: "both"
           parameters: '[ {"keywords": ["issue", "bug", "error", "problem", "failed", "stuck"], "labels": ["🐛 bug"], "assignees": ["Melvin-Abraham"]}, {"keywords": ["restricted_client", "Get Token", "TypeError", "invalid_grant"], "labels": ["🐛 bug", "duplicate"], "assignees": ["esau-morais"]}, {"keywords": ["Feature request", "Suggestion", "Enhancement"], "labels": ["✨ enhancement"], "assignees": []}]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.GAUDC_TOKEN }}"
