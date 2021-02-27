@@ -2526,7 +2526,7 @@ async function openConfig(configItem=null) {
         let res = dialog.showMessageBoxSync(assistantWindow, {
           type: "question",
           title: "Saved Tokens Path is empty",
-          message: `You have not specified any loaction for "Saved Tokens Path".\nAssistant can set a path automatically according to "Key File Path" and save them.`,
+          message: `You have not specified any location for "Saved Tokens Path".\nAssistant can set a path automatically according to "Key File Path" and save them.`,
           buttons: ["Automatically set a path", "Cancel"],
           defaultId: 0,
           cancelId: 1,
@@ -2647,7 +2647,7 @@ async function openConfig(configItem=null) {
         assistantConfig["language"] = languageSelector.value;
         assistantConfig["forceNewConversation"] = forceNewConversationCheckbox.checked;
         assistantConfig["enableAudioOutput"] = enableAudioOutput.checked;
-        assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinousConversation.checked;
+        assistantConfig["enableMicOnContinousConversation"] = enableMicOnContinuousConversation.checked;
         assistantConfig["enableMicOnStartup"] = enableMicOnStartup.checked;
         assistantConfig["startAsMaximized"] = startAsMaximized.checked;
         assistantConfig["hideOnFirstLaunch"] = hideOnFirstLaunch.checked;
