@@ -1,12 +1,12 @@
-const electron = require('electron');
-const url = require('url');
-const path = require('path');
-const fs = require('fs');
-const os = require('os');
-const { argv } = require('process');
+const electron = require("electron");
+const url = require("url");
+const path = require("path");
+const fs = require("fs");
+const os = require("os");
+const { argv } = require("process");
 const ipcMain = electron.ipcMain;
-const isValidAccelerator = require('electron-is-accelerator');
-const { getNativeKeyName } = require('./app/src/keybinding.js');
+const isValidAccelerator = require("electron-is-accelerator");
+const { getNativeKeyName } = require("./app/src/keybinding.js");
 
 const { app, BrowserWindow, Menu, nativeImage } = electron;
 
@@ -18,64 +18,61 @@ global.firstLaunch = true;
 
 const gotInstanceLock = app.requestSingleInstanceLock();
 
-let userDataPath = app.getPath('userData');
-let configFilePath = path.join(userDataPath, 'config.json');
-let logFilePath = path.join(userDataPath, 'main_process-debug.log');
-let assistantConfig = require('./app/src/common/initialConfig.js');
+let userDataPath = app.getPath("userData");
+let configFilePath = path.join(userDataPath, "config.json");
+let logFilePath = path.join(userDataPath, "main_process-debug.log");
+let assistantConfig = require("./app/src/common/initialConfig.js");
 
 // Quit the app when the system is about to shutdown
 // This would prevent shutdown interruption on MacOS
-electron.powerMonitor.on('shutdown', () => {
+electron.powerMonitor.on("shutdown", () => {
     quitApp();
 });
 
-process.on('uncaughtException', async (err) => {
-    let prelude = (app.isReady()) ? 'Uncaught Exception' : 'Uncaught Exception thrown before app was ready';
+process.on("uncaughtException", async (err) => {
+    let prelude = app.isReady()
+        ? "Uncaught Exception"
+        : "Uncaught Exception thrown before app was ready";
     let errorMessage = `\n${prelude}:\n\n${err.stack}\n\nLogs for this run is available here:\n    ${logFilePath}`;
 
-    debugLog(errorMessage, 'error');
+    debugLog(errorMessage, "error");
 
     if (app.isReady()) {
-        let buttonIndex = await electron.dialog.showMessageBox(
-            null,
-            {
-                title: 'Error',
-                type: 'error',
-                message: 'An unhandled exception occurred in the main process',
-                detail: errorMessage.trimStart(),
-                buttons: ['OK', 'Show logs'],
-                cancelId: 0
-            }
-        );
+        let buttonIndex = await electron.dialog.showMessageBox(null, {
+            title: "Error",
+            type: "error",
+            message: "An unhandled exception occurred in the main process",
+            detail: errorMessage.trimStart(),
+            buttons: ["OK", "Show logs"],
+            cancelId: 0,
+        });
 
         if (buttonIndex.response === 1) {
             electron.shell.openExternal(logFilePath, { activate: true });
         }
-    }
-    else {
+    } else {
         electron.dialog.showErrorBox(
-            'An unhandled exception occurred in the main process',
+            "An unhandled exception occurred in the main process",
             errorMessage.trimStart()
         );
     }
 });
 
-fs.writeFileSync(logFilePath, '');
+fs.writeFileSync(logFilePath, "");
 
-debugLog(`system = ${os.type()} ${os.release()}`, 'info', true);
-debugLog(`arch = ${os.arch()}`, 'info', true);
-debugLog(`args = ${process.argv}`, 'info', true);
-debugLog(`pid = ${process.pid}`, 'info', true);
-debugLog('');
+debugLog(`system = ${os.type()} ${os.release()}`, "info", true);
+debugLog(`arch = ${os.arch()}`, "info", true);
+debugLog(`args = ${process.argv}`, "info", true);
+debugLog(`pid = ${process.pid}`, "info", true);
+debugLog("");
 
 if (fs.existsSync(configFilePath)) {
-    debugLog('Reading Assistant Config');
+    debugLog("Reading Assistant Config");
     let savedConfig = JSON.parse(fs.readFileSync(configFilePath));
     Object.assign(assistantConfig, savedConfig);
-    debugLog('Successfully read Assistant Config');
-}
-else {
-    debugLog('Config file does not exist.');
+    debugLog("Successfully read Assistant Config");
+} else {
+    debugLog("Config file does not exist.");
 }
 
 // Set TMPDIR environment variable for linux snap
@@ -88,50 +85,57 @@ if (_isLinux() && _isSnap()) {
 // if running in development mode
 
 if (isDevMode()) {
-    process.env['DEV_MODE'] = true;
-    process.env['NODE_ENV'] = 'development';
+    process.env["DEV_MODE"] = true;
+    process.env["NODE_ENV"] = "development";
 }
 
 // Launch at Startup
 
 app.setLoginItemSettings({
-    openAtLogin: !process.env.DEV_MODE ? assistantConfig['launchAtStartup'] : false,
-    args: ['--sys-startup']
+    openAtLogin: !process.env.DEV_MODE
+        ? assistantConfig["launchAtStartup"]
+        : false,
+    args: ["--sys-startup"],
 });
 
-let openedAtLogin = (process.platform === 'darwin')
-                        ? app.getLoginItemSettings().wasOpenedAtLogin
-                        : argv.includes('--sys-startup');
+let openedAtLogin =
+    process.platform === "darwin"
+        ? app.getLoginItemSettings().wasOpenedAtLogin
+        : argv.includes("--sys-startup");
 
 if (!gotInstanceLock) {
     // Prevent opening of first instance when launched in Dev Mode
     // Makes sure the developer is launching a fresh instance for testing
     if (isDevMode()) {
-        debugLog('Another instance is already running', 'warn');
+        debugLog("Another instance is already running", "warn");
 
         electron.dialog.showErrorBox(
-            "Preventing launch", [
+            "Preventing launch",
+            [
                 "An instance of Google Assistant is already running.",
                 "Operation Aborted\n",
                 "You are prompted with this error since you are launching the app in Dev Mode.",
-            ].join('\n')
+            ].join("\n")
         );
-    }
-    else {
-        debugLog('Another instance is already running. Switching to first instance...');
+    } else {
+        debugLog(
+            "Another instance is already running. Switching to first instance..."
+        );
     }
 
     app.isQuiting = true;
     app.quit();
-}
-else {
-    debugLog('Sucessfully got instance lock');
+} else {
+    debugLog("Sucessfully got instance lock");
 
     app.allowRendererProcessReuse = false;
-    app.commandLine.appendSwitch('enable-transparent-visuals');
-    app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling');
+    app.commandLine.appendSwitch("enable-transparent-visuals");
+    app.commandLine.appendSwitch(
+        "disable-features",
+        "HardwareMediaKeyHandling"
+    );
 
-    app.on('second-instance', (_, args) => {
+    app.on("second-instance", (_, args) => {
         // Switch to current instance if a non dev-mode
         // instance is launched.
         if (!isDevMode(args[0])) {
@@ -140,7 +144,7 @@ else {
         }
     });
 
-    app.on('ready', () => setTimeout(onAppReady, 800));
+    app.on("ready", () => setTimeout(onAppReady, 800));
 }
 
 /**
@@ -164,17 +168,18 @@ function onAppReady() {
             nodeIntegration: true,
             scrollBounce: true,
             devTools: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
         },
-        backgroundColor: process.platform !== 'darwin' ? "#00000000" : "#00000001",
-        alwaysOnTop: true
+        backgroundColor:
+            process.platform !== "darwin" ? "#00000000" : "#00000001",
+        alwaysOnTop: true,
     });
 
-    debugLog('Created Browser Window');
+    debugLog("Created Browser Window");
 
     // Tray Icon Section
 
-    debugLog('Creating Tray Icon');
+    debugLog("Creating Tray Icon");
 
     // Set grayscale icon letting the user know
     // that the application is not ready to be launched
@@ -182,45 +187,46 @@ function onAppReady() {
         path.join(__dirname, "app", "res", "icons", "icon_grayscale.png")
     );
 
-    if (process.platform !== 'win32') {
-        debugLog('Setting tray icon size');
+    if (process.platform !== "win32") {
+        debugLog("Setting tray icon size");
 
         trayIcon = trayIcon.resize({
             height: 16.0,
             width: 16.0,
-            quality: 'best'
-        })
+            quality: "best",
+        });
     }
 
-    debugLog('Configuring tray');
+    debugLog("Configuring tray");
 
     tray = new electron.Tray(trayIcon);
     tray.setToolTip("Google Assistant Unofficial Desktop Client");
-    tray.on('double-click', () => launchAssistant());
+    tray.on("double-click", () => launchAssistant());
 
-    debugLog('Building tray context menu');
+    debugLog("Building tray context menu");
 
-    let assistantHotkey = assistantConfig["assistantHotkey"]
+    let assistantHotkey = assistantConfig["assistantHotkey"];
 
     if (!assistantHotkey || !isValidAccelerator(assistantHotkey)) {
-        assistantHotkey = 'Super+Shift+A';
+        assistantHotkey = "Super+Shift+A";
     }
 
     setTrayContextMenu(assistantHotkey);
 
     if (assistantConfig["hideOnFirstLaunch"] || openedAtLogin) {
-        debugLog('Invoking `tray.displayBaloon`');
+        debugLog("Invoking `tray.displayBaloon`");
 
         tray.displayBalloon({
-            "title": 'Google Assistant',
+            title: "Google Assistant",
 
-            "content":
+            content:
                 `Google Assistant is running in background!\n\n` +
-                `Press ${
-                    assistantConfig.assistantHotkey.split('+').map(getNativeKeyName).join(' + ')
-                } to launch`,
+                `Press ${assistantConfig.assistantHotkey
+                    .split("+")
+                    .map(getNativeKeyName)
+                    .join(" + ")} to launch`,
 
-            "icon": nativeImage.createFromPath(
+            icon: nativeImage.createFromPath(
                 path.join(__dirname, "app", "res", "icons", "icon.png")
             ),
         });
@@ -228,17 +234,19 @@ function onAppReady() {
 
     // SHORTCUT REGISTRATION
 
-    debugLog('Registering Global Shortcut');
+    debugLog("Registering Global Shortcut");
     registerAssistantHotkey(assistantHotkey);
 
-    mainWindow.on('will-quit', () => electron.globalShortcut.unregisterAll());
+    mainWindow.on("will-quit", () => electron.globalShortcut.unregisterAll());
 
     // 'close' ACTION OVERRIDE: Close to Tray
 
-    mainWindow.on('close', function (event) {
-        if(!app.isQuiting){
+    mainWindow.on("close", function (event) {
+        if (!app.isQuiting) {
             event.preventDefault();
-            mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+            mainWindow.webContents.executeJavaScript(
+                'document.querySelector("body").innerHTML = "";'
+            );
 
             // Close window 100ms after the `body` is emptied
             // to avoid the window from apperaring for a fraction of scecond
@@ -252,27 +260,30 @@ function onAppReady() {
 
     // WINDOW SIZING AND POSITIONING
 
-    debugLog('Setting Assistant window position');
+    debugLog("Setting Assistant window position");
     setAssistantWindowPosition();
 
     // Load HTML
 
-    debugLog('Loading application in the browser window');
+    debugLog("Loading application in the browser window");
 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'app', 'src', 'index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    mainWindow.loadURL(
+        url.format({
+            pathname: path.join(__dirname, "app", "src", "index.html"),
+            protocol: "file:",
+            slashes: true,
+        })
+    );
 
     // HIDE ON START
     // Hidden when assistant is initializing
 
-    debugLog('Hiding window');
+    debugLog("Hiding window");
 
-    mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";')
+    mainWindow.webContents
+        .executeJavaScript('document.querySelector("body").innerHTML = "";')
         .then(() => {
-            debugLog('Assistant is ready for launch');
+            debugLog("Assistant is ready for launch");
 
             // After the assistant has been initialized
             // set `readyForLaunch` to `true`
@@ -284,12 +295,12 @@ function onAppReady() {
                 path.join(__dirname, "app", "res", "icons", "icon.png")
             );
 
-            if (process.platform !== 'win32') {
+            if (process.platform !== "win32") {
                 trayIcon = trayIcon.resize({
                     height: 16.0,
                     width: 16.0,
-                    quality: 'best'
-                })
+                    quality: "best",
+                });
             }
 
             debugLog('Setting "Ready for launch" tray icon');
@@ -305,27 +316,34 @@ function onAppReady() {
 
     // FLOATING WINDOW
 
-    debugLog(`Setting window float behavior = "${assistantConfig['windowFloatBehavior']}"`);
+    debugLog(
+        `Setting window float behavior = "${assistantConfig["windowFloatBehavior"]}"`
+    );
 
-    if (assistantConfig['windowFloatBehavior'] === 'always-on-top') {
-        mainWindow.setAlwaysOnTop(true, 'floating');
+    if (assistantConfig["windowFloatBehavior"] === "always-on-top") {
+        mainWindow.setAlwaysOnTop(true, "floating");
     }
 
-    ipcMain.on('relaunch-assistant', () => launchAssistant());
-    ipcMain.on('quit-app', () => quitApp());
-    ipcMain.on('update-releases', (event, releases) => global.releases = releases);
-    ipcMain.on('update-first-launch', () => global.firstLaunch = false);
-    ipcMain.on('update-config', (event, config) => assistantConfig = config);
-    ipcMain.on('set-assistant-window-position', (event) => setAssistantWindowPosition());
-    ipcMain.on('update-hotkey', (event, hotkey) => updateHotkey(hotkey));
+    ipcMain.on("relaunch-assistant", () => launchAssistant());
+    ipcMain.on("quit-app", () => quitApp());
+    ipcMain.on(
+        "update-releases",
+        (event, releases) => (global.releases = releases)
+    );
+    ipcMain.on("update-first-launch", () => (global.firstLaunch = false));
+    ipcMain.on("update-config", (event, config) => (assistantConfig = config));
+    ipcMain.on("set-assistant-window-position", (event) =>
+        setAssistantWindowPosition()
+    );
+    ipcMain.on("update-hotkey", (event, hotkey) => updateHotkey(hotkey));
 }
 
 /**
  * Toggles the assistant microphone in the renderer process.
  */
 function requestMicToggle() {
-    debugLog('Requested microphone toggle');
-    mainWindow.webContents.send('request-mic-toggle');
+    debugLog("Requested microphone toggle");
+    mainWindow.webContents.send("request-mic-toggle");
 }
 
 /**
@@ -334,7 +352,9 @@ function requestMicToggle() {
 function launchAssistant() {
     if (!readyForLaunch) return;
 
-    mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+    mainWindow.webContents.executeJavaScript(
+        'document.querySelector("body").innerHTML = "";'
+    );
     mainWindow.reload();
     mainWindow.show();
 }
@@ -343,7 +363,7 @@ function launchAssistant() {
  * Quits the assistant application.
  */
 function quitApp() {
-    debugLog('Requested quit application');
+    debugLog("Requested quit application");
     app.isQuiting = true;
     app.quit();
 }
@@ -359,8 +379,8 @@ function setAssistantWindowPosition() {
     let windowSize = mainWindow.getSize();
 
     mainWindow.setPosition(
-        Math.floor((width / 2) - (windowSize[0] / 2) + x),
-        Math.floor((height) - (windowSize[1]) - 10)
+        Math.floor(width / 2 - windowSize[0] / 2 + x),
+        Math.floor(height - windowSize[1] - 10)
     );
 }
 
@@ -381,12 +401,10 @@ function _getDisplayIndex(displayList) {
         if (displayIndex > displayList.length - 1 || displayIndex < 0) {
             debugLog(`Resetting Display Preference: ${displayIndex + 1} -> 1`);
             displayIndex = 0;
-        }
-        else {
+        } else {
             displayIndex = 0;
         }
-    }
-    catch {
+    } catch {
         displayIndex = 0;
     }
 
@@ -403,27 +421,29 @@ function _getDisplayIndex(displayList) {
 function setTrayContextMenu(assistantHotkey) {
     let trayContextMenu = Menu.buildFromTemplate([
         {
-            label: 'Launch Assistant',
+            label: "Launch Assistant",
             click: function () {
                 launchAssistant();
             },
-            accelerator: assistantHotkey
+            accelerator: assistantHotkey,
         },
         {
-            label: 'Close to Tray',
+            label: "Close to Tray",
             click: function () {
-                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+                mainWindow.webContents.executeJavaScript(
+                    'document.querySelector("body").innerHTML = "";'
+                );
                 setTimeout(() => mainWindow.hide(), 100);
-            }
+            },
         },
         {
-            label: 'Open DevTools',
+            label: "Open DevTools",
             click: function () {
-                mainWindow.webContents.openDevTools({mode: 'undocked'})
-            }
+                mainWindow.webContents.openDevTools({ mode: "undocked" });
+            },
         },
         {
-            label: 'Quit',
+            label: "Quit",
             click: function () {
                 quitApp();
             },
@@ -431,7 +451,7 @@ function setTrayContextMenu(assistantHotkey) {
         {
             label: `v${electron.app.getVersion()}`,
             enabled: false,
-        }
+        },
     ]);
 
     tray.setContextMenu(trayContextMenu);
@@ -445,25 +465,24 @@ function setTrayContextMenu(assistantHotkey) {
  */
 function registerAssistantHotkey(hotkey) {
     electron.globalShortcut.register(hotkey, () => {
-        let hotkeyBehavior = assistantConfig['hotkeyBehavior'];
+        let hotkeyBehavior = assistantConfig["hotkeyBehavior"];
         const isContentsVisible = mainWindow.isVisible();
 
-        if (hotkeyBehavior === 'launch' || !isContentsVisible) {
+        if (hotkeyBehavior === "launch" || !isContentsVisible) {
             launchAssistant();
-        }
-        else if (hotkeyBehavior === 'launch+close' && isContentsVisible) {
-            mainWindow.restore();   // Prevents change in size and position of window when opening assistant the next time
-            mainWindow.webContents.send('window-will-close');
+        } else if (hotkeyBehavior === "launch+close" && isContentsVisible) {
+            mainWindow.restore(); // Prevents change in size and position of window when opening assistant the next time
+            mainWindow.webContents.send("window-will-close");
 
-            if (process.platform !== 'darwin') {
+            if (process.platform !== "darwin") {
                 mainWindow.close();
-            }
-            else {
-                mainWindow.webContents.executeJavaScript('document.querySelector("body").innerHTML = "";');
+            } else {
+                mainWindow.webContents.executeJavaScript(
+                    'document.querySelector("body").innerHTML = "";'
+                );
                 setTimeout(() => mainWindow.hide(), 100);
             }
-        }
-        else {
+        } else {
             requestMicToggle();
         }
     });
@@ -486,19 +505,19 @@ function updateHotkey(newHotkey) {
  * Checks if the user is currently using the `snap` build.
  */
 function _isSnap() {
-    return app.getAppPath().startsWith('/snap');
+    return app.getAppPath().startsWith("/snap");
 }
 
 /**
  * Checks if the assistant is running in any linux platform.
  */
 function _isLinux() {
-    return ['win32', 'darwin'].indexOf(process.platform) === -1;
+    return ["win32", "darwin"].indexOf(process.platform) === -1;
 }
 
 /**
  * Checks if the application is running in Development mode.
- * 
+ *
  * @param {string?} execPath
  * Path of the executable. Typically `argv[0]`.
  * If left blank, current executable path will be used.
@@ -521,46 +540,43 @@ function isDevMode(execPath) {
  * @param {boolean} logFileSync
  * Should the log be saved to file synchronously
  */
-function debugLog(message, type='info', logFileSync=false) {
+function debugLog(message, type = "info", logFileSync = false) {
     let date = new Date();
-    let tag = '';
+    let tag = "";
 
-    if (type === 'info') {
-        tag = '[INFO] '
-    }
-    else if (type === 'error') {
-        tag = '[ERROR]'
-    }
-    else if (type === 'warn') {
-        tag = '[WARN] '
+    if (type === "info") {
+        tag = "[INFO] ";
+    } else if (type === "error") {
+        tag = "[ERROR]";
+    } else if (type === "warn") {
+        tag = "[WARN] ";
     }
 
-    let processTag = '[main]';
+    let processTag = "[main]";
     let pre = `${date.toISOString()} | ${processTag} ${tag} : `;
     let finalMessage = message.replace(/\n(.*)/g, `\n${pre}$1`);
 
     if (!logFileSync) {
         fs.appendFile(
             logFilePath,
-            pre + finalMessage + '\n',
-            { encoding: 'utf-8', flag: 'a' },
+            pre + finalMessage + "\n",
+            { encoding: "utf-8", flag: "a" },
             () => {}
         );
-    }
-    else {
-        fs.appendFileSync(
-            logFilePath,
-            pre + finalMessage + '\n',
-            { encoding: 'utf-8', flag: 'a' }
-        )
+    } else {
+        fs.appendFileSync(logFilePath, pre + finalMessage + "\n", {
+            encoding: "utf-8",
+            flag: "a",
+        });
     }
 
-    if (argv.indexOf('--verbose') !== -1) {
+    if (argv.indexOf("--verbose") !== -1) {
         console.debug(pre + finalMessage);
-    }
-    else {
-        if (type === 'error') {
-            console.debug(`\n\nLogs for this run is available here:\n    ${logFilePath}\n\n`);
+    } else {
+        if (type === "error") {
+            console.debug(
+                `\n\nLogs for this run is available here:\n    ${logFilePath}\n\n`
+            );
         }
     }
 }
