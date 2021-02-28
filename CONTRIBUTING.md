@@ -6,13 +6,13 @@ Every contribution counts! 🔥
 
 ## 🐛 Found a Bug?
 
-If you find a bug, you can contribute by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=Type%3A+Bug&template=bug-report.md&title=%F0%9F%90%9B+BUG%3A+)
+If you find a bug, you can contribute by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+)
 
 **Note:** Before creating a bug report issue, check if someone else has already submitted the particular issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues). If you do find one, give it a thumbs up to let us know the serverity of the bug. If you have additional info related to the bug, you may comment within the same issue.
 
 ## 💡 Have a Great Idea?
 
-Have a feature in your mind that is missing? Share your thoughts with us by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=Type%3A+Feature&template=feature-request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+).
+Have a feature in your mind that is missing? Share your thoughts with us by submitting an issue [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+).
 
 **Note:** Before creating a suggestion issue, check if someone else has already submitted the particular suggestion [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues). If you do find one, give it a thumbs up to let us know the priority of the feature.
 
