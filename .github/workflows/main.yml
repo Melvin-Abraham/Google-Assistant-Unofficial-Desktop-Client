@@ -21,14 +21,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Dependencies
-        run: npm ci
-
       - name: Cache Dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm ci
 
       - name: Build
         run: npm run dist
