@@ -18,7 +18,7 @@
 
   /* Button */
   --color-btn-bg-default: #ffffff14;
-  --color-btn-bg-hover: #ffffffff;
+  --color-btn-bg-hover: #ffffff24;
   --color-btn-bg-active: #ffffff0d;
 
   /* Suggestion Chip */
@@ -695,7 +695,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  height: 20px;
+  height: 30px;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
