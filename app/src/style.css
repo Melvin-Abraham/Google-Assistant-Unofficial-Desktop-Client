@@ -18,7 +18,7 @@
 
   /* Button */
   --color-btn-bg-default: #ffffff14;
-  --color-btn-bg-hover: #ffffff24;
+  --color-btn-bg-hover: #ffffffff;
   --color-btn-bg-active: #ffffff0d;
 
   /* Suggestion Chip */
@@ -695,7 +695,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  height: 30px;
+  height: 20px;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
@@ -707,8 +707,8 @@ body {
 .assistant-mic-disabled {
   position: absolute;
   top: 10px;
-  right: 20px;
-  height: 30px;
+  right: 15px;
+  height: 28px;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
@@ -981,6 +981,7 @@ button[disabled],
 .ico-btn:hover {
   opacity: 0.75;
   background: rgba(var(--color-fg-rgb), 0.075);
+  filter: brightness(200%);
 }
 
 .ico-btn:active {
