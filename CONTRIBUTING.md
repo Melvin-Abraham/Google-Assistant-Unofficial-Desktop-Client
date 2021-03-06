@@ -104,6 +104,8 @@ Google Assistant Unofficial Desktop Client commit messages follows a pattern. So
 
 Once you have cloned the repository, you can run/build this app locally on your own. Before you start, make sure you have [node.js](https://nodejs.org/) installed on your machine.
 
+#### Windows Build Note
+
 If you are on **Windows**, you must install _Windows Build Tools_ to build native modules. Install the build tools with this one-liner. Start PowerShell as **Administrator** and run:
 
 ```console
@@ -115,6 +117,22 @@ Or, if you are using Yarn:
 ```console
 > yarn global add windows-build-tools
 ```
+
+#### Linux Build Note
+
+If you are building on a **Linux** machine, the rpm build might fail if *rpm build tools* are not installed. If you happen to get a failed build on linux for rpm, try the following:
+
+1. If you are on Debian based distributions (like, Ubuntu, Debian, etc.), you can resolve this issue by installing the `rpm` package
+
+   ```console
+   $ sudo apt-get install rpm
+   ```
+
+2. If you are on a RedHat based distribution (like Fedora, OpenSUSE, CentOS, etc.), you can resolve this issue by installing `rpm-build` package
+
+   ```console
+   $ sudo yum install rpm-build
+   ```
 
 Now that you are ready with the pre-requisites, you can type the following to get up and running.
 

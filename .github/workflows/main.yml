@@ -30,5 +30,9 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Install RPM package
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install rpm
+
       - name: Build
         run: npm run dist
