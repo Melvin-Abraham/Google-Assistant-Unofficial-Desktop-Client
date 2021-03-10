@@ -1,6 +1,6 @@
 # Google Assistant Unofficial Desktop Client
 
-[![Build](https://img.shields.io/travis/com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&logo=travis)][build]
+[![Build](https://img.shields.io/github/workflow/status/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/nodejs-ci?logo=github&style=for-the-badge)][build]
 [![Dependencies](https://img.shields.io/david/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client?style=for-the-badge&logo=node.js&logoColor=green)][dependencies]
 [![Downloads](https://img.shields.io/github/downloads/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/total.svg?logo=github&style=for-the-badge)][downloads]
 [![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][issues]
@@ -40,6 +40,17 @@ If you want to use a CLI tool to complete the **Device Registration** and **Auth
 > https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual
 
 After you have registered your device and downloaded the required authentication files, you can head on to _Settings_ and set the _"Key File Path"_ and _"Saved Tokens Path"_ to the location where the respective files are located.
+
+## Want to Contribute?
+
+You are more than welcome to contribute to all kinds of contributions:
+
+* 🤔 Request/Suggest a feature
+* 🐛 Report a bug
+* 📖 Make this documentation better
+* 💻 Contribute with the code
+
+Before you start, we highly recommend you check the Google Assistant Unofficial Desktop Client's [contributing guidelines](./CONTRIBUTING.md).
 
 ## How to Build?
 
@@ -115,7 +126,7 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 
 ## Other Libraries Used
 
-* **p5.js:** 
+* **p5.js:**
   * For visualization purpose when the user speaks through mic.
   * Link: https://p5js.org/
 
@@ -129,7 +140,7 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 
 [downloads]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases>
 [issues]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
-[build]: <https://travis-ci.org/github/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
+[build]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/actions/workflows/main.yml>
 [license]: <https://www.apache.org/licenses/LICENSE-2.0>
 [commits]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>

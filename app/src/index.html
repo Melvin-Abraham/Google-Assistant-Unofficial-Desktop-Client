@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Google Assistant Unofficial Client</title>
 
-    <link rel="stylesheet" href="../fonts/Product-Sans.css">
-    <link rel="stylesheet" href="../fonts/Roboto-Mono.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../fonts/Product-Sans.css" />
+    <link rel="stylesheet" href="../fonts/Roboto-Mono.css" />
+    <link rel="stylesheet" href="style.css" />
 
     <script src="./lib/p5.min.js"></script>
     <script src="./lib/p5.sound.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div id="master-bg"></div>
 
     <div id="title-bar">
-        <div id="nav-region">
-            <img id="settings-btn" class="ico-btn" type="icon" src="../res/settings_btn.svg" alt="Settings">
-        </div>
-        <div class="app-title"></div>
-        <div id="control-region">
-            <img id="expand-collapse-btn" class="ico-btn" type="icon" src="../res/expand_btn.svg" alt="Expand">
-            <img id="min-btn" class="ico-btn" type="icon" src="../res/min_btn.svg" alt="Minimize">
-            <img id="close-btn" class="ico-btn" type="icon" src="../res/close_btn.svg" alt="Close">
-        </div>
-        <div id="loader-area"></div>
+      <div id="nav-region">
+        <img
+          id="settings-btn"
+          class="ico-btn"
+          type="icon"
+          src="../res/settings_btn.svg"
+          alt="Settings"
+        />
+      </div>
+      <div class="app-title"></div>
+      <div id="control-region">
+        <img
+          id="expand-collapse-btn"
+          class="ico-btn"
+          type="icon"
+          src="../res/expand_btn.svg"
+          alt="Expand"
+        />
+        <img
+          id="min-btn"
+          class="ico-btn"
+          type="icon"
+          src="../res/min_btn.svg"
+          alt="Minimize"
+        />
+        <img
+          id="close-btn"
+          class="ico-btn"
+          type="icon"
+          src="../res/close_btn.svg"
+          alt="Close"
+        />
+      </div>
+      <div id="loader-area"></div>
     </div>
 
     <div class="container">
-        <div id="main-area">
-            <center id="init-loading">
-                <img
-                    id="assistant-logo-main"
-                    src="../res/Assistant Logo.svg"
-                    alt="Loading"
-                    style="padding-top: 30px; height: 200px; width: 100px;"
-                >
-            </center>
-        </div>
+      <div id="main-area">
+        <center id="init-loading">
+          <img
+            id="assistant-logo-main"
+            src="../res/Assistant Logo.svg"
+            alt="Loading"
+            style="padding-top: 30px; height: 200px; width: 100px"
+          />
+        </center>
+      </div>
 
-        <div id="suggestion-area">
-            <div class="suggestion-parent"></div>
-        </div>
+      <div id="suggestion-area">
+        <div class="suggestion-parent"></div>
+      </div>
 
-        <div id="assistant-persistent-bar">
-            <input id="assistant-input" autofocus type="text" placeholder="Ask me anything...">
+      <div id="assistant-persistent-bar">
+        <input
+          id="assistant-input"
+          autofocus
+          type="text"
+          placeholder="Ask me anything..."
+        />
 
-            <div id="assistant-mic-parent" class="fade-scale">
-                <img id="assistant-mic" src="../res/Google_mic.svg" type="icon" alt="Speak">
-            </div>
+        <div id="assistant-mic-parent" class="fade-scale">
+          <img
+            id="assistant-mic"
+            src="../res/Google_mic.svg"
+            type="icon"
+            alt="Speak"
+          />
         </div>
+      </div>
     </div>
 
     <script src="./main.js"></script>
-</body>
+  </body>
 </html>
