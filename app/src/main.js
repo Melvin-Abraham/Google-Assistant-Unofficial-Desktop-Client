@@ -2800,6 +2800,25 @@ function assistantTextQuery(query) {
   }
 }
 
+(async () => {
+  await app.whenReady();
+
+  if (!app.isDefaultProtocolClient('gassist')) {
+    app.setAsDefaultProtocolClient('gassist');
+  }
+
+  app.on('open-url', (_, url) => {
+    const [, action, payload] = url.match(/^gassist:\/\/(query)\/(.+)$/) ?? [];
+    switch (action) {
+      case 'query':
+        assistantWindow.show();
+        toggleExpandWindow(true);
+        assistantTextQuery(decodeURI(payload));
+        break;
+    }
+  });
+})();
+
 /**
  * Set the `query` in titlebar
  * @param {string} query
