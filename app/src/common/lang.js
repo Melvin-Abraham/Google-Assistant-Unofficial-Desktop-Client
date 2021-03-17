@@ -192,7 +192,7 @@ const supportedLanguages = {
       },
     ],
     noSuggestionsText: "Nenhuma sugestão.",
-    settingsUpdatedText: "Configurações atualizadas!",
+    settingsUpdatedText: "Configurações Atualizadas!",
   },
 };
 
