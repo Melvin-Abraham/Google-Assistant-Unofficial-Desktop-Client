@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+// Disable quotes as these will be ported to a separate JSON file in future.
+
 // @SRC: https://developers.google.com/assistant/sdk/reference/rpc/languages
 const supportedLanguages = {
   "de-DE": {

@@ -1,10 +1,10 @@
-const { EventEmitter } = require("events");
+const { EventEmitter } = require('events');
 
 /**
  * Audio Player for Google Assistant
  */
 class AudioPlayer extends EventEmitter {
-  constructor(audioOutDeviceId = "default") {
+  constructor(audioOutDeviceId = 'default') {
     super();
 
     this.audioOutDeviceId = audioOutDeviceId;
@@ -14,11 +14,8 @@ class AudioPlayer extends EventEmitter {
   initialize() {
     /** Variables for the Audio Player */
     this.mediaSource = new MediaSource();
-
     this.audioPlayer = new Audio();
-
     this.audioBuffer = null;
-
     this.audioQueue = [];
 
     this.setup();
@@ -36,12 +33,12 @@ class AudioPlayer extends EventEmitter {
    * Setups the player with the given buffer as source.
    */
   setup() {
-    this.audioPlayer.addEventListener("waiting", () => {
-      console.log("[Audio Player] Player is waiting on data...");
-      this.emit("waiting");
+    this.audioPlayer.addEventListener('waiting', () => {
+      console.log('[Audio Player] Player is waiting on data...');
+      this.emit('waiting');
     });
 
-    this.audioPlayer.preload = "none";
+    this.audioPlayer.preload = 'none';
     this.audioPlayer.autoplay = true;
     this.audioPlayer.src = URL.createObjectURL(this.mediaSource);
   }
@@ -53,7 +50,8 @@ class AudioPlayer extends EventEmitter {
   appendBuffer(buffer) {
     if (this.audioBuffer.updating || this.audioQueue.length > 0) {
       this.audioQueue.push(buffer);
-    } else {
+    }
+    else {
       this.audioBuffer.appendBuffer(buffer);
     }
   }
@@ -62,25 +60,25 @@ class AudioPlayer extends EventEmitter {
    * Set's up the audio processor required to process the mpeg receiving by Google.
    */
   setupAudioProcessor() {
-    this.mediaSource.addEventListener("sourceopen", () => {
-      this.audioBuffer = this.mediaSource.addSourceBuffer("audio/mpeg");
-      this.audioBuffer.mode = "sequence";
-      this.audioBuffer.addEventListener("update", () => {
+    this.mediaSource.addEventListener('sourceopen', () => {
+      this.audioBuffer = this.mediaSource.addSourceBuffer('audio/mpeg');
+      this.audioBuffer.mode = 'sequence';
+      this.audioBuffer.addEventListener('update', () => {
         if (
-          this.audioQueue.length > 0 &&
-          this.audioBuffer &&
-          !this.audioBuffer.updating
+          this.audioQueue.length > 0
+          && this.audioBuffer
+          && !this.audioBuffer.updating
         ) {
           this.audioBuffer.appendBuffer(this.audioQueue.shift());
           this.play();
         }
       });
 
-      this.audioBuffer.addEventListener("error", (e) => {
-        console.log("AudioBuffer Error: ", e);
+      this.audioBuffer.addEventListener('error', (e) => {
+        console.log('AudioBuffer Error: ', e);
       });
 
-      this.emit("ready");
+      this.emit('ready');
     });
   }
 
@@ -94,11 +92,11 @@ class AudioPlayer extends EventEmitter {
       this.audioPlayer
         .play()
         .then(() => {
-          console.log("Assistant Audio is playing...");
+          console.log('Assistant Audio is playing...');
         })
-        .catch((e) =>
-          console.log("something went wrong starting the player...", e)
-        );
+        .catch((e) => {
+          console.log('something went wrong starting the player...', e);
+        });
     }
   }
 
@@ -107,7 +105,7 @@ class AudioPlayer extends EventEmitter {
    */
   stop() {
     this.audioQueue = [];
-    this.audioPlayer.src = "";
+    this.audioPlayer.src = '';
     this.reset();
   }
 
@@ -124,24 +122,24 @@ class AudioPlayer extends EventEmitter {
   }
 
   playPingStart() {
-    const pingPlayer = new Audio("../res/pingStart.mp3");
+    const pingPlayer = new Audio('../res/pingStart.mp3');
     pingPlayer.setSinkId(this.audioOutDeviceId);
     pingPlayer.play();
-    this.emit("ping-start");
+    this.emit('ping-start');
   }
 
   playPingStop() {
-    const pingPlayer = new Audio("../res/pingStop.mp3");
+    const pingPlayer = new Audio('../res/pingStop.mp3');
     pingPlayer.setSinkId(this.audioOutDeviceId);
     pingPlayer.play();
-    this.emit("ping-stop");
+    this.emit('ping-stop');
   }
 
   playPingSuccess() {
-    const pingPlayer = new Audio("../res/pingSuccess.mp3");
+    const pingPlayer = new Audio('../res/pingSuccess.mp3');
     pingPlayer.setSinkId(this.audioOutDeviceId);
     pingPlayer.play();
-    this.emit("ping-success");
+    this.emit('ping-success');
   }
 }
 

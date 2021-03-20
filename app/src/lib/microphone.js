@@ -1,7 +1,7 @@
-const { EventEmitter } = require("events");
+const { EventEmitter } = require('events');
 
 class Microphone extends EventEmitter {
-  constructor(audioInDeviceId = "default", sampleRate = 16000) {
+  constructor(audioInDeviceId = 'default', sampleRate = 16000) {
     super();
 
     this.rawStream = null;
@@ -29,19 +29,19 @@ class Microphone extends EventEmitter {
         this.stream = this.audioContext.createMediaStreamSource(this.rawStream);
 
         this.audioProcessor = this.audioContext.createScriptProcessor(
-          this.bufferSize,
-          1,
-          1
+          this.bufferSize, 1, 1,
         );
-        this.audioProcessor.onaudioprocess = (event) =>
+
+        this.audioProcessor.onaudioprocess = (event) => {
           this.onAudioProcess(event);
+        };
 
         this.stream.connect(this.audioProcessor);
         this.audioProcessor.connect(this.audioContext.destination);
-        this.emit("ready");
+        this.emit('ready');
       });
 
-    this.emit("mic-started");
+    this.emit('mic-started');
   }
 
   /**
@@ -57,7 +57,7 @@ class Microphone extends EventEmitter {
     this.audioProcessor.onaudioprocess = null;
     this.audioProcessor = null;
 
-    this.emit("mic-stopped");
+    this.emit('mic-stopped');
   }
 
   /**
@@ -86,7 +86,7 @@ class Microphone extends EventEmitter {
     let data = event.inputBuffer.getChannelData(0);
     data = this.downsampleBuffer(data);
     // [TODO]: Implement piping?
-    this.emit("data", data);
+    this.emit('data', data);
   }
 
   /**
