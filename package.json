@@ -109,6 +109,7 @@
         "start:verbose": "electron . --verbose",
         "dist": "electron-builder",
         "pack": "electron-builder --dir",
+        "lint": "eslint .",
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
