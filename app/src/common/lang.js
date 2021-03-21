@@ -188,7 +188,7 @@ const supportedLanguages = {
     listeningMessage: "Ouvindo...",
     initSuggestions: [
       { label: "Clima", query: "Como está o tempo hoje?" },
-      { label: "Atirar uma moeda", query: "Atirar uma moeda" },
+      { label: "Lançar uma moeda", query: "Lançar uma moeda" },
       {
         label: "O que você pode fazer?",
         query: "O que você pode fazer?",
