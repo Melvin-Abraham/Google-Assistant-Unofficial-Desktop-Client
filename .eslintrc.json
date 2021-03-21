@@ -11,6 +11,9 @@
   "parserOptions": {
       "ecmaVersion": 12
   },
+  "ignorePatterns": [
+    "*.min.js"
+  ],
   "rules": {
     "linebreak-style": "off",
     "no-restricted-globals": "off",
