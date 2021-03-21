@@ -55,13 +55,16 @@ let currentTypedQuery = ''; // Query that the user is typing currently
 const firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let isAssistantReady = false;
-const p5jsMic = new p5.AudioIn(); // For Audio Visualization
 let releases = electron.remote.getGlobal('releases');
 const assistantInput = document.querySelector('#assistant-input');
 let assistantMicrophone = document.querySelector('#assistant-mic');
 const suggestionArea = document.querySelector('#suggestion-area');
 const mainArea = document.querySelector('#main-area');
 let initHeadline;
+
+// For Audio Visualization
+// eslint-disable-next-line no-undef
+const p5jsMic = new p5.AudioIn();
 
 // Add click listener for "Settings" button
 document.querySelector('#settings-btn').onclick = () => openConfig();
