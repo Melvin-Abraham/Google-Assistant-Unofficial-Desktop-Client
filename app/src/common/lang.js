@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+// Disable quotes as these will be ported to a separate JSON file in future.
+
 // @SRC: https://developers.google.com/assistant/sdk/reference/rpc/languages
 const supportedLanguages = {
   "de-DE": {
@@ -185,7 +188,7 @@ const supportedLanguages = {
     listeningMessage: "Ouvindo...",
     initSuggestions: [
       { label: "Clima", query: "Como está o tempo hoje?" },
-      { label: "Atirar uma moeda", query: "Atirar uma moeda" },
+      { label: "Lançar uma moeda", query: "Lançar uma moeda" },
       {
         label: "O que você pode fazer?",
         query: "O que você pode fazer?",
