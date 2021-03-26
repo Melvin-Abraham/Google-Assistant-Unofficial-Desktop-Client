@@ -226,25 +226,24 @@ function onAppReady() {
 
   setTrayContextMenu(assistantHotkey);
 
-  if (assistantConfig['hideOnFirstLaunch'] || openedAtLogin) {
-    debugLog('Invoking `tray.displayBaloon`');
-
-    tray.displayBalloon({
-      title: 'Google Assistant',
-
-      content: [
-        'Google Assistant is running in background!',
-        `Press ${assistantConfig.assistantHotkey
-          .split('+')
-          .map(getNativeKeyName)
-          .join(' + ')
-        } to launch`,
-      ].join('\n\n'),
-
-      icon: nativeImage.createFromPath(
-        path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
-      ),
-    });
+  if (assistantConfig['notificationOnStart']) {
+    if (assistantConfig['hideOnFirstLaunch'] || openedAtLogin) {
+      debugLog('Invoking `tray.displayBaloon`');
+      tray.displayBalloon({
+        title: 'Google Assistant',
+        content: [
+          'Google Assistant is running in background!',
+          `Press ${assistantConfig.assistantHotkey
+            .split('+')
+            .map(getNativeKeyName)
+            .join(' + ')
+          } to launch`,
+        ].join('\n\n'),
+        icon: nativeImage.createFromPath(
+          path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
+        ),
+      });
+    }
   }
 
   // SHORTCUT REGISTRATION
