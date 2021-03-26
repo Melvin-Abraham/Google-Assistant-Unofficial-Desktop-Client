@@ -1525,6 +1525,27 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
+          <div id="config-item__notification-on-startup" class="setting-item">
+            <div class="setting-key">
+              Send Notification on Startup
+  
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="When enebled, the assistant will send you a notification when it is ready to launch."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="notification-on-startup" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
           <div id="config-item__close-to-tray" class="setting-item">
             <div class="setting-key">
               Always Close to Tray
