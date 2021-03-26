@@ -17,6 +17,7 @@ const initialAssistantConfig = {
   enableAutoScaling: true,
   enableMicOnStartup: false,
   hideOnFirstLaunch: true,
+  notificationOnStart: true,
   assistantHotkey: 'Super+Shift+A',
   hotkeyBehavior: 'launch+mic',
   language: 'en-US',
