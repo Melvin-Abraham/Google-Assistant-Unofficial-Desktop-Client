@@ -771,7 +771,7 @@ assistant
         initHeadline.innerText = supportedLanguages[assistantConfig['language']].listeningMessage;
       }
 
-      // Set `p5jsMic` for visulaization
+      // Set `p5jsMic` for visualization
       p5jsMic.start();
       const assistantMicrophoneParent = document.querySelector('#assistant-mic-parent');
 
@@ -1102,7 +1102,7 @@ function openFileDialog(callback, openDialogTitle = null) {
  * it the next time Assistant is launched.
  *
  * @param {*} assistantConfigObject
- * Pass config as an object or pass `null` to consider `asssistantConfig`
+ * Pass config as an object or pass `null` to consider `assistantConfig`
  */
 function saveConfig(assistantConfigObject = null) {
   fs.writeFile(
@@ -1257,7 +1257,7 @@ async function openConfig(configItem = null) {
               ">
                 <img
                   src="../res/help.svg"
-                  title="Mutes/Unmutes Assistant's voice"
+                  title="Mutes/Un-mutes Assistant's voice"
                 >
               </span>
             </div>
@@ -1270,7 +1270,7 @@ async function openConfig(configItem = null) {
           </div>
           <div id="config-item__mic-on-cont-conv" class="setting-item">
             <div class="setting-key">
-              Enable microphone on Continous Conversation
+              Enable microphone on Continuous Conversation
 
               <span style="
                 vertical-align: sub;
@@ -1284,7 +1284,7 @@ async function openConfig(configItem = null) {
             </div>
             <div class="setting-value" style="height: 35px;">
               <label class="switch">
-                <input id="continous-conv-mic" type="checkbox">
+                <input id="continuous-conv-mic" type="checkbox">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -1324,7 +1324,7 @@ async function openConfig(configItem = null) {
               ">
                 <img
                   src="../res/help.svg"
-                  title="Maximizes the Assistant Window everytime you start it."
+                  title="Maximizes the assistant window every time you start it."
                 >
               </span>
             </div>
@@ -1476,7 +1476,7 @@ async function openConfig(configItem = null) {
             </div>
           </div>
           <div class="setting-label">
-            ACCESSIBILTY
+            ACCESSIBILITY
             <hr />
           </div>
           <div id="config-item__ping-sound" class="setting-item">
@@ -1569,7 +1569,7 @@ async function openConfig(configItem = null) {
               <span id="curr-theme-icon"></span>
             </div>
           </div>
-          <div id="config-item__hotket-behavior" class="setting-item">
+          <div id="config-item__hotkey-behavior" class="setting-item">
             <div class="setting-key">
               Configure Hotkey Behavior
 
@@ -1860,7 +1860,7 @@ async function openConfig(configItem = null) {
                           >
                         </span>
                         <span style="color: var(--color-red);">
-                          An error occured while fetching releases
+                          An error occurred while fetching releases
                         </span>
 
                         <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
@@ -1978,7 +1978,7 @@ async function openConfig(configItem = null) {
     const languageSelector = document.querySelector('#lang-selector');
     const forceNewConversationCheckbox = document.querySelector('#new-conversation');
     const enableAudioOutput = document.querySelector('#audio-output');
-    const enableMicOnContinousConversation = document.querySelector('#continous-conv-mic');
+    const enableMicOnContinuousConversation = document.querySelector('#continuous-conv-mic');
     const enableMicOnStartup = document.querySelector('#enable-mic-startup');
     const startAsMaximized = document.querySelector('#start-maximized');
     const hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
@@ -2148,7 +2148,7 @@ async function openConfig(configItem = null) {
     languageSelector.value = assistantConfig['language'];
     forceNewConversationCheckbox.checked = assistantConfig['forceNewConversation'];
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
-    enableMicOnContinousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
+    enableMicOnContinuousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
     enableMicOnStartup.checked = assistantConfig['enableMicOnStartup'];
     startAsMaximized.checked = assistantConfig['startAsMaximized'];
     hideOnFirstLaunch.checked = assistantConfig['hideOnFirstLaunch'];
@@ -2329,7 +2329,7 @@ async function openConfig(configItem = null) {
       checkForUpdateSection.innerHTML = `
         <div style="animation: fade_in_from_right_anim 300ms;">
           <div class="disabled" style="margin-bottom: 10px; font-size: 16px;">
-            Cheking for updates...
+            Checking for updates...
           </div>
           <div class="loader"></div>
         </div>
@@ -2424,7 +2424,7 @@ async function openConfig(configItem = null) {
               >
             </span>
             <span style="color: var(--color-red);">
-              An error occured while cheking for updates
+              An error occurred while checking for updates
             </span>
             <span
               id="check-for-update-btn"
@@ -2459,7 +2459,7 @@ async function openConfig(configItem = null) {
           type: 'question',
           title: 'Saved Tokens Path is empty',
           message: [
-            'You have not specified any loaction for "Saved Tokens Path".',
+            'You have not specified any location for "Saved Tokens Path".',
             'Assistant can set a path automatically according to "Key File Path" and save them.',
           ].join('\n'),
           buttons: ['Automatically set a path', 'Cancel'],
@@ -2511,7 +2511,7 @@ async function openConfig(configItem = null) {
           type: 'info',
           title: 'Saved Tokens Path does not exist',
           message: [
-            '"Saved Tokens Path" is a non-existant path.',
+            '"Saved Tokens Path" is a non-existent path.',
             'Assistant can recursively create directories for you.',
           ].join('\n'),
           buttons: ['Recursively create directory', 'Cancel'],
@@ -2594,7 +2594,7 @@ async function openConfig(configItem = null) {
         assistantConfig['language'] = languageSelector.value;
         assistantConfig['forceNewConversation'] = forceNewConversationCheckbox.checked;
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
-        assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinousConversation.checked;
+        assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinuousConversation.checked;
         assistantConfig['enableMicOnStartup'] = enableMicOnStartup.checked;
         assistantConfig['startAsMaximized'] = startAsMaximized.checked;
         assistantConfig['hideOnFirstLaunch'] = hideOnFirstLaunch.checked;
@@ -3267,10 +3267,10 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
   }
 
   if (hasPhotoCarousel) {
-    const imgages = element.querySelectorAll('img[data-src]');
+    const images = element.querySelectorAll('img[data-src]');
 
-    for (let i = 0; i < imgages.length; i++) {
-      const img = imgages[i];
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
       img.setAttribute('src', img.getAttribute('data-src'));
     }
   }
@@ -3330,7 +3330,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
 
     if (hasPhotoCarousel) {
       const currentQuery = getCurrentQuery();
-      const seperatorIndex = Math.min(
+      const separatorIndex = Math.min(
         currentQuery.indexOf('of') !== -1
           ? currentQuery.indexOf('of')
           : Infinity,
@@ -3339,7 +3339,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
           : Infinity,
       );
       const subject = currentQuery
-        .slice(seperatorIndex)
+        .slice(separatorIndex)
         .replace(/(^of|^from)\s/, '');
 
       let photosUrl = 'https://photos.google.com/';
@@ -4496,7 +4496,7 @@ function isSnap() {
 }
 
 /**
- * Returns an object comtaining `commitHash` and `commitDate`
+ * Returns an object containing `commitHash` and `commitDate`
  * of the latest commit.
  *
  * (**Requires GIT**)
@@ -4758,7 +4758,7 @@ function map(n, start1, stop1, start2, stop2) {
 }
 
 /**
- * Contrain `n` between `high` and `low`
+ * Constrain `n` between `high` and `low`
  *
  * @param {number} n
  * @param {number} low
@@ -4819,7 +4819,7 @@ function fetchReleasesAndCheckUpdates() {
       console.log(...consoleMessage('Updates Available'));
     }
     else {
-      console.log(...consoleMessage('No updates avaiable'));
+      console.log(...consoleMessage('No updates available'));
     }
   }
 }
