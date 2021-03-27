@@ -136,11 +136,11 @@ if (!gotInstanceLock) {
     );
   }
 
-  app.isQuiting = true;
+  app.isQuitting = true;
   app.quit();
 }
 else {
-  debugLog('Sucessfully got instance lock');
+  debugLog('Successfully got instance lock');
 
   app.allowRendererProcessReuse = false;
   app.commandLine.appendSwitch('enable-transparent-visuals');
@@ -256,7 +256,7 @@ function onAppReady() {
   // 'close' ACTION OVERRIDE: Close to Tray
 
   mainWindow.on('close', (event) => {
-    if (!app.isQuiting) {
+    if (!app.isQuitting) {
       event.preventDefault();
 
       mainWindow.webContents.executeJavaScript(
@@ -264,7 +264,7 @@ function onAppReady() {
       );
 
       // Close window 100ms after the `body` is emptied
-      // to avoid the window from apperaring for a fraction of scecond
+      // to avoid the window from appearing for a fraction of second
       // immediately after showing the assistant window
 
       setTimeout(() => mainWindow.hide(), 100);
@@ -396,7 +396,7 @@ function launchAssistant() {
  */
 function quitApp() {
   debugLog('Requested quit application');
-  app.isQuiting = true;
+  app.isQuitting = true;
   app.quit();
 }
 
