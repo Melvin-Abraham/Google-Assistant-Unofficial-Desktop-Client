@@ -1525,23 +1525,23 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__notification-on-startup" class="setting-item">
+          <div id="config-item__notify-on-startup" class="setting-item">
             <div class="setting-key">
-              Send Notification on Startup
-  
+              Notify on app startup
+
               <span style="
                 vertical-align: sub;
                 margin-left: 10px;
               ">
                 <img
                   src="../res/help.svg"
-                  title="When enebled, the assistant will send you a notification when it is ready to launch."
+                  title="When enabled, the assistant will send you a notification when it is ready to launch."
                 >
               </span>
             </div>
             <div class="setting-value" style="height: 35px;">
               <label class="switch">
-                <input id="notification-on-startup" type="checkbox">
+                <input id="notify-on-startup" type="checkbox">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -2010,6 +2010,7 @@ async function openConfig(configItem = null) {
     const displayPreferenceSelector = document.querySelector('#display-selector');
     const winBorderSelector = document.querySelector('#win-border-selector');
     const launchAtStartUp = document.querySelector('#launch-at-startup');
+    const notifyOnStartUp = document.querySelector('#notify-on-startup');
     const alwaysCloseToTray = document.querySelector('#close-to-tray');
     const assistantHotkeyBar = document.querySelector('#hotkey-div');
     const enablePingSound = document.querySelector('#ping-sound');
@@ -2180,6 +2181,7 @@ async function openConfig(configItem = null) {
     displayPreferenceSelector.value = assistantConfig['displayPreference'];
     winBorderSelector.value = assistantConfig['windowBorder'];
     launchAtStartUp.checked = assistantConfig['launchAtStartup'];
+    notifyOnStartUp.checked = assistantConfig['notifyOnStartup'];
     alwaysCloseToTray.checked = assistantConfig['alwaysCloseToTray'];
     enablePingSound.checked = assistantConfig['enablePingSound'];
     enableAutoScaling.checked = assistantConfig['enableAutoScaling'];
@@ -2626,6 +2628,7 @@ async function openConfig(configItem = null) {
         assistantConfig['displayPreference'] = displayPreferenceSelector.value;
         assistantConfig['windowBorder'] = winBorderSelector.value;
         assistantConfig['launchAtStartup'] = launchAtStartUp.checked;
+        assistantConfig['notifyOnStartup'] = notifyOnStartUp.checked;
         assistantConfig['alwaysCloseToTray'] = alwaysCloseToTray.checked;
         assistantConfig['enablePingSound'] = enablePingSound.checked;
         assistantConfig['enableAutoScaling'] = enableAutoScaling.checked;

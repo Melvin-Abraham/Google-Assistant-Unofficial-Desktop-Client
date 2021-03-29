@@ -226,7 +226,7 @@ function onAppReady() {
 
   setTrayContextMenu(assistantHotkey);
 
-  if (assistantConfig['notificationOnStart']) {
+  if (assistantConfig['notifyOnStartup']) {
     if (assistantConfig['hideOnFirstLaunch'] || openedAtLogin) {
       debugLog('Invoking `tray.displayBaloon`');
       tray.displayBalloon({
