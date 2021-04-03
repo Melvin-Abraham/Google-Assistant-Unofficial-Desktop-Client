@@ -197,6 +197,19 @@ const supportedLanguages = {
     noSuggestionsText: "Nenhuma sugestão.",
     settingsUpdatedText: "Configurações Atualizadas!",
   },
+  "ur-UR": {
+    langName: "اردو (پاکستان)",
+    welcomeMessage: "ہائے! میں کس طرح مدد کرسکتا ہوں؟",
+    inputPlaceholder: "مجھ سے کچھ بھی پوچھ لیں۔۔۔",
+    listeningMessage: "سن رہا ہے۔۔۔",
+    initSuggestions: [
+      { label: "موسم", query: "آج موسم کیسا ہے؟" },
+      { label: "ایک سکے ٹاس", query: "ایک سکے ٹاس" },
+      { label: "تم کیا کر سکتے ہو؟", query: "تم کیا کر سکتے ہو؟" },
+    ],
+    noSuggestionsText: "کوئی تجاویز نہیں۔",
+    settingsUpdatedText: "ترتیبات کی تازہ کاری",
+  },
 };
 
 module.exports = supportedLanguages;
