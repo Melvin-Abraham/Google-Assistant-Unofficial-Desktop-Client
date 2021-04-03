@@ -210,6 +210,19 @@ const supportedLanguages = {
     noSuggestionsText: "کوئی تجاویز نہیں۔",
     settingsUpdatedText: "ترتیبات کی تازہ کاری",
   },
+  "en-PK": {
+    langName: "English (Pakistan)",
+    welcomeMessage: "Hi! How can I help?",
+    inputPlaceholder: "Ask me anything...",
+    listeningMessage: "Listening...",
+    initSuggestions: [
+      { label: "Weather", query: "How\\'s the Weather today?" },
+      { label: "Toss a coin", query: "Toss a coin" },
+      { label: "What can you do?", query: "What can you do?" },
+    ],
+    noSuggestionsText: "No suggestions.",
+    settingsUpdatedText: "Settings Updated!",
+  },
 };
 
 module.exports = supportedLanguages;
