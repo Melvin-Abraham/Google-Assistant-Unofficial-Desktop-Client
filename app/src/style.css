@@ -55,6 +55,7 @@ body {
   color: var(--color-fg);
   font-family: "Product Sans";
   -webkit-user-select: none;
+  user-select: none;
   background: transparent;
 
   transition: color 150ms ease-in;
@@ -140,6 +141,7 @@ body {
   -webkit-app-region: no-drag;
   cursor: default;
   -webkit-user-select: none;
+  user-select: none;
   position: absolute;
   right: 10px;
   top: 10px;
@@ -151,6 +153,7 @@ body {
   -webkit-app-region: no-drag;
   cursor: default;
   -webkit-user-select: none;
+  user-select: none;
   position: absolute;
   left: 10px;
   top: 10px;
@@ -322,6 +325,7 @@ body {
   left: 20px;
   bottom: 120px;
   -webkit-user-select: text;
+  user-select: text;
 }
 
 .assistant-markup-response {
@@ -340,6 +344,7 @@ body {
   border-radius: 10px;
   width: 75%;
   -webkit-user-select: none;
+  user-select: none;
 
   transition: all 150ms ease-in;
 }
@@ -389,6 +394,7 @@ body {
   width: 60px;
   margin-top: 20px;
   -webkit-user-select: none;
+  user-select: none;
   -webkit-user-drag: none;
 }
 
@@ -411,6 +417,7 @@ body {
   margin-top: 20px;
   margin-bottom: 20px;
   -webkit-user-select: none;
+  user-select: none;
   -webkit-user-drag: none;
 }
 
@@ -842,6 +849,7 @@ ul li {
   opacity: 0.5 !important;
   padding: 2px;
   -webkit-user-select: none;
+  user-select: none;
   -webkit-user-drag: none;
 
   transition: none;
@@ -945,6 +953,7 @@ button,
   font-size: 16px;
   border: none;
   outline: none;
+  user-select: none;
   -webkit-user-select: none;
 
   transition: all 150ms ease-in;
@@ -974,6 +983,7 @@ button[disabled],
   padding: 2px;
   border-radius: 100px;
   -webkit-user-select: none;
+  user-select: none;
   -webkit-user-drag: none;
   transition: all 0.2s ease-in;
 }
