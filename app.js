@@ -226,26 +226,6 @@ function onAppReady() {
 
   setTrayContextMenu(assistantHotkey);
 
-  if (assistantConfig['notifyOnStartup']) {
-    if (assistantConfig['hideOnFirstLaunch'] || openedAtLogin) {
-      debugLog('Invoking `tray.displayBaloon`');
-      tray.displayBalloon({
-        title: 'Google Assistant',
-        content: [
-          'Google Assistant is running in background!',
-          `Press ${assistantConfig.assistantHotkey
-            .split('+')
-            .map(getNativeKeyName)
-            .join(' + ')
-          } to launch`,
-        ].join('\n\n'),
-        icon: nativeImage.createFromPath(
-          path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
-        ),
-      });
-    }
-  }
-
   // SHORTCUT REGISTRATION
 
   debugLog('Registering Global Shortcut');
@@ -321,9 +301,71 @@ function onAppReady() {
       debugLog('Setting "Ready for launch" tray icon');
       tray.setImage(trayIcon);
 
-      if (!assistantConfig['hideOnFirstLaunch'] && !openedAtLogin) {
-        debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
-        launchAssistant();
+      if (!assistantConfig['hideOnFirstLaunch']) {
+        if (!openedAtLogin) {
+          debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
+          launchAssistant();
+        }
+      }
+      else if (assistantConfig['notifyOnStartup']) {
+        // Notify user when app is ready
+
+        const title = 'Google Assistant';
+        const body = [
+          'Google Assistant is running in background!',
+          `Press ${assistantConfig.assistantHotkey
+            .split('+')
+            .map(getNativeKeyName)
+            .join(' + ')
+          } to launch`,
+        ].join('\n\n');
+
+        const icon = nativeImage.createFromPath(
+          path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
+        );
+
+        debugLog('Sending "app-ready-to-launch" notification');
+
+        if (process.platform === 'win32') {
+          tray.displayBalloon({
+            title,
+            content: body,
+            icon,
+          });
+
+          tray.on('balloon-click', () => {
+            // Launch the assistant when balloon is clicked.
+            launchAssistant();
+          });
+        }
+        else {
+          const notification = new electron.Notification({
+            title,
+            body,
+            icon,
+            actions: [
+              { type: 'button', text: 'Launch' },
+              { type: 'button', text: 'Dismiss' },
+            ],
+          });
+
+          notification.on('action', (_, index) => {
+            switch (index) {
+              case 0:
+                launchAssistant();
+                break;
+
+              default:
+            }
+          });
+
+          notification.on('click', () => {
+            // Launch the assistant when notification is clicked.
+            launchAssistant();
+          });
+
+          notification.show();
+        }
       }
     });
 
