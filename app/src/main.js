@@ -204,8 +204,7 @@ else {
   if (isFirstTimeUser) {
     // Disable settings button
     const settingsButton = document.querySelector('#settings-btn');
-    settingsButton.onclick = '';
-    settingsButton.classList.add('disabled');
+    settingsButton.remove();
 
     throw Error([
       'First Time User: Halting Assistant Initialization.',
