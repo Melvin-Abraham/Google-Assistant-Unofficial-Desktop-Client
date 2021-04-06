@@ -3,6 +3,7 @@ const initialAssistantConfig = {
   savedTokensPath: '',
   forceNewConversation: false,
   enableAudioOutput: true,
+  enableAudioOutputForTypedQueries: false,
   enableMicOnContinousConversation: true,
   startAsMaximized: false,
   windowFloatBehavior: 'always-on-top',

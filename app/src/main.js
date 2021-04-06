@@ -461,6 +461,15 @@ const startConversation = (conversation) => {
       // usually send it to some audio output / file
 
       if (assistantConfig['enableAudioOutput'] && assistantWindow.isVisible()) {
+        // If the query asked is typed,
+        // check if user has disabled audio output for it
+        if (
+          config.conversation.textQuery
+          && !assistantConfig['enableAudioOutputForTypedQueries']
+        ) {
+          return;
+        }
+
         audPlayer.appendBuffer(Buffer.from(data));
       }
     })
@@ -1267,6 +1276,27 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
+          <div id="config-item__audio-on-typed-query" class="setting-item">
+            <div class="setting-key">
+              Enable audio output for typed queries
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="When enabled, assistant will speak the response for typed query"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="audio-on-typed-query" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
           <div id="config-item__mic-on-cont-conv" class="setting-item">
             <div class="setting-key">
               Enable microphone on Continuous Conversation
@@ -1998,6 +2028,7 @@ async function openConfig(configItem = null) {
     const languageSelector = document.querySelector('#lang-selector');
     const forceNewConversationCheckbox = document.querySelector('#new-conversation');
     const enableAudioOutput = document.querySelector('#audio-output');
+    const enableAudioOutputForTypedQueries = document.querySelector('#audio-on-typed-query');
     const enableMicOnContinuousConversation = document.querySelector('#continuous-conv-mic');
     const enableMicOnStartup = document.querySelector('#enable-mic-startup');
     const startAsMaximized = document.querySelector('#start-maximized');
@@ -2164,11 +2195,29 @@ async function openConfig(configItem = null) {
       ].join('\n'));
     }
 
+    // Disable `enableAudioOutputForTypedQueries` option
+    // whenever "Audio Output" is disabled.
+    enableAudioOutput.onchange = () => {
+      const enableAudioOutputForTypedQueriesParent = enableAudioOutputForTypedQueries.parentElement;
+
+      if (enableAudioOutput.checked) {
+        enableAudioOutputForTypedQueries.disabled = false;
+        enableAudioOutputForTypedQueriesParent.querySelector('.slider').classList.remove('disabled');
+        enableAudioOutputForTypedQueriesParent.title = '';
+      }
+      else {
+        enableAudioOutputForTypedQueries.disabled = true;
+        enableAudioOutputForTypedQueriesParent.querySelector('.slider').classList.add('disabled');
+        enableAudioOutputForTypedQueriesParent.title = 'Option is diabled since Audio Output is off';
+      }
+    };
+
     keyFilePathInput.value = assistantConfig['keyFilePath'];
     savedTokensPathInput.value = assistantConfig['savedTokensPath'];
     languageSelector.value = assistantConfig['language'];
     forceNewConversationCheckbox.checked = assistantConfig['forceNewConversation'];
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
+    enableAudioOutputForTypedQueries.checked = assistantConfig['enableAudioOutputForTypedQueries'];
     enableMicOnContinuousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
     enableMicOnStartup.checked = assistantConfig['enableMicOnStartup'];
     startAsMaximized.checked = assistantConfig['startAsMaximized'];
@@ -2616,6 +2665,7 @@ async function openConfig(configItem = null) {
         assistantConfig['language'] = languageSelector.value;
         assistantConfig['forceNewConversation'] = forceNewConversationCheckbox.checked;
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
+        assistantConfig['enableAudioOutputForTypedQueries'] = enableAudioOutputForTypedQueries.checked;
         assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinuousConversation.checked;
         assistantConfig['enableMicOnStartup'] = enableMicOnStartup.checked;
         assistantConfig['startAsMaximized'] = startAsMaximized.checked;
