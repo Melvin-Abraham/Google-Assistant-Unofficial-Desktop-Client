@@ -4952,6 +4952,7 @@ assistantInput.onkeydown = (e) => {
  * @param {InputEvent} e
  */
 assistantInput.oninput = (e) => {
+  stopMic()
   queryHistoryHead = history.length;
   currentTypedQuery = e.target.value;
 };
