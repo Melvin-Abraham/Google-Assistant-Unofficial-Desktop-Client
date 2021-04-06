@@ -11,7 +11,7 @@ const initialAssistantConfig = {
   microphoneSource: 'default',
   speakerSource: 'default',
   displayPreference: '1',
-  windowBorder: 'none',
+  windowBorder: 'minimal',
   launchAtStartup: true,
   alwaysCloseToTray: true,
   enablePingSound: true,
