@@ -4946,12 +4946,15 @@ assistantInput.onkeydown = (e) => {
 };
 
 /**
- * Remember user's currently typed query when user
- * inputs some characters in the assistant input box.
+ * Remember user's currently typed query and stops mic when
+ * user inputs some characters in the assistant input box.
  *
  * @param {InputEvent} e
  */
 assistantInput.oninput = (e) => {
+  // Stop listening when user starts typing
+  if (mic.isActive) stopMic();
+
   queryHistoryHead = history.length;
   currentTypedQuery = e.target.value;
 };
