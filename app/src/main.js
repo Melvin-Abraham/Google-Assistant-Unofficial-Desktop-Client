@@ -547,10 +547,16 @@ const startConversation = (conversation) => {
       else if (isMicReadyForContinuousConversation) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
+      else if (assistantConfig['closeOnConversationEnd']) {
+        console.log(...consoleMessage('Conversation Complete and Closing App'));
+        close();
+        if (!assistantConfig['alwaysCloseToTray']) {
+          quitApp();
+        }
+      }
       else {
         console.log(...consoleMessage('Conversation Complete'));
       }
-
       if (initHeadline) {
         initHeadline.innerText = supportedLanguages[assistantConfig['language']].welcomeMessage;
       }
@@ -1339,6 +1345,27 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
+          <div id="config-item__close-on-conversation-end" class="setting-item">
+            <div class="setting-key">
+              Close on Conversation End
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="Closes the Assistant Window when Conversation is Over."
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="close-on-conversation-end" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
           <div class="setting-label">
             WINDOW
             <hr />
@@ -2031,6 +2058,7 @@ async function openConfig(configItem = null) {
     const enableAudioOutputForTypedQueries = document.querySelector('#audio-on-typed-query');
     const enableMicOnContinuousConversation = document.querySelector('#continuous-conv-mic');
     const enableMicOnStartup = document.querySelector('#enable-mic-startup');
+    const closeOnConversationEndCheckbox = document.querySelector('#close-on-conversation-end');
     const startAsMaximized = document.querySelector('#start-maximized');
     const hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
     const winFloatBehaviorSelector = document.querySelector('#win-float-behavior-selector');
@@ -2219,6 +2247,7 @@ async function openConfig(configItem = null) {
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
     enableAudioOutputForTypedQueries.checked = assistantConfig['enableAudioOutputForTypedQueries'];
     enableMicOnContinuousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
+    closeOnConversationEndCheckbox.checked = assistantConfig['closeOnConversationEnd'];
     enableMicOnStartup.checked = assistantConfig['enableMicOnStartup'];
     startAsMaximized.checked = assistantConfig['startAsMaximized'];
     hideOnFirstLaunch.checked = assistantConfig['hideOnFirstLaunch'];
@@ -2667,6 +2696,7 @@ async function openConfig(configItem = null) {
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
         assistantConfig['enableAudioOutputForTypedQueries'] = enableAudioOutputForTypedQueries.checked;
         assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinuousConversation.checked;
+        assistantConfig['closeOnConversationEnd'] = closeOnConversationEndCheckbox.checked;
         assistantConfig['enableMicOnStartup'] = enableMicOnStartup.checked;
         assistantConfig['startAsMaximized'] = startAsMaximized.checked;
         assistantConfig['hideOnFirstLaunch'] = hideOnFirstLaunch.checked;
