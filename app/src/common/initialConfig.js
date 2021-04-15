@@ -5,6 +5,7 @@ const initialAssistantConfig = {
   enableAudioOutput: true,
   enableAudioOutputForTypedQueries: false,
   enableMicOnContinousConversation: true,
+  closeOnConversationEnd: false,
   startAsMaximized: false,
   windowFloatBehavior: 'always-on-top',
   escapeKeyBehavior: 'none',
