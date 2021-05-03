@@ -260,7 +260,7 @@ function onAppReady() {
   let bumblebee = new Bumblebee();
 
   // set path to worker files
-  bumblebee.setWorkersPath('/app/src/lib/bumblebee-workers');
+  bumblebee.setWorkersPath('/app/src/lib');
 
   // add hotword
   bumblebee.addHotword('hey google');
