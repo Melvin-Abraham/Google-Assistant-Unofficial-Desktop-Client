@@ -253,6 +253,28 @@ function onAppReady() {
     return false;
   });
 
+  // HOTWORD DETECTION
+  debugLog('Setting up Hotword Detection')
+  const Bumblebee = require('bumblebee-hotword');
+
+  let bumblebee = new Bumblebee();
+
+  // set path to worker files
+  bumblebee.setWorkersPath('/app/src/lib/bumblebee-workers');
+
+  // add hotword
+  bumblebee.addHotword('hey google');
+
+  // set sensitivity from 0.0 to 1.0
+  bumblebee.setSensitivity(0.75);
+
+  bumblebee.on('hotword', function(hotword) {
+    launchAssistant()
+    debugLog('Hotword Detected')
+  });
+
+bumblebee.start();
+
   // WINDOW SIZING AND POSITIONING
 
   debugLog('Setting Assistant window position');
