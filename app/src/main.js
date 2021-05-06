@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Initialize "close", "expand" and "minimize" buttons
 
 const closeButton = document.querySelector('#close-btn');
@@ -32,6 +33,7 @@ const supportedLanguages = require('./common/lang.js');
 const themes = require('./common/themes.js');
 const Microphone = require('./lib/microphone.js');
 const AudioPlayer = require('./lib/audio_player.js');
+const { fallbackModeConfigKeys } = require('./common/utils');
 
 const { ipcRenderer } = electron;
 const { app, dialog } = electron.remote;
@@ -93,8 +95,23 @@ navigator.mediaDevices
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
   const savedConfig = JSON.parse(fs.readFileSync(configFilePath));
-  Object.assign(assistantConfig, savedConfig);
-  console.log(...consoleMessage('Config loaded'));
+
+  if (isFallbackMode()) {
+    const minimalConfig = Object.fromEntries(
+      Object.entries(savedConfig)
+        .filter(([configKey, _]) => fallbackModeConfigKeys.includes(configKey)),
+    );
+
+    Object.assign(assistantConfig, minimalConfig);
+
+    console.group(...consoleMessage('[FALLBACK MODE] Only minimal config loaded', 'warn'));
+    console.log(minimalConfig);
+    console.groupEnd();
+  }
+  else {
+    Object.assign(assistantConfig, savedConfig);
+    console.log(...consoleMessage('Config loaded'));
+  }
 
   isFirstTimeUser = false;
 }
@@ -1731,6 +1748,44 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
+          <div id="config-item__fallback-mode" class="setting-item">
+            <div class="setting-key">
+              Fallback Mode
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="${[
+                    'Fallback mode temporarily forces your settings to fallback to their defaults.',
+                    'Useful in cases where you think the app is not working as intended with the current settings.',
+                  ].join('\n')}"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="${!isFallbackMode()
+                ? 'restartInFallbackMode()'
+                : 'restartInNormalMode()'
+              }">
+                <span>
+                  <img src="../res/fallback.svg" style="
+                    height: 20px;
+                    width: 20px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                ${!isFallbackMode()
+                  ? 'Restart session with default settings (Fallback)'
+                  : 'Restart session in Normal mode'
+                }
+              </label>
+            </div>
+          </div>
           <div id="config-item__quit-assistant" class="setting-item">
             <div class="setting-key">
               Quit from Tray
@@ -1969,6 +2024,67 @@ async function openConfig(configItem = null) {
 
     const configNotice = mainArea.querySelector('#config-notice-parent');
 
+    if (isFallbackMode()) {
+      configNotice.innerHTML += `
+        <div
+          class="setting-key accordion"
+          style="
+            margin-top: 40px;
+            margin-right: 30px;
+            background: #fbbc0530;
+            padding: 10px 30px 18px 30px;
+            border-radius: 10px;
+          "
+        >
+          <input type="checkbox" id="alert-accordion" />
+          <label for="alert-accordion" class="accordion-tile">
+            <div style="width: 100%; display: inline-block;">
+              <span>
+                <img src="../res/fallback.svg" style="
+                  height: 25px;
+                  width: 25px;
+                  vertical-align: sub;
+                  padding-right: 12px;
+                  ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                >
+              </span>
+              <span style="width: 100%;">
+                Fallback mode is active
+              </span>
+              <span
+                class="accordion-chevron"
+                style="${getEffectiveTheme() === 'light' ? '' : 'filter: invert(1);'}"
+              >
+                <img src="../res/chevron_down.svg" />
+              </span>
+            </div>
+          </label>
+          <div class="accordion-content">
+            <div style="margin-top: 30px;">
+              <p>
+                The app settings (except a few) have been temporarily set to the defaults.
+                You can change any settings here that you think might be causing issues
+                and save them permanently.
+              </p>
+              <p>
+                Making changes to any settings while in fallback mode might not reflect
+                changes on subsequent relaunches until you revert back to normal mode.
+              </p>
+              <div style="padding-top: 15px; padding-bottom: 20px;">
+                <span style="padding-right: 5px; opacity: 0.5;">
+                  Done with the changes?
+                </span>
+
+                <div class="button" onclick="restartInNormalMode()">
+                  Revert back to normal mode
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     if (!canAccessMicrophone) {
       configNotice.innerHTML += `
         <div
@@ -1986,11 +2102,11 @@ async function openConfig(configItem = null) {
             <div style="width: 100%; display: inline-block;">
               <span>
                 <img src="../res/mic_off.svg" style="
-                  height: 20px;
-                  width: 20px;
+                  height: 22px;
+                  width: 22px;
                   vertical-align: sub;
-                  padding-right: 5px;
-                  ${getEffectiveTheme() === 'light' ? '' : 'filter: invert(1);'}}"
+                  padding-right: 12px;
+                  ${getEffectiveTheme() === 'light' ? '' : 'filter: invert(1);'}"
                 >
               </span>
               <span style="width: 100%;">
@@ -2627,6 +2743,29 @@ async function openConfig(configItem = null) {
       }
 
       if (validatePathInput(keyFilePathInput, true)) {
+        // Warn users if saving settings in fallback mode
+
+        if (isFallbackMode()) {
+          const result = dialog.showMessageBoxSync(assistantWindow, {
+            message: 'Confirm settings overwrite',
+            detail: [
+              'Saving the settings in Fallback mode will overwrite any existing settings you have in normal mode. ',
+              'Are you sure to continue?',
+              '\n',
+              '\nNote: Making changes to any settings while in fallback mode might not reflect changes ',
+              'on subsequent relaunches until you revert back to normal mode.',
+            ].join(''),
+            type: 'question',
+            buttons: [
+              'Overwrite existing settings',
+              'Cancel',
+            ],
+            cancelId: 1,
+          });
+
+          if (result === 1) return;
+        }
+
         // Determine if relaunch is required
 
         let relaunchRequired = false;
@@ -3672,6 +3811,22 @@ function relaunchAssistant() {
 }
 
 /**
+ * Restarts session in fallback mode.
+ */
+function restartInFallbackMode() {
+  ipcRenderer.send('restart-fallback');
+  console.log('Sent request for restarting in fallback mode...');
+}
+
+/**
+ * Restarts session in normal mode.
+ */
+function restartInNormalMode() {
+  ipcRenderer.send('restart-normal');
+  console.log('Sent request for restarting in normal mode...');
+}
+
+/**
  * Quits the application from tray.
  */
 function quitApp() {
@@ -4566,6 +4721,15 @@ function closeOnBlurCallback() {
  */
 function isSnap() {
   return app.getAppPath().startsWith('/snap');
+}
+
+/**
+ * Checks if the application is running in fallback mode.
+ * Typically enabled when user requests the app to start
+ * with settings set to default.
+ */
+function isFallbackMode() {
+  return process.env.FALLBACK_MODE === 'true';
 }
 
 /**

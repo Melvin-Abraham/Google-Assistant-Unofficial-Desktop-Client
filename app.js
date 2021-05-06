@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
@@ -6,6 +8,7 @@ const os = require('os');
 const { argv } = require('process');
 const isValidAccelerator = require('electron-is-accelerator');
 const { getNativeKeyName } = require('./app/src/keybinding.js');
+const { fallbackModeConfigKeys } = require('./app/src/common/utils.js');
 
 const {
   app,
@@ -13,6 +16,7 @@ const {
   Menu,
   nativeImage,
   ipcMain,
+  shell: electronShell,
 } = electron;
 
 let mainWindow;
@@ -59,7 +63,7 @@ process.on('uncaughtException', async (err) => {
     });
 
     if (buttonIndex.response === 1) {
-      electron.shell.openExternal(logFilePath, { activate: true });
+      electronShell.openExternal(logFilePath, { activate: true });
     }
   }
   else {
@@ -78,10 +82,32 @@ debugLog(`args = ${process.argv}`, 'info', true);
 debugLog(`pid = ${process.pid}`, 'info', true);
 debugLog('');
 
+// Let the renderer process know whether it's running
+// in a fallback session.
+if (isFallbackMode()) {
+  process.env.FALLBACK_MODE = true;
+  debugLog('[FALLBACK] Session running in Fallback mode');
+}
+else {
+  process.env.FALLBACK_MODE = false;
+}
+
 if (fs.existsSync(configFilePath)) {
   debugLog('Reading Assistant Config');
   const savedConfig = JSON.parse(fs.readFileSync(configFilePath));
-  Object.assign(assistantConfig, savedConfig);
+
+  if (!isFallbackMode()) {
+    Object.assign(assistantConfig, savedConfig);
+  }
+  else {
+    const minimalConfig = Object.fromEntries(
+      Object.entries(savedConfig)
+        .filter(([configKey, _]) => fallbackModeConfigKeys.includes(configKey)),
+    );
+
+    Object.assign(assistantConfig, minimalConfig);
+  }
+
   debugLog('Successfully read Assistant Config');
 }
 else {
@@ -410,6 +436,14 @@ function onAppReady() {
   ipcMain.on('update-hotkey', (_, hotkey) => {
     updateHotkey(hotkey);
   });
+
+  ipcMain.on('restart-fallback', () => {
+    restartInFallbackMode();
+  });
+
+  ipcMain.on('restart-normal', () => {
+    restartInNormalMode();
+  });
 }
 
 /**
@@ -440,6 +474,28 @@ function quitApp() {
   debugLog('Requested quit application');
   app.isQuitting = true;
   app.quit();
+}
+
+/**
+ * Restarts session in fallback mode
+ */
+function restartInFallbackMode() {
+  app.relaunch({
+    args: [...argv.slice(1), '--fallback'],
+  });
+
+  quitApp();
+}
+
+/**
+ * Restarts session in normal mode
+ */
+function restartInNormalMode() {
+  app.relaunch({
+    args: [...argv.slice(1).filter((arg) => arg !== '--fallback')],
+  });
+
+  quitApp();
 }
 
 /**
@@ -513,10 +569,42 @@ function setTrayContextMenu(assistantHotkey) {
       },
     },
     {
-      label: 'Open DevTools',
-      click: () => {
-        mainWindow.webContents.openDevTools({ mode: 'undocked' });
-      },
+      label: 'Troubleshoot',
+      submenu: [
+        {
+          label: 'Open DevTools',
+          click: () => {
+            mainWindow.webContents.openDevTools({ mode: 'undocked' });
+          },
+        },
+        {
+          label: (!isFallbackMode())
+            ? 'Restart session with default settings (fallback)'
+            : 'Revert session back to normal mode',
+          click: () => {
+            if (!isFallbackMode()) {
+              restartInFallbackMode();
+            }
+            else {
+              restartInNormalMode();
+            }
+          },
+        },
+        {
+          label: 'Check FAQ',
+          click: () => {
+            electronShell.openExternal(
+              'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)',
+            );
+          },
+        },
+        {
+          label: 'Reveal main process logs in folder',
+          click: () => {
+            electronShell.showItemInFolder(logFilePath);
+          },
+        },
+      ],
     },
     {
       label: 'Quit',
@@ -605,6 +693,15 @@ function isLinux() {
 function isDevMode(execPath) {
   const executablePath = execPath ?? process.argv0;
   return /[\\/]electron.*$/.test(executablePath);
+}
+
+/**
+ * Checks if the application is running in fallback mode.
+ * Typically enabled when user requests the session to start
+ * with settings set to default.
+ */
+function isFallbackMode() {
+  return argv.includes('--fallback');
 }
 
 /**

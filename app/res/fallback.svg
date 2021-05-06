@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="184.73" height="183.822" viewBox="0 0 184.73 183.822">
+  <g id="Fallback_Icon" data-name="Fallback Icon" transform="translate(-670.099 -2086.629)">
+    <g id="refresh" transform="translate(815.763 2086.62) rotate(74.991)">
+      <path id="Path_21" data-name="Path 21" d="M44.8,144.333a75.414,75.414,0,1,1,53.659,2.891l-3.8-11.984A62.881,62.881,0,1,0,39.2,126.777Z" transform="translate(0.009 0)" fill="#fff" fill-rule="evenodd"/>
+      <path id="Path_22" data-name="Path 22" d="M37.707,37.707H0V50.276H43.988L50.269,44V0H37.707Z" transform="translate(0 100.533)" fill="#fff" fill-rule="evenodd"/>
+    </g>
+    <g id="Group_68" data-name="Group 68" transform="translate(-205.131 55.69)">
+      <line id="Line_33" data-name="Line 33" x1="17.315" y2="24.81" transform="translate(954.5 2098.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"/>
+      <line id="Line_35" data-name="Line 35" x1="17.315" y2="24.81" transform="translate(963.376 2123.31)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"/>
+      <line id="Line_34" data-name="Line 34" x2="26.191" transform="translate(954.5 2123.31)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"/>
+    </g>
+  </g>
+</svg>
