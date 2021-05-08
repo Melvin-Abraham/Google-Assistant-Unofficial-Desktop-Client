@@ -4505,6 +4505,9 @@ function getChangelog(version) {
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
+  // Disable hotword detection when assistant is listening
+  hotwordDetector?.stop();
+
   if (canAccessMicrophone) {
     if (!mic) mic = new Microphone();
   }
@@ -4531,6 +4534,9 @@ function startMic() {
  * Stops the microphone for transcription and visualization.
  */
 function stopMic() {
+  // Enable hotword detection when assistant has done listening
+  hotwordDetector?.start();
+
   console.log('STOPPING MICROPHONE...');
   if (mic) mic.stop();
   p5jsMic.stop();
