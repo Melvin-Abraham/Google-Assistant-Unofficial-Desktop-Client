@@ -28,6 +28,7 @@ const fs = require('fs');
 const os = require('os');
 
 const { KeyBindingListener, getNativeKeyName } = require('./keybinding.js');
+const { getHotwordDetectorInstance } = require('./hotword.js');
 const supportedLanguages = require('./common/lang.js');
 const themes = require('./common/themes.js');
 const Microphone = require('./lib/microphone.js');
@@ -225,6 +226,15 @@ if (assistantConfig['startAsMaximized']) {
 if (assistantConfig['windowFloatBehavior'] === 'close-on-blur') {
   window.onblur = closeOnBlurCallback;
 }
+
+// Setup Hotword Detection
+
+const hotwordDetector = getHotwordDetectorInstance((hotword) => {
+  console.log(...consoleMessage(`Hotword Detected: "${hotword}"`));
+  relaunchAssistant();
+});
+
+hotwordDetector.start();
 
 // Set microphone and speaker source
 
