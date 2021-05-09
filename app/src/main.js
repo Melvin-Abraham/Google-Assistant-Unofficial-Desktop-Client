@@ -38,6 +38,7 @@ const { ipcRenderer } = electron;
 const { app, dialog } = electron.remote;
 const assistantWindow = electron.remote.getCurrentWindow();
 const electronShell = electron.shell;
+const assistantWindowLaunchArgs = ipcRenderer.sendSync('get-assistant-win-launch-args');
 
 const parser = new DOMParser();
 const audPlayer = new AudioPlayer();
@@ -231,7 +232,19 @@ if (assistantConfig['windowFloatBehavior'] === 'close-on-blur') {
 
 const hotwordDetector = getHotwordDetectorInstance((hotword) => {
   console.log(...consoleMessage(`Hotword Detected: "${hotword}"`));
-  relaunchAssistant();
+
+  if (!assistantWindow.isVisible()) {
+    relaunchAssistant({
+      shouldStartMic: true,
+    });
+  }
+  else {
+    if (assistantWindow.isMinimized()) {
+      assistantWindow.restore();
+    }
+
+    startMic();
+  }
 });
 
 hotwordDetector.start();
@@ -3675,9 +3688,17 @@ function toggleExpandWindow(shouldExpandWindow) {
 
 /**
  * Relaunch Google Assistant Window.
+ *
+ * @param {object} args
+ * Arguments to be processed when assistant window relaunches
+ *
+ * @param {boolean} args.shouldStartMic
+ * Should the assistant start mic when relaunched
  */
-function relaunchAssistant() {
-  ipcRenderer.send('relaunch-assistant');
+function relaunchAssistant(args = {
+  shouldStartMic: false,
+}) {
+  ipcRenderer.send('relaunch-assistant', args);
   console.log('Sent request for relaunch...');
 }
 
@@ -4923,7 +4944,10 @@ document.querySelector('#init-loading').style.opacity = 0;
 setTimeout(() => {
   setInitScreen();
 
-  if (assistantConfig.enableMicOnStartup && !firstLaunch) {
+  if (
+    (assistantConfig.enableMicOnStartup || assistantWindowLaunchArgs.shouldStartMic)
+    && !firstLaunch
+  ) {
     startMic();
   }
 }, 200);

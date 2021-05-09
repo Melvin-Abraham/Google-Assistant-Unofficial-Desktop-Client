@@ -3,8 +3,8 @@ const Bumblebee = require('bumblebee-hotword');
 /**
  * Returns an instance of hotword detector
  *
- * @param {Function} onHotword
- * Function called when the hotword is detected.
+ * @param {(hotword: string) => void} onHotword
+ * Function called when hotword is detected.
  */
 function getHotwordDetectorInstance(onHotword) {
   // Create instance of Bumblebee

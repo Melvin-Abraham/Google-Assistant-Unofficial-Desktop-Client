@@ -18,6 +18,7 @@ const {
 let mainWindow;
 let tray;
 let readyForLaunch = false;
+let assistantWindowLaunchArgs = {};
 global.releases = null;
 global.firstLaunch = true;
 
@@ -383,8 +384,13 @@ function onAppReady() {
 
   // IPC LISTENERS
 
-  ipcMain.on('relaunch-assistant', () => {
-    launchAssistant();
+  ipcMain.on('relaunch-assistant', (_, args) => {
+    launchAssistant(args);
+  });
+
+  ipcMain.on('get-assistant-win-launch-args', (event) => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = assistantWindowLaunchArgs;
   });
 
   ipcMain.on('quit-app', () => {
@@ -422,9 +428,20 @@ function requestMicToggle() {
 
 /**
  * Launches the assistant renderer process.
+ *
+ * @param {object} args
+ * Arguments to be processed when assistant window launches
+ *
+ * @param {boolean} args.shouldStartMic
+ * Should the assistant start mic when relaunched
  */
-function launchAssistant() {
+function launchAssistant(args = {
+  shouldStartMic: false,
+}) {
   if (!readyForLaunch) return;
+
+  // Set assistant window launch args
+  assistantWindowLaunchArgs = args;
 
   mainWindow.webContents.executeJavaScript(
     'document.querySelector("body").innerHTML = "";',
