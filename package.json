@@ -117,16 +117,16 @@
     "dependencies": {
         "bumblebee-hotword": "0.2.1",
         "electron-is-accelerator": "^0.2.0",
-        "google-assistant": "0.6.4",
-        "grpc": "1.24.6"
+        "google-assistant": "^0.6.5",
+        "grpc": "^1.24.9"
     },
     "devDependencies": {
         "electron": "10.3.2",
         "electron-builder": "22.10.5",
-        "eslint": "^7.22.0",
+        "eslint": "^7.26.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-plugin-import": "^2.22.1",
-        "prettier": "^2.2.1"
+        "prettier": "^2.3.0"
     }
 }
