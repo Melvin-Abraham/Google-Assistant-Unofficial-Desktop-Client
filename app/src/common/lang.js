@@ -141,8 +141,8 @@ const supportedLanguages = {
   },
   "it-IT": {
     langName: "Italiano (Italia)",
-    welcomeMessage: "Ciao! Come posso aiutare?",
-    inputPlaceholder: "Chiedimi qualunque cosa...",
+    welcomeMessage: "Ciao! Come posso aiutarti?",
+    inputPlaceholder: "Chiedimi qualcosa...",
     listeningMessage: "Ascoltando...",
     initSuggestions: [
       { label: "Tempo metereologico", query: "Com\\'è il tempo oggi?" },
