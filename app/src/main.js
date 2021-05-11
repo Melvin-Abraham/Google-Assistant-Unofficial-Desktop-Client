@@ -1278,7 +1278,7 @@ async function openConfig(configItem = null) {
           </div>
           <div id="config-item__hotword" class="setting-item">
             <div class="setting-key">
-              Respond to "Hey Google"
+              Hey Google / Ok Google
 
               <span style="
                 vertical-align: sub;
@@ -1286,7 +1286,7 @@ async function openConfig(configItem = null) {
               ">
                 <img
                   src="../res/help.svg"
-                  title="If enabled, assistant will activate when it detects the hotword.\n(This feature is in BETA)"
+                  title="If enabled, assistant will activate when it detects the hotword.\n(Might not work in a noisy environment)"
                 >
               </span>
             </div>
