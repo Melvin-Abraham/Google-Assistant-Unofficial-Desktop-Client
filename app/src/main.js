@@ -247,7 +247,9 @@ const hotwordDetector = getHotwordDetectorInstance((hotword) => {
   }
 });
 
-hotwordDetector.start();
+if (assistantConfig['respondToHotword']) {
+  hotwordDetector.start();
+}
 
 // Set microphone and speaker source
 
@@ -1257,6 +1259,27 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
+          <div id="config-item__hotword" class="setting-item">
+            <div class="setting-key">
+              Respond to "Hey Google"
+
+              <span style="
+                vertical-align: sub;
+                margin-left: 10px;
+              ">
+                <img
+                  src="../res/help.svg"
+                  title="If enabled, assistant will activate when it detects the hotword.\n(This feature is in BETA)"
+                >
+              </span>
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="switch">
+                <input id="hotword" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
           <div id="config-item__force-new-conv" class="setting-item">
             <div class="setting-key">
               Force New Conversation
@@ -2049,6 +2072,7 @@ async function openConfig(configItem = null) {
     const keyFilePathInput = mainArea.querySelector('#key-file-path');
     const savedTokensPathInput = mainArea.querySelector('#saved-tokens-path');
     const languageSelector = document.querySelector('#lang-selector');
+    const respondToHotword = document.querySelector('#hotword');
     const forceNewConversationCheckbox = document.querySelector('#new-conversation');
     const enableAudioOutput = document.querySelector('#audio-output');
     const enableAudioOutputForTypedQueries = document.querySelector('#audio-on-typed-query');
@@ -2238,6 +2262,7 @@ async function openConfig(configItem = null) {
     keyFilePathInput.value = assistantConfig['keyFilePath'];
     savedTokensPathInput.value = assistantConfig['savedTokensPath'];
     languageSelector.value = assistantConfig['language'];
+    respondToHotword.checked = assistantConfig['respondToHotword'];
     forceNewConversationCheckbox.checked = assistantConfig['forceNewConversation'];
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
     enableAudioOutputForTypedQueries.checked = assistantConfig['enableAudioOutputForTypedQueries'];
@@ -2686,6 +2711,7 @@ async function openConfig(configItem = null) {
         assistantConfig['keyFilePath'] = keyFilePathInput.value;
         assistantConfig['savedTokensPath'] = savedTokensPathInput.value;
         assistantConfig['language'] = languageSelector.value;
+        assistantConfig['respondToHotword'] = respondToHotword.checked;
         assistantConfig['forceNewConversation'] = forceNewConversationCheckbox.checked;
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
         assistantConfig['enableAudioOutputForTypedQueries'] = enableAudioOutputForTypedQueries.checked;
@@ -2750,6 +2776,13 @@ async function openConfig(configItem = null) {
         });
 
         audPlayer.setDeviceId(assistantConfig['speakerSource']);
+
+        if (assistantConfig['respondToHotword']) {
+          hotwordDetector.start();
+        }
+        else {
+          hotwordDetector.stop();
+        }
 
         // Notify about config changes to main process
         ipcRenderer.send('update-config', assistantConfig);
@@ -4526,8 +4559,10 @@ function getChangelog(version) {
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
-  // Disable hotword detection when assistant is listening
-  hotwordDetector?.stop();
+  if (assistantConfig['respondToHotword']) {
+    // Disable hotword detection when assistant is listening
+    hotwordDetector?.stop();
+  }
 
   if (canAccessMicrophone) {
     if (!mic) mic = new Microphone();
@@ -4555,8 +4590,10 @@ function startMic() {
  * Stops the microphone for transcription and visualization.
  */
 function stopMic() {
-  // Enable hotword detection when assistant has done listening
-  hotwordDetector?.start();
+  if (assistantConfig['respondToHotword']) {
+    // Enable hotword detection when assistant has done listening
+    hotwordDetector?.start();
+  }
 
   console.log('STOPPING MICROPHONE...');
   if (mic) mic.stop();
