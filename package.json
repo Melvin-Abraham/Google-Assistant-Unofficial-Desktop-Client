@@ -121,7 +121,7 @@
         "grpc": "^1.24.9"
     },
     "devDependencies": {
-        "electron": "10.3.2",
+        "electron": "^11.2.3",
         "electron-builder": "22.10.5",
         "eslint": "^7.26.0",
         "eslint-config-airbnb": "^18.2.1",
