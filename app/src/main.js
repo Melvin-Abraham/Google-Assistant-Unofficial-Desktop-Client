@@ -4017,8 +4017,12 @@ function validatePathInput(
  *
  * @param {function} oauthValidationCallback
  * The callback to process the OAuth Code.
+ *
+ * @param {string} authUrl
+ * The URL for getting auth code for a Google Account
+ * _(Typically to be used when the browser fails to open)_
  */
-function showGetTokenScreen(oauthValidationCallback) {
+function showGetTokenScreen(oauthValidationCallback, authUrl) {
   initScreenFlag = 0;
 
   mainArea.innerHTML = `
@@ -4093,7 +4097,44 @@ function showGetTokenScreen(oauthValidationCallback) {
     <div id="open-settings-btn" class="suggestion" onclick="openConfig()">
       Open Settings
     </div>
+
+    <div id="browser-open-failed-btn" class="suggestion">
+      Browser didn't open
+    </div>
   `;
+
+  suggestionArea.querySelector('#browser-open-failed-btn').onclick = () => {
+    const result = dialog.showMessageBoxSync(assistantWindow, {
+      type: 'info',
+      message: 'Your Browser failed to open the link?',
+      detail: [
+        'You may try the following:',
+        '',
+        '1. Check if your browser is minimized. It is possible that your browser did open the link but didn\'t show up in foreground.',
+        '2. If that\'s not the case, you may try opening the link again by clicking on "Retry"',
+        '3. If none of these work, you may copy the auth link and paste it manually in the browser.',
+      ].join('\n'),
+      buttons: [
+        'Copy Auth Link',
+        'Retry',
+        'Close',
+      ],
+      cancelId: 2,
+    });
+
+    switch (result) {
+      case 0:
+        electronShell.openExternal(authUrl);
+        break;
+
+      case 1:
+        electron.clipboard.writeText(authUrl);
+        break;
+
+      default:
+        // no-op
+    }
+  };
 
   suggestionArea.querySelector('#submit-btn').onclick = () => {
     const isAuthCodeProcessingInProgress = document
