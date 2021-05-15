@@ -112,6 +112,7 @@
         "dist": "electron-builder",
         "pack": "electron-builder --dir",
         "lint": "eslint .",
+        "preinstall": "npm install git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
