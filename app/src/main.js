@@ -2790,6 +2790,47 @@ async function openConfig(configItem = null) {
         return;
       }
 
+      // Check if it's possible to create a token file
+
+      try {
+        if (!fs.existsSync(savedTokensPathInput.value)) {
+          fs.writeFileSync(savedTokensPathInput.value, '');
+        }
+      }
+      catch (err) {
+        console.group(...consoleMessage('Error while creating tokens file'));
+        console.error(err);
+        console.groupEnd();
+
+        let detail = 'Unexpected error occurred while creating tokens file.';
+
+        if (err.code === 'EPERM') {
+          detail = [
+            'Assistant failed to create the token file due to Permission Error.',
+            '',
+            `Try setting the "Saved Tokens Path" to a different location as the current location requires ${
+              (process.platform === 'win32') ? 'admin' : 'superuser'
+            } privileges to save the tokens.`,
+          ].join('\n');
+        }
+        else {
+          detail = [
+            'Something went wrong while creating tokens file.',
+            'Try setting the "Saved Tokens Path" to a different location.',
+            '',
+            err,
+          ].join('\n');
+        }
+
+        dialog.showMessageBoxSync(assistantWindow, {
+          type: 'error',
+          message: 'Failed to create Token File',
+          detail,
+        });
+
+        return;
+      }
+
       if (validatePathInput(keyFilePathInput, true)) {
         // Warn users if saving settings in fallback mode
 
