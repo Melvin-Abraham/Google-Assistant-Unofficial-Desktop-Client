@@ -2804,7 +2804,7 @@ async function openConfig(configItem = null) {
 
         let detail = 'Unexpected error occurred while creating tokens file.';
 
-        if (err.code === 'EPERM') {
+        if (err.code === 'EPERM' || err.code === 'EACCES') {
           detail = [
             'Assistant failed to create the token file due to Permission Error.',
             '',
