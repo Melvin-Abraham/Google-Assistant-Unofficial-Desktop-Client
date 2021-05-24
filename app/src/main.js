@@ -2757,7 +2757,6 @@ async function openConfig(configItem = null) {
         if (result === 1) return;
 
         const savedTokensPathVal = savedTokensPathInput.value;
-        let errMsgContent = '';
 
         try {
           fs.mkdirSync(path.dirname(savedTokensPathVal), {
@@ -2766,30 +2765,30 @@ async function openConfig(configItem = null) {
         }
         catch (error) {
           console.group(...consoleMessage(
-            'EPERM Exception: mkdir failed',
+            `${error.code} Exception: mkdir failed`,
             'error',
           ));
           console.error(error);
           console.groupEnd();
 
-          errMsgContent = [
+          const errMsgContent = [
             'Assistant failed to create the following path:',
             `"${savedTokensPathVal}"`,
             '',
             'Either the path is invalid or Assistant does not have enough permissions to create one.',
           ].join('\n');
+
+          dialog.showMessageBoxSync(assistantWindow, {
+            type: 'error',
+            title: 'Path Creation Failure',
+            message: 'Path Creation Failure',
+            detail: errMsgContent,
+            buttons: ['OK'],
+            cancelId: 0,
+          });
+
+          return;
         }
-
-        dialog.showMessageBoxSync(assistantWindow, {
-          type: 'error',
-          title: 'Path Creation Failure',
-          message: 'Path Creation Failure',
-          detail: errMsgContent,
-          buttons: ['OK'],
-          cancelId: 0,
-        });
-
-        return;
       }
 
       // Check if it's possible to create a token file
