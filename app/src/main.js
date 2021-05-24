@@ -2785,6 +2785,8 @@ async function openConfig(configItem = null) {
           title: 'Path Creation Failure',
           message: 'Path Creation Failure',
           detail: errMsgContent,
+          buttons: ['OK'],
+          cancelId: 0,
         });
 
         return;
@@ -2826,6 +2828,8 @@ async function openConfig(configItem = null) {
           type: 'error',
           message: 'Failed to create Token File',
           detail,
+          buttons: ['OK'],
+          cancelId: 0,
         });
 
         return;
