@@ -2071,11 +2071,13 @@ async function openConfig(configItem = null) {
     const configNotice = mainArea.querySelector('#config-notice-parent');
 
     if (isFallbackMode()) {
+      configNotice.style.display = 'block';
+
       configNotice.innerHTML += `
         <div
           class="setting-key accordion"
           style="
-            margin-top: 40px;
+            margin-top: 10px;
             margin-right: 30px;
             background: #fbbc0530;
             padding: 10px 30px 18px 30px;
@@ -2132,11 +2134,13 @@ async function openConfig(configItem = null) {
     }
 
     if (!canAccessMicrophone) {
+      configNotice.style.display = 'block';
+
       configNotice.innerHTML += `
         <div
           class="setting-key accordion"
           style="
-            margin-top: 40px;
+            margin-top: 10px;
             margin-right: 30px;
             background: #ea433530;
             padding: 10px 30px 18px 30px;
