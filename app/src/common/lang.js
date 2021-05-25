@@ -169,14 +169,14 @@ const supportedLanguages = {
     langName: "한국어 (대한민국)",
     welcomeMessage: "안녕하세요? 무엇을 도와드릴까요?",
     inputPlaceholder: "무엇이든 물어보세요",
-    listeningMessage: "네, 무엇을 도와드릴까요?",
+    listeningMessage: "듣는 중이에요...",
     initSuggestions: [
       { label: "날씨가 어때?", query: "날씨가 어때?" },
       { label: "동전 던져 줘", query: "동전 던져 줘" },
-      { label: "무엇을 도와줄 수 있니?", query: "무엇을 도와줄 수 있니?" },
+      { label: "무엇을 할 수 있니?", query: "무엇을 할 수 있니?" },
     ],
     noSuggestionsText: "제안이 없습니다.",
-    settingsUpdatedText: "설정이 변경되었습니다.",
+    settingsUpdatedText: "설정이 변경되었어요!",
   },
   "pt-BR": {
     langName: "Português (Brasil)",
