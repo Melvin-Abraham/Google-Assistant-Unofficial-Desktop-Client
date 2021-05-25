@@ -2071,11 +2071,13 @@ async function openConfig(configItem = null) {
     const configNotice = mainArea.querySelector('#config-notice-parent');
 
     if (isFallbackMode()) {
+      configNotice.style.display = 'block';
+
       configNotice.innerHTML += `
         <div
           class="setting-key accordion"
           style="
-            margin-top: 40px;
+            margin-top: 10px;
             margin-right: 30px;
             background: #fbbc0530;
             padding: 10px 30px 18px 30px;
@@ -2132,11 +2134,13 @@ async function openConfig(configItem = null) {
     }
 
     if (!canAccessMicrophone) {
+      configNotice.style.display = 'block';
+
       configNotice.innerHTML += `
         <div
           class="setting-key accordion"
           style="
-            margin-top: 40px;
+            margin-top: 10px;
             margin-right: 30px;
             background: #ea433530;
             padding: 10px 30px 18px 30px;
@@ -2757,7 +2761,6 @@ async function openConfig(configItem = null) {
         if (result === 1) return;
 
         const savedTokensPathVal = savedTokensPathInput.value;
-        let errMsgContent = '';
 
         try {
           fs.mkdirSync(path.dirname(savedTokensPathVal), {
@@ -2766,25 +2769,70 @@ async function openConfig(configItem = null) {
         }
         catch (error) {
           console.group(...consoleMessage(
-            'EPERM Exception: mkdir failed',
+            `${error.code} Exception: mkdir failed`,
             'error',
           ));
           console.error(error);
           console.groupEnd();
 
-          errMsgContent = [
+          const errMsgContent = [
             'Assistant failed to create the following path:',
             `"${savedTokensPathVal}"`,
             '',
             'Either the path is invalid or Assistant does not have enough permissions to create one.',
           ].join('\n');
+
+          dialog.showMessageBoxSync(assistantWindow, {
+            type: 'error',
+            title: 'Path Creation Failure',
+            message: 'Path Creation Failure',
+            detail: errMsgContent,
+            buttons: ['OK'],
+            cancelId: 0,
+          });
+
+          return;
+        }
+      }
+
+      // Check if it's possible to create a token file
+
+      try {
+        if (!fs.existsSync(savedTokensPathInput.value)) {
+          fs.writeFileSync(savedTokensPathInput.value, '');
+        }
+      }
+      catch (err) {
+        console.group(...consoleMessage('Error while creating tokens file'));
+        console.error(err);
+        console.groupEnd();
+
+        let detail = 'Unexpected error occurred while creating tokens file.';
+
+        if (err.code === 'EPERM' || err.code === 'EACCES') {
+          detail = [
+            'Assistant failed to create the token file due to Permission Error.',
+            '',
+            `Try setting the "Saved Tokens Path" to a different location as the current location requires ${
+              (process.platform === 'win32') ? 'admin' : 'superuser'
+            } privileges to save the tokens.`,
+          ].join('\n');
+        }
+        else {
+          detail = [
+            'Something went wrong while creating tokens file.',
+            'Try setting the "Saved Tokens Path" to a different location.',
+            '',
+            err,
+          ].join('\n');
         }
 
         dialog.showMessageBoxSync(assistantWindow, {
           type: 'error',
-          title: 'Path Creation Failure',
-          message: 'Path Creation Failure',
-          detail: errMsgContent,
+          message: 'Failed to create Token File',
+          detail,
+          buttons: ['OK'],
+          cancelId: 0,
         });
 
         return;

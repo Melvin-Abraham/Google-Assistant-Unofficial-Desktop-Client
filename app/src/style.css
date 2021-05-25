@@ -538,6 +538,11 @@ body {
   height: 94%;
 }
 
+#config-notice-parent {
+  padding-top: 30px;
+  display: none;
+}
+
 .setting-label {
   margin: 20px 10px 20px 10px;
   font-weight: bold;

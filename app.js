@@ -33,11 +33,13 @@ const configFilePath = path.join(userDataPath, 'config.json');
 const logFilePath = path.join(userDataPath, 'main_process-debug.log');
 let assistantConfig = require('./app/src/common/initialConfig.js');
 
-// Quit the app when the system is about to shutdown
-// This would prevent shutdown interruption on MacOS
-electron.powerMonitor.on('shutdown', () => {
-  quitApp();
-});
+if (process.platform === 'darwin') {
+  // Quit the app when the system is about to shutdown
+  // This would prevent shutdown interruption on MacOS
+  electron.powerMonitor.on('shutdown', () => {
+    quitApp();
+  });
+}
 
 process.on('uncaughtException', async (err) => {
   const prelude = app.isReady()
