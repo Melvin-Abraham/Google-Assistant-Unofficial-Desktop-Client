@@ -4111,8 +4111,7 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
             margin-top: 12px;
             opacity: 0.502;
           ">
-            A new browser window is being opened.
-            Login/Select a Google account, accept the permissions and paste the authentication code below.
+            authUrl
           </div>
 
           <input
