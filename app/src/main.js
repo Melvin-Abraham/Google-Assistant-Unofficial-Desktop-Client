@@ -1939,6 +1939,67 @@ async function openConfig(configItem = null) {
             </div>
           </div>
           <div class="setting-label">
+            HELP
+            <hr />
+          </div>
+              <div style="margin-top: 40px;">
+                <div class="disabled" style="margin-bottom: 5px;">
+                  Facing an Issue?
+                </div>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  Facing an Issue?
+                </span>
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                  <span>
+                    <img src="../res/open-link.svg" style="
+                      height: 20px;
+                      width: 20px;
+                      vertical-align: sub;
+                      padding-right: 5px;
+                      ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                    >
+                  </span>
+                  Check the FAQs
+                </label>
+              <div style="margin-top: 40px;">
+                <div class="disabled" style="margin-bottom: 5px;">
+                  Found an bug?
+                </div>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  Found an bug?
+                </span>
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                  <span>
+                    <img src="../res/open-link.svg" style="
+                      height: 20px;
+                      width: 20px;
+                      vertical-align: sub;
+                      padding-right: 5px;
+                      ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                    >
+                  </span>
+                  Report an Issue
+                </label>
+              <div style="margin-top: 40px;">
+                <div class="disabled" style="margin-bottom: 5px;">
+                  Want an feature?
+                </div>
+                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
+                  Want an feature?
+                </span>
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                  <span>
+                    <img src="../res/open-link.svg" style="
+                      height: 20px;
+                      width: 20px;
+                      vertical-align: sub;
+                      padding-right: 5px;
+                      ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                    >
+                  </span>
+                  Suggest a Feature Request
+                </label>
+          <div class="setting-label">
             ABOUT
             <hr />
           </div>
