@@ -167,19 +167,16 @@ const supportedLanguages = {
   },
   "ko-KR": {
     langName: "한국어 (대한민국)",
-    welcomeMessage: "안녕하세요! 내가 어떻게 도움이 될 수 있습니다?",
-    inputPlaceholder: "무엇이든 물어보세요...",
-    listeningMessage: "청취...",
+    welcomeMessage: "안녕하세요? 무엇을 도와드릴까요?",
+    inputPlaceholder: "무엇이든 물어보세요",
+    listeningMessage: "듣는 중이에요...",
     initSuggestions: [
-      { label: "날씨", query: "오늘의 날씨는 어떻습니까?" },
-      { label: "동전을 던지세요", query: "동전을 던지세요" },
-      {
-        label: "당신은 무엇을 할 수 있나요?",
-        query: "당신은 무엇을 할 수 있나요?",
-      },
+      { label: "날씨가 어때?", query: "날씨가 어때?" },
+      { label: "동전 던져 줘", query: "동전 던져 줘" },
+      { label: "무엇을 할 수 있니?", query: "무엇을 할 수 있니?" },
     ],
     noSuggestionsText: "제안이 없습니다.",
-    settingsUpdatedText: "설정이 업데이트!",
+    settingsUpdatedText: "설정이 변경되었어요!",
   },
   "pt-BR": {
     langName: "Português (Brasil)",
