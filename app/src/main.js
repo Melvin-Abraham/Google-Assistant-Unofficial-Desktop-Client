@@ -1948,7 +1948,7 @@ async function openConfig(configItem = null) {
                 </span>
                 <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
                   <span>
-                    <img src="../res/open-link.svg" style="
+                    <img src="../res/open_link.svg" style="
                       height: 20px;
                       width: 20px;
                       vertical-align: sub;
@@ -1964,7 +1964,7 @@ async function openConfig(configItem = null) {
                 </span>
                 <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
                   <span>
-                    <img src="../res/open-link.svg" style="
+                    <img src="../res/open_link.svg" style="
                       height: 20px;
                       width: 20px;
                       vertical-align: sub;
@@ -1980,7 +1980,7 @@ async function openConfig(configItem = null) {
                 </span>
                 <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
                   <span>
-                    <img src="../res/open-link.svg" style="
+                    <img src="../res/open_link.svg" style="
                       height: 20px;
                       width: 20px;
                       vertical-align: sub;
