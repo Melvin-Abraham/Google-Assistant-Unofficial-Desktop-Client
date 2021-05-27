@@ -28,12 +28,12 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-const { KeyBindingListener, getNativeKeyName } = require('./keybinding.js');
-const { getHotwordDetectorInstance } = require('./hotword.js');
-const supportedLanguages = require('./common/lang.js');
-const themes = require('./common/themes.js');
-const Microphone = require('./lib/microphone.js');
-const AudioPlayer = require('./lib/audio_player.js');
+const { KeyBindingListener, getNativeKeyName } = require('./keybinding');
+const { getHotwordDetectorInstance } = require('./hotword');
+const supportedLanguages = require('./common/lang');
+const themes = require('./common/themes');
+const Microphone = require('./lib/microphone');
+const AudioPlayer = require('./lib/audio_player');
 const { fallbackModeConfigKeys } = require('./common/utils');
 
 const { ipcRenderer } = electron;
@@ -50,7 +50,7 @@ let mic = new Microphone();
 
 const userDataPath = app.getPath('userData');
 const configFilePath = path.join(userDataPath, 'config.json');
-let assistantConfig = require('./common/initialConfig.js');
+let assistantConfig = require('./common/initialConfig');
 
 const history = [];
 let historyHead = -1;
