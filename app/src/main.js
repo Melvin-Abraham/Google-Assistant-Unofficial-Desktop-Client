@@ -1962,7 +1962,7 @@ async function openConfig(configItem = null) {
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Found an bug?
                 </span>
-                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=')">
                   <span>
                     <img src="../res/open_link.svg" style="
                       height: 20px;
@@ -1978,7 +1978,7 @@ async function openConfig(configItem = null) {
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Want an feature?
                 </span>
-                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=')">
                   <span>
                     <img src="../res/open_link.svg" style="
                       height: 20px;
