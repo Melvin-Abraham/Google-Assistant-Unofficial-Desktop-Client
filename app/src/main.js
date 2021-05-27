@@ -1943,9 +1943,6 @@ async function openConfig(configItem = null) {
             <hr />
           </div>
               <div style="margin-top: 40px;">
-                <div class="disabled" style="margin-bottom: 5px;">
-                  Facing an Issue?
-                </div>
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Facing an Issue?
                 </span>
@@ -1962,9 +1959,6 @@ async function openConfig(configItem = null) {
                   Check the FAQs
                 </label>
               <div style="margin-top: 40px;">
-                <div class="disabled" style="margin-bottom: 5px;">
-                  Found an bug?
-                </div>
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Found an bug?
                 </span>
@@ -1981,9 +1975,6 @@ async function openConfig(configItem = null) {
                   Report an Issue
                 </label>
               <div style="margin-top: 40px;">
-                <div class="disabled" style="margin-bottom: 5px;">
-                  Want an feature?
-                </div>
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Want an feature?
                 </span>
