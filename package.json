@@ -119,7 +119,7 @@
         "bumblebee-hotword": "0.2.1",
         "electron-is-accelerator": "^0.2.0",
         "google-assistant": "git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
-        "grpc": "1.24.7"
+        "grpc": "1.24.6"
     },
     "devDependencies": {
         "electron": "10.3.2",
