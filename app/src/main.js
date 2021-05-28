@@ -4171,11 +4171,11 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
 
     switch (result) {
       case 0:
-        electronShell.openExternal(authUrl);
+        electron.clipboard.writeText(authUrl);
         break;
 
       case 1:
-        electron.clipboard.writeText(authUrl);
+        electronShell.openExternal(authUrl);
         break;
 
       default:
