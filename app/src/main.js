@@ -1944,6 +1944,25 @@ async function openConfig(configItem = null) {
           </div>
           <div id="config-item__about-assistant" class="setting-item">
             <div class="setting-key">
+              How to setup authentication?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Show Authentication Guide Wiki
+              </label>
+            </div>
+          </div>
+          <div id="config-item__about-assistant" class="setting-item">
+            <div class="setting-key">
               Stuck on an issue?
             </div>
             <div class="setting-value" style="height: 35px;">
