@@ -1939,6 +1939,86 @@ async function openConfig(configItem = null) {
             </div>
           </div>
           <div class="setting-label">
+            FEEDBACK & LINKS
+            <hr />
+          </div>
+          <div id="config-item__link-setup-auth-wiki" class="setting-item">
+            <div class="setting-key">
+              How to setup authentication?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Show Authentication Guide Wiki
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-faq" class="setting-item">
+            <div class="setting-key">
+              Stuck on an issue?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Check the FAQs
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-bug-report" class="setting-item">
+            <div class="setting-key">
+              Found a new bug?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Create a bug report issue
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-feature-request" class="setting-item">
+            <div class="setting-key">
+              Have a suggestion or an idea?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Create a feature request issue
+              </label>
+            </div>
+          </div>
+          <div class="setting-label">
             ABOUT
             <hr />
           </div>
