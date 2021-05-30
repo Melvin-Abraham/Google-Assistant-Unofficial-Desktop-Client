@@ -1966,7 +1966,7 @@ async function openConfig(configItem = null) {
               Found a new bug?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=')">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -1985,7 +1985,7 @@ async function openConfig(configItem = null) {
               Have a suggestion or an idea?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=')">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
