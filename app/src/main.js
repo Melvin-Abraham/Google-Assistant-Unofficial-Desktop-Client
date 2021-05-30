@@ -1942,7 +1942,7 @@ async function openConfig(configItem = null) {
             FEEDBACK & LINKS
             <hr />
           </div>
-          <div id="config-item__about-assistant" class="setting-item">
+          <div id="config-item__link-setup-auth-wiki" class="setting-item">
             <div class="setting-key">
               How to setup authentication?
             </div>
@@ -1961,7 +1961,7 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__about-assistant" class="setting-item">
+          <div id="config-item__link-faq" class="setting-item">
             <div class="setting-key">
               Stuck on an issue?
             </div>
@@ -1980,7 +1980,7 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__about-assistant" class="setting-item">
+          <div id="config-item__link-bug-report" class="setting-item">
             <div class="setting-key">
               Found a new bug?
             </div>
@@ -1999,7 +1999,7 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__about-assistant" class="setting-item">
+          <div id="config-item__link-feature-request" class="setting-item">
             <div class="setting-key">
               Have a suggestion or an idea?
             </div>
