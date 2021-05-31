@@ -95,7 +95,7 @@
                 "deb",
                 "rpm"
             ],
-            "icon": "./app/res/icons/icon.png"
+            "icon": "./app/res/icons/icon.icns"
         },
         "snap": {
             "confinement": "strict",
