@@ -2879,7 +2879,7 @@ async function openConfig(configItem = null) {
       // Check if it's possible to create a token file
 
       try {
-        if (!fs.existsSync(savedTokensPathInput.value)) {
+        if (!fs.existsSync(savedTokensPathInput.value) && keyFilePathInput.value !== '') {
           fs.writeFileSync(savedTokensPathInput.value, '');
         }
       }
