@@ -288,6 +288,7 @@ if (assistantConfig['respondToHotword']) {
   if (audioInDeviceIndex !== -1) {
     // If the audio-in Device ID exists
     mic.setDeviceId(assistantConfig.microphoneSource);
+    hotwordDetector.setMicrophone(assistantConfig.microphoneSource);
     p5jsMic.setSource(audioInDeviceIndex);
   }
 
@@ -3032,6 +3033,7 @@ async function openConfig(configItem = null) {
         setAssistantWindowBorder();
 
         mic.setDeviceId(assistantConfig['microphoneSource']);
+        hotwordDetector.setMicrophone(assistantConfig['microphoneSource']);
 
         p5jsMic.getSources((sources) => {
           p5jsMic.setSource(
