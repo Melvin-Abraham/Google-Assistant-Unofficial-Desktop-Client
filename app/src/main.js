@@ -566,8 +566,8 @@ const startConversation = (conversation) => {
     .on('ended', (error, continueConversation) => {
       // once the conversation is ended, see if we need to follow up
 
-      const isMicReadyForContinuousConversation = continueConversation
-        && assistantConfig['enableMicOnContinousConversation']
+      const isMicReadyForImmediateResponse = continueConversation
+        && assistantConfig['enableMicOnImmediateResponse']
         && !mic.isActive;
 
       audPlayer.play();
@@ -586,7 +586,7 @@ const startConversation = (conversation) => {
           subdetails: `Error: ${error.message}`,
         });
       }
-      else if (isMicReadyForContinuousConversation) {
+      else if (isMicReadyForImmediateResponse) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
       else {
@@ -1360,9 +1360,9 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__mic-on-cont-conv" class="setting-item">
+          <div id="config-item__mic-on-immediate-response" class="setting-item">
             <div class="setting-key">
-              Enable microphone on Continuous Conversation
+              Enable microphone on Immediate Response
 
               <span style="
                 vertical-align: sub;
@@ -1376,7 +1376,7 @@ async function openConfig(configItem = null) {
             </div>
             <div class="setting-value" style="height: 35px;">
               <label class="switch">
-                <input id="continuous-conv-mic" type="checkbox">
+                <input id="immediate-response-mic" type="checkbox">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -2276,7 +2276,7 @@ async function openConfig(configItem = null) {
     const forceNewConversationCheckbox = document.querySelector('#new-conversation');
     const enableAudioOutput = document.querySelector('#audio-output');
     const enableAudioOutputForTypedQueries = document.querySelector('#audio-on-typed-query');
-    const enableMicOnContinuousConversation = document.querySelector('#continuous-conv-mic');
+    const enableMicOnInstantResponse = document.querySelector('#immediate-response-mic');
     const enableMicOnStartup = document.querySelector('#enable-mic-startup');
     const startAsMaximized = document.querySelector('#start-maximized');
     const hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
@@ -2466,7 +2466,7 @@ async function openConfig(configItem = null) {
     forceNewConversationCheckbox.checked = assistantConfig['forceNewConversation'];
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
     enableAudioOutputForTypedQueries.checked = assistantConfig['enableAudioOutputForTypedQueries'];
-    enableMicOnContinuousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
+    enableMicOnInstantResponse.checked = assistantConfig['enableMicOnImmediateResponse'];
     enableMicOnStartup.checked = assistantConfig['enableMicOnStartup'];
     startAsMaximized.checked = assistantConfig['startAsMaximized'];
     hideOnFirstLaunch.checked = assistantConfig['hideOnFirstLaunch'];
@@ -2982,7 +2982,7 @@ async function openConfig(configItem = null) {
         assistantConfig['forceNewConversation'] = forceNewConversationCheckbox.checked;
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
         assistantConfig['enableAudioOutputForTypedQueries'] = enableAudioOutputForTypedQueries.checked;
-        assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinuousConversation.checked;
+        assistantConfig['enableMicOnImmediateResponse'] = enableMicOnInstantResponse.checked;
         assistantConfig['enableMicOnStartup'] = enableMicOnStartup.checked;
         assistantConfig['startAsMaximized'] = startAsMaximized.checked;
         assistantConfig['hideOnFirstLaunch'] = hideOnFirstLaunch.checked;
