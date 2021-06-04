@@ -187,7 +187,7 @@ else {
     }
   });
 
-  app.on('ready', () => setTimeout(onAppReady, 800));
+  app.on('ready', () => setTimeout(onAppReady, 1000));
 }
 
 /**
