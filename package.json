@@ -130,4 +130,12 @@
         "eslint-plugin-import": "^2.23.3",
         "prettier": "^2.3.0"
     }
+  "prettier": {
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "endOfLine": "crlf",
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "semi": true
+  }
 }
