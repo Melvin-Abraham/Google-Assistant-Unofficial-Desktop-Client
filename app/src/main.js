@@ -5167,8 +5167,27 @@ function getMicPermEnableHelp() {
  * @param {boolean} showRelaunchScreen
  * If set to `true`, the "Relaunch Required" screen will
  * be shown.
+ *
+ * @param {boolean} showWarning
+ * If set to `true`, the user will see a warning before
+ * any action is taken.
  */
-function resetSavedTokensFile(showRelaunchScreen = true) {
+function resetSavedTokensFile(showRelaunchScreen = true, showWarning = true) {
+  if (showWarning) {
+    const res = dialog.showMessageBoxSync(assistantWindow, {
+      type: 'warning',
+      message: 'Are you sure to reset the tokens?',
+      detail: 'After proceeding with the token reset, you will be directed to the "Get Token" screen for fetching new access tokens.',
+      buttons: [
+        'Proceed',
+        'Cancel',
+      ],
+      cancelId: 1,
+    });
+
+    if (res === 1) return;
+  }
+
   const savedTokensFilePath = assistantConfig.savedTokensPath;
   fs.unlinkSync(savedTokensFilePath);
 
