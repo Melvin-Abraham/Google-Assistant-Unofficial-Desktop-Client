@@ -611,16 +611,44 @@ const startConversation = (conversation) => {
         const suggestionParent = document.querySelector('.suggestion-parent');
 
         if (error.details.includes('invalid_grant')) {
-          displayErrorScreen({
-            icon: {
-              path: '../res/offline_icon.svg',
-              style: 'margin-top: -5px;',
-            },
-            title: 'Auth Error',
-            details:
-              'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
-            subdetails: `Error: ${error.details}`,
-          });
+          const savedTokenContent = fs.readFileSync(assistantConfig.savedTokensPath);
+          const savedTokenJson = JSON.parse(savedTokenContent);
+          const savedTokenExpiryTimestamp = savedTokenJson?.['expiry_date'];
+
+          // Check if the tokens have expired
+          if (savedTokenExpiryTimestamp <= Date.now()) {
+            const savedTokenExpiryDateFormatted = new Intl.DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+            }).format(savedTokenExpiryTimestamp);
+
+            displayErrorScreen({
+              icon: {
+                path: '../res/auth_expired.svg',
+                style: 'margin-top: -5px;',
+              },
+              title: 'Access Tokens Expired',
+              details:
+                `Your access tokens expired on ${savedTokenExpiryDateFormatted}. Reset your tokens to get a new one.`,
+              subdetails: `Error: ${error.details}`,
+            });
+          }
+          else {
+            displayErrorScreen({
+              icon: {
+                path: '../res/offline_icon.svg',
+                style: 'margin-top: -5px;',
+              },
+              title: 'Auth Error',
+              details:
+                'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
+              subdetails: `Error: ${error.details}`,
+            });
+          }
 
           suggestionParent.innerHTML += `
             <div class="suggestion" onclick="resetSavedTokensFile()">
@@ -2879,7 +2907,7 @@ async function openConfig(configItem = null) {
       // Check if it's possible to create a token file
 
       try {
-        if (!fs.existsSync(savedTokensPathInput.value)) {
+        if (!fs.existsSync(savedTokensPathInput.value) && keyFilePathInput.value !== '') {
           fs.writeFileSync(savedTokensPathInput.value, '');
         }
       }
@@ -5139,8 +5167,27 @@ function getMicPermEnableHelp() {
  * @param {boolean} showRelaunchScreen
  * If set to `true`, the "Relaunch Required" screen will
  * be shown.
+ *
+ * @param {boolean} showWarning
+ * If set to `true`, the user will see a warning before
+ * any action is taken.
  */
-function resetSavedTokensFile(showRelaunchScreen = true) {
+function resetSavedTokensFile(showRelaunchScreen = true, showWarning = true) {
+  if (showWarning) {
+    const res = dialog.showMessageBoxSync(assistantWindow, {
+      type: 'warning',
+      message: 'Are you sure to reset the tokens?',
+      detail: 'After proceeding with the token reset, you will be directed to the "Get Token" screen for fetching new access tokens.',
+      buttons: [
+        'Proceed',
+        'Cancel',
+      ],
+      cancelId: 1,
+    });
+
+    if (res === 1) return;
+  }
+
   const savedTokensFilePath = assistantConfig.savedTokensPath;
   fs.unlinkSync(savedTokensFilePath);
 
