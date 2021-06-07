@@ -187,6 +187,10 @@ else {
     }
   });
 
+  // Disable hardware acceleration on Linux to fix
+  // transperency issues.
+  if (isLinux()) app.disableHardwareAcceleration();
+
   app.on('ready', () => setTimeout(onAppReady, 1000));
 }
 
