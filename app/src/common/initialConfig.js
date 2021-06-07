@@ -4,7 +4,7 @@ const initialAssistantConfig = {
   forceNewConversation: false,
   enableAudioOutput: true,
   enableAudioOutputForTypedQueries: false,
-  enableMicOnContinousConversation: true,
+  enableMicOnImmediateResponse: true,
   startAsMaximized: true,
   windowFloatBehavior: 'always-on-top',
   escapeKeyBehavior: 'none',
