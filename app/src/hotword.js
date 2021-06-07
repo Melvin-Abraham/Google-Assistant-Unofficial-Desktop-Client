@@ -8,6 +8,10 @@ const Bumblebee = require('bumblebee-hotword');
  */
 function getHotwordDetectorInstance(onHotword) {
   // Create instance of Bumblebee
+
+  /**
+   * @type {Bumblebee & { setMicrophone?: (id: string) => void }}
+   */
   const bumblebee = new Bumblebee();
 
   // set path to worker files

@@ -145,6 +145,14 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
   * For recording audio using Web API.
   * Link: https://github.com/ItsWendell/google-assistant-desktop-client/blob/develop/src/renderer/providers/assistant/microphone.js
 
+* **google-assistant:**
+  * Node.js implementation of the Google Assistant SDK
+  * Link: https://github.com/endoplasmic/google-assistant
+
+* **bumblebee-hotword:**
+  * A minimalist hotword / wake word for the web, based on Porcupine
+  * Link: https://github.com/jaxcore/bumblebee-hotword
+
 [downloads]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases>
 [issues]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues>
 [build]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/actions/workflows/main.yml>

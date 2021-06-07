@@ -288,6 +288,7 @@ if (assistantConfig['respondToHotword']) {
   if (audioInDeviceIndex !== -1) {
     // If the audio-in Device ID exists
     mic.setDeviceId(assistantConfig.microphoneSource);
+    hotwordDetector.setMicrophone(assistantConfig.microphoneSource);
     p5jsMic.setSource(audioInDeviceIndex);
   }
 
@@ -566,8 +567,8 @@ const startConversation = (conversation) => {
     .on('ended', (error, continueConversation) => {
       // once the conversation is ended, see if we need to follow up
 
-      const isMicReadyForContinuousConversation = continueConversation
-        && assistantConfig['enableMicOnContinousConversation']
+      const isMicReadyForImmediateResponse = continueConversation
+        && assistantConfig['enableMicOnImmediateResponse']
         && !mic.isActive;
 
       audPlayer.play();
@@ -586,7 +587,7 @@ const startConversation = (conversation) => {
           subdetails: `Error: ${error.message}`,
         });
       }
-      else if (isMicReadyForContinuousConversation) {
+      else if (isMicReadyForImmediateResponse) {
         audPlayer.audioPlayer.addEventListener('waiting', () => startMic());
       }
       else {
@@ -610,16 +611,44 @@ const startConversation = (conversation) => {
         const suggestionParent = document.querySelector('.suggestion-parent');
 
         if (error.details.includes('invalid_grant')) {
-          displayErrorScreen({
-            icon: {
-              path: '../res/offline_icon.svg',
-              style: 'margin-top: -5px;',
-            },
-            title: 'Auth Error',
-            details:
-              'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
-            subdetails: `Error: ${error.details}`,
-          });
+          const savedTokenContent = fs.readFileSync(assistantConfig.savedTokensPath);
+          const savedTokenJson = JSON.parse(savedTokenContent);
+          const savedTokenExpiryTimestamp = savedTokenJson?.['expiry_date'];
+
+          // Check if the tokens have expired
+          if (savedTokenExpiryTimestamp <= Date.now()) {
+            const savedTokenExpiryDateFormatted = new Intl.DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+            }).format(savedTokenExpiryTimestamp);
+
+            displayErrorScreen({
+              icon: {
+                path: '../res/auth_expired.svg',
+                style: 'margin-top: -5px;',
+              },
+              title: 'Access Tokens Expired',
+              details:
+                `Your access tokens expired on ${savedTokenExpiryDateFormatted}. Reset your tokens to get a new one.`,
+              subdetails: `Error: ${error.details}`,
+            });
+          }
+          else {
+            displayErrorScreen({
+              icon: {
+                path: '../res/offline_icon.svg',
+                style: 'margin-top: -5px;',
+              },
+              title: 'Auth Error',
+              details:
+                'Your tokens seem to be invalidated. Reset your tokens and get a new one or manually set the Saved Tokens Path',
+              subdetails: `Error: ${error.details}`,
+            });
+          }
 
           suggestionParent.innerHTML += `
             <div class="suggestion" onclick="resetSavedTokensFile()">
@@ -1360,9 +1389,9 @@ async function openConfig(configItem = null) {
               </label>
             </div>
           </div>
-          <div id="config-item__mic-on-cont-conv" class="setting-item">
+          <div id="config-item__mic-on-immediate-response" class="setting-item">
             <div class="setting-key">
-              Enable microphone on Continuous Conversation
+              Enable microphone on Immediate Response
 
               <span style="
                 vertical-align: sub;
@@ -1376,7 +1405,7 @@ async function openConfig(configItem = null) {
             </div>
             <div class="setting-value" style="height: 35px;">
               <label class="switch">
-                <input id="continuous-conv-mic" type="checkbox">
+                <input id="immediate-response-mic" type="checkbox">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -1939,6 +1968,86 @@ async function openConfig(configItem = null) {
             </div>
           </div>
           <div class="setting-label">
+            FEEDBACK & LINKS
+            <hr />
+          </div>
+          <div id="config-item__link-setup-auth-wiki" class="setting-item">
+            <div class="setting-key">
+              How to setup authentication?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Show Authentication Guide Wiki
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-faq" class="setting-item">
+            <div class="setting-key">
+              Stuck on an issue?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Check the FAQs
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-bug-report" class="setting-item">
+            <div class="setting-key">
+              Found a new bug?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Create a bug report issue
+              </label>
+            </div>
+          </div>
+          <div id="config-item__link-feature-request" class="setting-item">
+            <div class="setting-key">
+              Have a suggestion or an idea?
+            </div>
+            <div class="setting-value" style="height: 35px;">
+              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
+                <span>
+                  <img src="../res/open_link.svg" style="
+                    height: 16px;
+                    width: 16px;
+                    vertical-align: sub;
+                    padding-right: 5px;
+                    ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                  >
+                </span>
+                Create a feature request issue
+              </label>
+            </div>
+          </div>
+          <div class="setting-label">
             ABOUT
             <hr />
           </div>
@@ -2196,7 +2305,7 @@ async function openConfig(configItem = null) {
     const forceNewConversationCheckbox = document.querySelector('#new-conversation');
     const enableAudioOutput = document.querySelector('#audio-output');
     const enableAudioOutputForTypedQueries = document.querySelector('#audio-on-typed-query');
-    const enableMicOnContinuousConversation = document.querySelector('#continuous-conv-mic');
+    const enableMicOnInstantResponse = document.querySelector('#immediate-response-mic');
     const enableMicOnStartup = document.querySelector('#enable-mic-startup');
     const startAsMaximized = document.querySelector('#start-maximized');
     const hideOnFirstLaunch = document.querySelector('#hide-on-first-launch');
@@ -2386,7 +2495,7 @@ async function openConfig(configItem = null) {
     forceNewConversationCheckbox.checked = assistantConfig['forceNewConversation'];
     enableAudioOutput.checked = assistantConfig['enableAudioOutput'];
     enableAudioOutputForTypedQueries.checked = assistantConfig['enableAudioOutputForTypedQueries'];
-    enableMicOnContinuousConversation.checked = assistantConfig['enableMicOnContinousConversation'];
+    enableMicOnInstantResponse.checked = assistantConfig['enableMicOnImmediateResponse'];
     enableMicOnStartup.checked = assistantConfig['enableMicOnStartup'];
     startAsMaximized.checked = assistantConfig['startAsMaximized'];
     hideOnFirstLaunch.checked = assistantConfig['hideOnFirstLaunch'];
@@ -2798,7 +2907,7 @@ async function openConfig(configItem = null) {
       // Check if it's possible to create a token file
 
       try {
-        if (!fs.existsSync(savedTokensPathInput.value)) {
+        if (!fs.existsSync(savedTokensPathInput.value) && keyFilePathInput.value !== '') {
           fs.writeFileSync(savedTokensPathInput.value, '');
         }
       }
@@ -2902,7 +3011,7 @@ async function openConfig(configItem = null) {
         assistantConfig['forceNewConversation'] = forceNewConversationCheckbox.checked;
         assistantConfig['enableAudioOutput'] = enableAudioOutput.checked;
         assistantConfig['enableAudioOutputForTypedQueries'] = enableAudioOutputForTypedQueries.checked;
-        assistantConfig['enableMicOnContinousConversation'] = enableMicOnContinuousConversation.checked;
+        assistantConfig['enableMicOnImmediateResponse'] = enableMicOnInstantResponse.checked;
         assistantConfig['enableMicOnStartup'] = enableMicOnStartup.checked;
         assistantConfig['startAsMaximized'] = startAsMaximized.checked;
         assistantConfig['hideOnFirstLaunch'] = hideOnFirstLaunch.checked;
@@ -2952,6 +3061,7 @@ async function openConfig(configItem = null) {
         setAssistantWindowBorder();
 
         mic.setDeviceId(assistantConfig['microphoneSource']);
+        hotwordDetector.setMicrophone(assistantConfig['microphoneSource']);
 
         p5jsMic.getSources((sources) => {
           p5jsMic.setSource(
@@ -5057,8 +5167,27 @@ function getMicPermEnableHelp() {
  * @param {boolean} showRelaunchScreen
  * If set to `true`, the "Relaunch Required" screen will
  * be shown.
+ *
+ * @param {boolean} showWarning
+ * If set to `true`, the user will see a warning before
+ * any action is taken.
  */
-function resetSavedTokensFile(showRelaunchScreen = true) {
+function resetSavedTokensFile(showRelaunchScreen = true, showWarning = true) {
+  if (showWarning) {
+    const res = dialog.showMessageBoxSync(assistantWindow, {
+      type: 'warning',
+      message: 'Are you sure to reset the tokens?',
+      detail: 'After proceeding with the token reset, you will be directed to the "Get Token" screen for fetching new access tokens.',
+      buttons: [
+        'Proceed',
+        'Cancel',
+      ],
+      cancelId: 1,
+    });
+
+    if (res === 1) return;
+  }
+
   const savedTokensFilePath = assistantConfig.savedTokensPath;
   fs.unlinkSync(savedTokensFilePath);
 
