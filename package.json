@@ -35,6 +35,11 @@
         "directories": {
             "buildResources": "app/res/misc/*"
         },
+        "protocols": [{
+            "name": "Google Assistant",
+            "role": "Viewer",
+            "schemes": ["gassist"]
+        }],
         "publish": null,
         "win": {
             "target": [
