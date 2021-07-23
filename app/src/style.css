@@ -1002,11 +1002,11 @@ img[type="icon"] {
 }
 
 #close-btn:hover {
-  rgba(var(--color-red), 0.075)
+  rgba(var(--color-red), 0.075);
 }
 
-#close-btn:hover {
-  rgba(var(--color-red), 0.22)
+#close-btn:active {
+  rgba(var(--color-red), 0.22);
 }
 
 /********** SCROLLBAR **********/
