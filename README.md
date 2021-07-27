@@ -54,13 +54,6 @@ Before you start, we highly recommend you check the Google Assistant Unofficial 
 
 ## How to Build?
 
-### Using Gitpod
------------------
-Click the button below and click "Open Browser" or "Open Preview" in the bottom right to view the app. To put in the auth file, upload it as a project file for it to show up in the Gitpod file browser.
-
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client)
-
 ### Using `npm`
 ---------------
 
