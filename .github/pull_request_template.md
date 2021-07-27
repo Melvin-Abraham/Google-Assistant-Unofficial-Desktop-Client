@@ -1,6 +1,6 @@
 <!-- 
 Try not to make duplicates. Do a quick search before posting
-LANGUAGES NOTE: Please check <link> to check if the language you are adding is supported.
+LANGUAGES NOTE: Please check https://developers.google.com/assistant/sdk/reference/rpc/languages to check if the language you are adding is supported.
 -->
 
 **Resolved / Related Issues**
