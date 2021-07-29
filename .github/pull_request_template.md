@@ -22,6 +22,8 @@ Add details of changes here.
 **Validation**
 How did you test these changes?
 - [ ] Built and ran the app
+- [ ] Tested your changes
+- [ ] Formated your code using Prettier
 
 **Screenshots (optional)**
 Add screenshots here.
