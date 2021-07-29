@@ -24,6 +24,7 @@ How did you test these changes?
 - [ ] Built and ran the app
 - [ ] Tested your changes
 - [ ] Formated your code using Prettier
+- [ ] Added comments in hard-to-understand areas
 
 **Screenshots (optional)**
 Add screenshots here.
