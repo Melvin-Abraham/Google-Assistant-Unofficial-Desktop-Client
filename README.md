@@ -105,7 +105,7 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 - [x] Set `build` for Mac and Linux in _package.json_
 - [x] Create Config File
 - [x] Remove 'auth' from the `app` folder
-- [ ] Respond to "Ok Google" or "Hey Google"
+- [x] Respond to "Ok Google" or "Hey Google"
 - [x] Activate Mic for `continuousConverstion` only when audio output is done
 - [x] Use different dependency for audio recording
 - [ ] Improve Carousel UI Rendering in the `main_area`
