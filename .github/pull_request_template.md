@@ -3,28 +3,30 @@ Try not to make duplicates. Do a quick search before posting
 LANGUAGES NOTE: Please check https://developers.google.com/assistant/sdk/reference/rpc/languages to check if the language you are adding is supported.
 -->
 
-**Resolved / Related Issues**
-Items resolved / related issues by this PR.
-- Closes #issue...
-- Related #issue...
+### Description
 
-**Type of Change**
+What does this PR add or fix? Add the details here
+
+### Resolved / Related Issues
+Issues resolved or addressed by this PR.
+
+- Closes #ISSUE_NUMBER
+- Addresses #ISSUE_NUMBER
+
+### Type of Change
+
 - [ ] Feature
 - [ ] Bug Fix
 - [ ] Documentation
 - [ ] Localization 
 
-**Details of Changes**
-Add details of changes here.
-- Added #...
-- Fixed #...
+### Validation Checklist
+Check all that applies
 
-**Validation**
-How did you test these changes?
 - [ ] Built and ran the app
-- [ ] Tested your changes
-- [ ] Formated your code using Prettier
-- [ ] Added comments in hard-to-understand areas
+- [ ] Tested my changes _(to make sure your changes don't break something, make sure to test the code)_
+- [ ] Formated code using Prettier/ESLint
+- [ ] Added comments/documentation in relevant places _([JSDocs](https://jsdoc.app/) for function/class body and `//` comments for other parts)_
 
-**Screenshots (optional)**
+### Screenshots (optional)
 Add screenshots here.
