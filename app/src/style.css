@@ -285,6 +285,8 @@ body {
 }
 
 .determinate-progress {
+  --determinate-progress-value: 0%;
+
   height: 4px;
   width: 100%;
   position: relative;
@@ -298,8 +300,15 @@ body {
   display: block;
   position: absolute;
   content: "";
+  left: 0 !important;
+  width: var(--determinate-progress-value);
   height: 4px;
   background-color: var(--color-accent);
+  animation: none;
+  transition: width 150ms ease-in-out;
+}
+
+.determinate-progress.progress-countdown-ten-secs:before {
   animation: progress_determinate_anim 10s linear forwards;
 }
 
@@ -530,6 +539,28 @@ body {
 }
 
 /********** CONFIG (SETTINGS) SECTION **********/
+
+#settings-btn {
+  position: relative;
+}
+
+#settings-btn::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  box-shadow: 0 0 6px 1px var(--color-accent);
+  background-color: var(--color-accent);
+  transform: scale(0);
+  transition: transform 150ms ease;
+}
+
+#settings-btn.active-badge::before {
+  transform: scale(1);
+}
 
 #config-screen {
   overflow-x: auto;
@@ -996,7 +1027,7 @@ button[disabled],
   background: none;
 }
 
-img[type="icon"] {
+*[type="icon"] {
   height: 30px;
   width: 30px;
 }

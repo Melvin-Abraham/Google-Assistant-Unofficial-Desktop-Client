@@ -21,6 +21,7 @@
     "dot-notation": "off",
     "no-console": "off",
     "no-plusplus": "off",
+    "no-underscore-dangle": "off",
     "brace-style": ["warn", "stroustrup"],
     "radix": ["error", "as-needed"],
     "import/no-extraneous-dependencies": [

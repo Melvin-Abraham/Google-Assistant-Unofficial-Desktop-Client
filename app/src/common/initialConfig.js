@@ -24,6 +24,7 @@ const initialAssistantConfig = {
   hotkeyBehavior: 'launch+mic',
   language: 'en-US',
   theme: 'dark',
+  autoDownloadUpdates: true,
 };
 
 module.exports = initialAssistantConfig;

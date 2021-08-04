@@ -23,7 +23,7 @@ expandCollapseButton.onclick = () => toggleExpandWindow();
 const electron = require('electron');
 const GoogleAssistant = require('google-assistant');
 const isValidAccelerator = require('electron-is-accelerator');
-const { execSync, exec } = require('child_process');
+const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -34,7 +34,16 @@ const supportedLanguages = require('./common/lang');
 const themes = require('./common/themes');
 const Microphone = require('./lib/microphone');
 const AudioPlayer = require('./lib/audio_player');
-const { fallbackModeConfigKeys } = require('./common/utils');
+const UpdaterRenderer = require('./updater/updaterRenderer');
+const { UpdaterStatus } = require('./updater/updaterUtils');
+
+const {
+  fallbackModeConfigKeys,
+  isDebOrRpm,
+  isSnap,
+  getConfigFilePath,
+  getFlagsFilePath,
+} = require('./common/utils');
 
 const { ipcRenderer } = electron;
 const { app, dialog } = electron.remote;
@@ -48,9 +57,11 @@ let mic = new Microphone();
 
 // Assistant config initialization
 
-const userDataPath = app.getPath('userData');
-const configFilePath = path.join(userDataPath, 'config.json');
+const userDataPath = ipcRenderer.sendSync('get-userdata-path');
+const configFilePath = getConfigFilePath(userDataPath);
+const flagsFilePath = getFlagsFilePath(userDataPath);
 let assistantConfig = require('./common/initialConfig');
+const flags = require('./common/initialFlags');
 
 const history = [];
 let historyHead = -1;
@@ -73,6 +84,10 @@ const p5jsMic = new p5.AudioIn();
 // Add click listener for "Settings" button
 document.querySelector('#settings-btn').onclick = () => openConfig();
 
+if (!firstLaunch) {
+  ipcRenderer.send('update-did-launch-window');
+}
+
 // Notify the main process that first launch is completed
 ipcRenderer.send('update-first-launch');
 
@@ -93,6 +108,35 @@ navigator.mediaDevices
     canAccessMicrophone = false;
     displayQuickMessage('Microphone is not accessible');
   });
+
+// Set settings badge
+
+if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.UpdateDownloaded) {
+  document.querySelector('#settings-btn')?.classList.add('active-badge');
+}
+
+// Load global flags
+
+if (fs.existsSync(flagsFilePath)) {
+  const savedFlags = JSON.parse(fs.readFileSync(flagsFilePath));
+  Object.assign(flags, savedFlags);
+}
+else {
+  flags.appVersion = getVersion();
+  fs.writeFileSync(flagsFilePath, JSON.stringify(flags));
+}
+
+// Display a quick message stating the app was updated
+
+if (!firstLaunch) {
+  if (flags.appVersion !== getVersion()) {
+    displayQuickMessage('App was updated successfully', true);
+    flags.appVersion = getVersion();
+
+    fs.writeFileSync(flagsFilePath, JSON.stringify(flags));
+    ipcRenderer.send('update-flags', flags);
+  }
+}
 
 // Initialize Configuration
 if (fs.existsSync(configFilePath)) {
@@ -297,6 +341,48 @@ if (assistantConfig['respondToHotword']) {
     audPlayer.setDeviceId(assistantConfig.speakerSource);
   }
 })();
+
+const updaterRenderer = new UpdaterRenderer({
+  onUpdateAvailable: (info) => {
+    // If auto-updates are disabled, notify the user
+    // that a new update is available
+
+    if (!assistantConfig.autoDownloadUpdates) {
+      displayQuickMessage('Update Available!');
+    }
+
+    sessionStorage.setItem('updateVersion', info.version);
+
+    // Set badge in the settings button to let the user
+    // that a new update is available (for deb, rpm, snap).
+
+    const settingsButton = document.querySelector('#settings-btn');
+
+    if (settingsButton && (assistantConfig.autoDownloadUpdates || isDebOrRpm() || isSnap())) {
+      settingsButton.classList.add('active-badge');
+    }
+  },
+
+  onUpdateDownloaded: () => {
+    displayQuickMessage('Restart app to update');
+
+    // Set badge in the settings button to let the user
+    // that the update is ready to be installed.
+
+    const settingsButton = document.querySelector('#settings-btn');
+
+    if (settingsButton) {
+      settingsButton.classList.add('active-badge');
+    }
+  },
+
+  onUpdateApplied: () => {
+    if (process.platform !== 'darwin') return;
+    displayQuickMessage('Restart app to new version');
+  },
+});
+
+updaterRenderer.autoDownloadUpdates = assistantConfig.autoDownloadUpdates;
 
 const config = {
   auth: {
@@ -1210,10 +1296,6 @@ async function openConfig(configItem = null) {
     const suggestionOnClickListeners = [
       ...document.querySelectorAll('.suggestion-parent > .suggestion'),
     ].map((btn) => btn.onclick);
-
-    if (!releases) {
-      getReleases();
-    }
 
     mainArea.innerHTML = `
       <div id="config-screen" class="fade-in-from-bottom">
@@ -2151,6 +2233,45 @@ async function openConfig(configItem = null) {
                   </div>
                 </div>
               </div>
+              <div id="config-item__update-options" style="
+                margin-top: 30px;
+                padding: 10px 20px;
+                border: 2px solid var(--color-accent);
+                border-radius: 10px;
+              ">
+                <div style="display: flex; gap: 30px; padding: 5px 0;">
+                  <div class="setting-key">
+                    Enable Auto-Update
+                  </div>
+                  <div class="setting-value" style="height: 35px; margin-left: 71px;">
+                    <label class="switch">
+                      <input id="auto-update" type="checkbox">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+                <hr style="border-color: var(--color-fg-light); margin: 5px 0;">
+                <div style="display: flex; gap: 30px; padding: 5px 0;">
+                  <div class="setting-key">
+                    Download installer externally
+                  </div>
+                  <div class="setting-value" style="height: 35px;">
+                    <label class="button setting-item-button" id="download-external-btn">
+                      <span>
+                        <img src="../res/open_link.svg" style="
+                          height: 16px;
+                          width: 16px;
+                          vertical-align: sub;
+                          padding-right: 5px;
+                          ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+                        >
+                      </span>
+
+                      Download installer
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div style="margin-top: 40px;">
                 <div class="disabled" style="margin-bottom: 5px;">
                   Google Assistant Unofficial Desktop Client is an open source project
@@ -2315,6 +2436,7 @@ async function openConfig(configItem = null) {
     const speakerSourceSelector = document.querySelector('#speaker-source-selector');
     const displayPreferenceSelector = document.querySelector('#display-selector');
     const winBorderSelector = document.querySelector('#win-border-selector');
+    const autoDownloadUpdates = document.querySelector('#auto-update');
     const launchAtStartUp = document.querySelector('#launch-at-startup');
     const notifyOnStartUp = document.querySelector('#notify-on-startup');
     const alwaysCloseToTray = document.querySelector('#close-to-tray');
@@ -2505,6 +2627,7 @@ async function openConfig(configItem = null) {
     speakerSourceSelector.value = assistantConfig['speakerSource'];
     displayPreferenceSelector.value = assistantConfig['displayPreference'];
     winBorderSelector.value = assistantConfig['windowBorder'];
+    autoDownloadUpdates.checked = assistantConfig['autoDownloadUpdates'];
     launchAtStartUp.checked = assistantConfig['launchAtStartup'];
     notifyOnStartUp.checked = assistantConfig['notifyOnStartup'];
     alwaysCloseToTray.checked = assistantConfig['alwaysCloseToTray'];
@@ -2671,125 +2794,55 @@ async function openConfig(configItem = null) {
       }
     };
 
-    const checkForUpdates = async () => {
-      const checkForUpdateSection = document.querySelector('#check-for-update-section');
+    /** @type {HTMLElement} */
+    const downloadExternallyButton = document.querySelector('#download-external-btn');
 
-      checkForUpdateSection.innerHTML = `
-        <div style="animation: fade_in_from_right_anim 300ms;">
-          <div class="disabled" style="margin-bottom: 10px; font-size: 16px;">
-            Checking for updates...
-          </div>
-          <div class="loader"></div>
-        </div>
-      `;
+    downloadExternallyButton.onclick = () => {
+      const updateVersion = sessionStorage.getItem('updateVersion');
+      const releasesUrl = 'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases';
 
-      try {
-        // eslint-disable-next-line no-shadow
-        const releases = await getReleases();
+      if (updateVersion) {
+        const latestReleaseUrl = `${releasesUrl}/tag/v${updateVersion}`;
+        electronShell.openExternal(latestReleaseUrl);
+      }
+      else {
+        const res = dialog.showMessageBoxSync(assistantWindow, {
+          type: 'info',
+          message: 'No new updates available',
+          detail: 'There are no new updates to download at the moment',
+          buttons: [
+            'Show all releases',
+            'OK',
+          ],
+          cancelId: 1,
+        });
 
-        if (releases) {
-          console.group(...consoleMessage('Fetched releases'));
-          console.log(releases);
-
-          if (releases[0] === 'Error') {
-            throw Error(releases[1]);
-          }
-
-          console.groupEnd();
-
-          if (releases[0].tag_name !== `v${app.getVersion()}`) {
-            checkForUpdateSection.innerHTML = `
-              <div style="animation: fade_in_from_right_anim 300ms;">
-                <span>
-                  <img src="../res/download.svg" style="
-                    height: 20px;
-                    width: 20px;
-                    vertical-align: bottom;
-                    padding-right: 5px;"
-                  >
-                </span>
-                <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
-                  New update available:
-                  <span style="color: #1e90ff;">
-                    ${releases[0].tag_name}
-                  </span>
-                </span>
-                <label id="download-update-btn" class="button setting-item-button" onclick="downloadAssistant()">
-                  Download update
-                </label>
-                <span
-                  id="check-for-update-btn"
-                  class="hyperlink"
-                  style="margin-left: 10px; color: #999; vertical-align: bottom;"
-                >
-                  Recheck
-                </span>
-              </div>
-            `;
-          }
-          else {
-            checkForUpdateSection.innerHTML = `
-              <div style="animation: fade_in_from_right_anim 300ms;">
-                <span>
-                  <img src="../res/checkmark.svg" style="
-                    height: 20px;
-                    width: 20px;
-                    vertical-align: sub;
-                    padding-right: 5px;"
-                  >
-                </span>
-                <span>
-                  You have the latest version installed
-                </span>
-                <span
-                  id="check-for-update-btn"
-                  class="hyperlink"
-                  style="margin-left: 10px; color: #999;"
-                >
-                  Check for Updates
-                </span>
-              </div>
-            `;
-          }
+        if (res === 0) {
+          electronShell.openExternal(releasesUrl);
         }
       }
-      catch (error) {
-        console.group(...consoleMessage(
-          'Error while fetching releases',
-          'error',
-        ));
-        console.error(error);
-        console.groupEnd();
-
-        checkForUpdateSection.innerHTML = `
-          <div style="animation: fade_in_from_right_anim 300ms;">
-            <span>
-              <img src="../res/error.svg" style="
-                height: 20px;
-                width: 20px;
-                vertical-align: sub;
-                padding-right: 5px;"
-              >
-            </span>
-            <span style="color: var(--color-red);">
-              An error occurred while checking for updates
-            </span>
-            <span
-              id="check-for-update-btn"
-              class="hyperlink"
-              style="margin-left: 10px;"
-            >
-              Retry
-            </span>
-          </div>
-        `;
-      }
-
-      const checkForUpdateButton = document.querySelector('#check-for-update-btn');
-      if (checkForUpdateButton) checkForUpdateButton.onclick = checkForUpdates;
     };
 
-    document.querySelector('#check-for-update-btn').onclick = checkForUpdates;
+    // Set Updater Status
+
+    document.querySelector('#check-for-update-btn').onclick = () => UpdaterRenderer.requestCheckForUpdates();
+
+    if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.UpdateDownloaded) {
+      updaterRenderer.setUpdateAndRestartSection();
+    }
+    else if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.UpdateAvailable) {
+      const updaterCurrentInfo = JSON.parse(sessionStorage.getItem('updaterCurrentInfo'));
+      updaterRenderer.setDownloadUpdateSection(updaterCurrentInfo);
+    }
+    else if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.UpdateNotAvailable) {
+      updaterRenderer.setNoUpdatesAvailableSection();
+    }
+    else if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.Error) {
+      updaterRenderer.setUpdaterErrorSection();
+    }
+    else if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.InstallingUpdate) {
+      updaterRenderer.setInstallingUpdatesSection();
+    }
 
     document.querySelector('#cancel-config-changes').onclick = () => {
       closeCurrentScreen();
@@ -3021,6 +3074,7 @@ async function openConfig(configItem = null) {
         assistantConfig['speakerSource'] = speakerSourceSelector.value;
         assistantConfig['displayPreference'] = displayPreferenceSelector.value;
         assistantConfig['windowBorder'] = winBorderSelector.value;
+        assistantConfig['autoDownloadUpdates'] = autoDownloadUpdates.checked;
         assistantConfig['launchAtStartup'] = launchAtStartUp.checked;
         assistantConfig['notifyOnStartup'] = notifyOnStartUp.checked;
         assistantConfig['alwaysCloseToTray'] = alwaysCloseToTray.checked;
@@ -3059,6 +3113,7 @@ async function openConfig(configItem = null) {
         }
 
         setAssistantWindowBorder();
+        updaterRenderer.autoDownloadUpdates = assistantConfig.autoDownloadUpdates;
 
         mic.setDeviceId(assistantConfig['microphoneSource']);
         hotwordDetector.setMicrophone(assistantConfig['microphoneSource']);
@@ -3174,13 +3229,18 @@ function updateNav() {
       alt="Next Result"
     >
 
-    <img
+    <div
       id="settings-btn"
       class="ico-btn"
       type="icon"
-      src="../res/settings_btn.svg"
-      alt="Settings"
+      style="display: inline-block;"
     >
+      <img
+        type="icon"
+        src="../res/settings_btn.svg"
+        alt="Settings"
+      >
+    </div>
   `;
 
   document.querySelector('#nav-region').innerHTML = newNav;
@@ -4076,6 +4136,9 @@ function updateReleases(releasesObject) {
 function displayQuickMessage(message, allowOnlyOneMessage = false) {
   const navRegion = document.querySelector('#nav-region');
 
+  // Exit from function when window is not displayed
+  if (!navRegion) return;
+
   // Show the message only when no other message is showing up.
   // If `allowOlyOneMessage` is `true`
   if (allowOnlyOneMessage && navRegion.querySelector('.quick-msg')) return;
@@ -4317,7 +4380,7 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
     }
 
     document.querySelector('#loader-area').innerHTML = `
-      <div class="determinate-progress"></div>
+      <div class="determinate-progress progress-countdown-ten-secs"></div>
     `;
 
     // Disable suggestions
@@ -4467,222 +4530,6 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
       };
     }
   };
-}
-
-/**
- * Returns `releases` from GitHub using GitHub API
- *
- * @returns {Promise<object[]>}
- * List of objects containing details about each release
- */
-async function getReleases() {
-  try {
-    const releasesFetchResult = await window.fetch(
-      'https://api.github.com/repos/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases',
-
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/vnd.github.v3+json',
-        },
-      },
-    );
-
-    if (releasesFetchResult.ok) {
-      releases = await releasesFetchResult.json();
-      updateReleases(releases);
-      return releases;
-    }
-
-    throw new Error(releasesFetchResult.status);
-  }
-  catch (error) {
-    return ['Error', error.message];
-  }
-}
-
-/**
- * Returns download URL from where the given
- * version of application installer can be downloaded
- *
- * @param {*} releaseObject
- * A Release object (JSON) for a particular version
- *
- * @returns {string}
- * The Download URL for downloading the installer
- * based on the platform (Windows, MacOS, Linux)
- */
-function getAssetDownloadUrl(releaseObject) {
-  const { platform } = process;
-  let downloadUrl = '';
-
-  if (releaseObject) {
-    releaseObject['assets'].forEach((asset) => {
-      switch (platform) {
-        case 'win32':
-          if (asset['name'].endsWith('.exe')) {
-            downloadUrl = asset['browser_download_url'];
-          }
-
-          break;
-
-        case 'darwin':
-          if (asset['name'].endsWith('.dmg')) {
-            downloadUrl = asset['browser_download_url'];
-          }
-
-          break;
-
-        default:
-          if (isSnap()) {
-            if (asset['name'].endsWith('.snap')) {
-              downloadUrl = asset['browser_download_url'];
-            }
-          }
-          else if (asset['name'].endsWith('.AppImage')) {
-            downloadUrl = asset['browser_download_url'];
-          }
-
-          break;
-      }
-    });
-
-    return downloadUrl;
-  }
-
-  return '';
-}
-
-/**
- * Performs necessary action(s) to update the assistant.
- */
-function downloadAssistant() {
-  const downloadUrl = getAssetDownloadUrl(releases[0]);
-
-  if (!isSnap()) {
-    openLink(downloadUrl);
-  }
-  else {
-    const optIndex = dialog.showMessageBoxSync(assistantWindow, {
-      title: 'Snap Download',
-      message: 'Snap Download',
-      detail: [
-        'Snap package can be updated via terminal with the following command:',
-        'sudo snap refresh g-assist',
-        '',
-        'Do you want to update using the shell command?',
-      ].join('\n'),
-      buttons: [
-        'Run snap refresh (Recommended)',
-        'Download file from repo',
-        'Cancel',
-      ],
-      cancelId: 2,
-    });
-
-    if (optIndex === 0) {
-      // Add a throbber inside download button and update button text
-
-      const updateDownloadBtn = document.querySelector('#download-update-btn');
-
-      if (updateDownloadBtn) {
-        updateDownloadBtn.innerHTML = `
-          <img src="../res/throbber.svg" style="vertical-align: text-top; margin-right: 10px;" />
-          Updating...
-        `;
-
-        updateDownloadBtn.classList.add('disabled');
-        updateDownloadBtn.onclick = '';
-      }
-
-      // snap refresh g-assist
-
-      const childProcess = exec(
-        '/usr/bin/pkexec --disable-internal-agent snap refresh g-assist',
-        (err, stdout, stderr) => {
-          if (stderr) console.log('[STDERR]:', stderr);
-          if (stdout) console.log('[STDOUT]:', stdout);
-
-          if (err) {
-            console.log('ERROR:');
-            console.log(err);
-
-            // eslint-disable-next-line no-shadow
-            const updateDownloadBtn = document.querySelector('#download-update-btn');
-
-            if (updateDownloadBtn) {
-              updateDownloadBtn.innerHTML = 'Download update';
-              updateDownloadBtn.classList.remove('disabled');
-              updateDownloadBtn.onclick = downloadAssistant;
-            }
-
-            dialog.showMessageBoxSync(assistantWindow, {
-              title: 'Error while running update command',
-              message: 'Error while running update command',
-              detail: err.toString(),
-              type: 'error',
-              buttons: ['OK'],
-              cancelId: 0,
-            });
-
-            dialog
-              .showMessageBox(assistantWindow, {
-                title: 'Snap Update',
-                message: 'Copy Update Command',
-                detail: [
-                  'You can paste the following command on your terminal to update this application:',
-                  'sudo snap refresh g-assist',
-                ].join('\n\n'),
-                type: 'info',
-                buttons: ['Copy command', 'OK'],
-                cancelId: 1,
-              })
-              .then((result) => {
-                if (result.response === 0) {
-                  electron.clipboard.writeText('sudo snap refresh g-assist');
-                }
-              });
-          }
-        },
-      );
-
-      childProcess.on('exit', (exitCode) => {
-        // Successful update
-        if (exitCode === 0) {
-          // eslint-disable-next-line no-shadow
-          const updateDownloadBtn = document.querySelector('#download-update-btn');
-
-          if (updateDownloadBtn) {
-            updateDownloadBtn.innerHTML = 'Relaunch';
-            updateDownloadBtn.classList.remove('disabled');
-            updateDownloadBtn.onclick = () => {
-              dialog
-                .showMessageBox(assistantWindow, {
-                  title: 'Hard Relaunch Required',
-                  message: 'Hard Relaunch Required',
-                  detail:
-                    'Assistant has to perform hard relaunch to finish updating. Press Relaunch to continue.',
-                  type: 'info',
-                  buttons: ['Relaunch', 'Not Now'],
-                  cancelId: 1,
-                })
-                .then((result) => {
-                  console.log('DIALOG OPTION:', result);
-
-                  if (result.response === 0) {
-                    app.relaunch();
-                    quitApp();
-                  }
-                });
-            };
-          }
-        }
-      });
-    }
-    else if (optIndex === 1) {
-      openLink(downloadUrl);
-    }
-  }
 }
 
 /**
@@ -4986,14 +4833,6 @@ function closeOnBlurCallback() {
     stopAudioAndMic();
     close();
   }
-}
-
-/**
- * Returns `true` if the assistant is running as a
- * snap application (linux).
- */
-function isSnap() {
-  return app.getAppPath().startsWith('/snap');
 }
 
 /**
@@ -5307,54 +5146,6 @@ assistantInput.addEventListener('keyup', (event) => {
     assistantTextQuery(assistantInput.value);
   }
 });
-
-// Check updates
-
-function updateAvailable(releasesData) {
-  return (
-    releasesData
-    && releasesData[0] !== 'Error'
-    && releasesData[0]['tag_name'] !== `v${app.getVersion()}`
-  );
-}
-
-function displayUpdateAvailable() {
-  displayQuickMessage('Update Available!');
-}
-
-function fetchReleasesAndCheckUpdates() {
-  if (!releases) {
-    // API request is only done once to avoid Error 403 (Rate Limit Exceeded)
-    // when Assistant is launched many times...
-
-    (async () => {
-      const releasesData = await getReleases();
-
-      if (updateAvailable(releasesData)) {
-        displayUpdateAvailable();
-      }
-      else {
-        console.log(...consoleMessage('No Updates Available!'));
-      }
-    })();
-  }
-  else {
-    console.group(...consoleMessage('Fetched releases'));
-    console.log('RELEASES:', releases);
-    console.groupEnd();
-
-    if (updateAvailable(releases)) {
-      displayUpdateAvailable();
-      console.log(...consoleMessage('Updates Available'));
-    }
-    else {
-      console.log(...consoleMessage('No updates available'));
-    }
-  }
-}
-
-// Fetch releases and check for updates initially
-fetchReleasesAndCheckUpdates();
 
 // Set Initial Screen
 

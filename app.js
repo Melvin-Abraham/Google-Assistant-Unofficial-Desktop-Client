@@ -7,31 +7,50 @@ const fs = require('fs');
 const os = require('os');
 const { argv } = require('process');
 const isValidAccelerator = require('electron-is-accelerator');
-const { getNativeKeyName } = require('./app/src/keybinding.js');
-const { fallbackModeConfigKeys } = require('./app/src/common/utils.js');
+const { getNativeKeyName } = require('./app/src/keybinding');
+
+// Updater daemon
+const UpdaterService = require('./app/src/updater/updaterMain');
+
+const {
+  fallbackModeConfigKeys,
+  getConfigFilePath,
+  getLogFilePath,
+  getFlagsFilePath,
+} = require('./app/src/common/utils');
 
 const {
   app,
   BrowserWindow,
   Menu,
+  MenuItem,
   nativeImage,
   ipcMain,
+  dialog,
   shell: electronShell,
 } = electron;
 
 let mainWindow;
 let tray;
 let readyForLaunch = false;
+let didLaunchWindow = false;
 let assistantWindowLaunchArgs = {};
 global.releases = null;
 global.firstLaunch = true;
+global.userDataPath = app.getPath('userData');
+
+/** @type {UpdaterService | undefined} */
+let updater;
 
 const gotInstanceLock = app.requestSingleInstanceLock();
 
-const userDataPath = app.getPath('userData');
-const configFilePath = path.join(userDataPath, 'config.json');
-const logFilePath = path.join(userDataPath, 'main_process-debug.log');
-let assistantConfig = require('./app/src/common/initialConfig.js');
+const { userDataPath } = global;
+const configFilePath = getConfigFilePath(userDataPath);
+const logFilePath = getLogFilePath(userDataPath);
+const flagsFilePath = getFlagsFilePath(userDataPath);
+
+let assistantConfig = require('./app/src/common/initialConfig');
+let flags = require('./app/src/common/initialFlags');
 
 if (process.platform === 'darwin') {
   // Quit the app when the system is about to shutdown
@@ -56,7 +75,7 @@ process.on('uncaughtException', async (err) => {
   debugLog(errorMessage, 'error');
 
   if (app.isReady()) {
-    const buttonIndex = await electron.dialog.showMessageBox(null, {
+    const buttonIndex = await dialog.showMessageBox(null, {
       title: 'Error',
       type: 'error',
       message: 'An unhandled exception occurred in the main process',
@@ -70,7 +89,7 @@ process.on('uncaughtException', async (err) => {
     }
   }
   else {
-    electron.dialog.showErrorBox(
+    dialog.showErrorBox(
       'An unhandled exception occurred in the main process',
       errorMessage.trimStart(),
     );
@@ -95,6 +114,8 @@ else {
   process.env.FALLBACK_MODE = false;
 }
 
+// Read config
+
 if (fs.existsSync(configFilePath)) {
   debugLog('Reading Assistant Config');
   const savedConfig = JSON.parse(fs.readFileSync(configFilePath));
@@ -115,6 +136,22 @@ if (fs.existsSync(configFilePath)) {
 }
 else {
   debugLog('Config file does not exist.');
+}
+
+// Read flags
+
+if (fs.existsSync(flagsFilePath)) {
+  debugLog('Reading flags');
+  const savedFlags = JSON.parse(fs.readFileSync(flagsFilePath));
+
+  Object.assign(flags, savedFlags);
+  debugLog('Successfully read flags');
+}
+else {
+  debugLog('Flags file does not exist. Creating file...');
+
+  flags.appVersion = `v${app.getVersion()}`;
+  fs.writeFileSync(flagsFilePath, JSON.stringify(flags));
 }
 
 // Set TMPDIR environment variable for linux snap
@@ -150,7 +187,7 @@ if (!gotInstanceLock) {
   if (isDevMode()) {
     debugLog('Another instance is already running', 'warn');
 
-    electron.dialog.showErrorBox(
+    dialog.showErrorBox(
       'Preventing launch',
       [
         'An instance of Google Assistant is already running.',
@@ -182,8 +219,8 @@ else {
     // Switch to current instance if a non dev-mode
     // instance is launched.
     if (!isDevMode(args[0])) {
-      if (!mainWindow.isVisible()) launchAssistant();
-      else mainWindow.focus();
+      if (!mainWindow?.isVisible()) launchAssistant();
+      else mainWindow?.focus();
     }
   });
 
@@ -330,72 +367,56 @@ function onAppReady() {
       debugLog('Setting "Ready for launch" tray icon');
       tray.setImage(trayIcon);
 
-      if (!assistantConfig['hideOnFirstLaunch']) {
+      // Do not auto-reveal window if an update is pending
+      // to be installed.
+
+      if (shouldAutoInstallUpdate()) {
+        debugLog('Supressing window auto-reveal [auto-update on startup]');
+        return;
+      }
+
+      if (!assistantConfig['hideOnFirstLaunch'] || flags.appVersion !== `v${app.getVersion()}`) {
         if (!openedAtLogin) {
-          debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
+          if (!assistantConfig['hideOnFirstLaunch']) {
+            debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
+          }
+          else {
+            debugLog('Revealing assistant [recently updated]');
+          }
+
           launchAssistant();
         }
       }
       else if (assistantConfig['notifyOnStartup']) {
         // Notify user when app is ready
-
-        const title = 'Google Assistant';
-        const body = [
-          'Google Assistant is running in background!',
-          `Press ${assistantConfig.assistantHotkey
-            .split('+')
-            .map(getNativeKeyName)
-            .join(' + ')
-          } to launch`,
-        ].join('\n\n');
-
-        const icon = nativeImage.createFromPath(
-          path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
-        );
-
-        debugLog('Sending "app-ready-to-launch" notification');
-
-        if (process.platform === 'win32') {
-          tray.displayBalloon({
-            title,
-            content: body,
-            icon,
-          });
-
-          tray.on('balloon-click', () => {
-            // Launch the assistant when balloon is clicked.
-            launchAssistant();
-          });
-        }
-        else {
-          const notification = new electron.Notification({
-            title,
-            body,
-            icon,
-            actions: [
-              { type: 'button', text: 'Launch' },
-              { type: 'button', text: 'Dismiss' },
-            ],
-          });
-
-          notification.on('action', (_, index) => {
-            switch (index) {
-              case 0:
-                launchAssistant();
-                break;
-
-              default:
-            }
-          });
-
-          notification.on('click', () => {
-            // Launch the assistant when notification is clicked.
-            launchAssistant();
-          });
-
-          notification.show();
-        }
+        displayNotification({
+          title: 'Google Assistant',
+          body: [
+            'Google Assistant is running in background!',
+            `Press ${assistantConfig.assistantHotkey
+              .split('+')
+              .map(getNativeKeyName)
+              .join(' + ')
+            } to launch`,
+          ].join('\n\n'),
+          actions: [
+            {
+              text: 'Launch',
+              type: 'button',
+              onClick: () => launchAssistant(),
+            },
+            {
+              text: 'Dismiss',
+              type: 'button',
+              onClick: () => {},
+            },
+          ],
+          onNotificationClick: () => launchAssistant(),
+        });
       }
+
+      // Send updater status to renderer process
+      updater.sendStatusToWindow();
     });
 
   mainWindow.hide();
@@ -421,8 +442,22 @@ function onAppReady() {
     event.returnValue = assistantWindowLaunchArgs;
   });
 
+  ipcMain.on('get-userdata-path', (event) => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = app.getPath('userData');
+  });
+
   ipcMain.on('quit-app', () => {
     quitApp();
+  });
+
+  ipcMain.on('display-notification', (_, opts) => {
+    displayNotification(opts);
+  });
+
+  ipcMain.on('display-dialog', (event, opts) => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = dialog.showMessageBoxSync(mainWindow, opts);
   });
 
   ipcMain.on('update-releases', (_, releases) => {
@@ -433,8 +468,19 @@ function onAppReady() {
     global.firstLaunch = false;
   });
 
+  ipcMain.on('update-did-launch-window', () => {
+    didLaunchWindow = true;
+  });
+
   ipcMain.on('update-config', (_, config) => {
     assistantConfig = config;
+
+    // Set `shouldAutoDownload` property for updater
+    updater.shouldAutoDownload = assistantConfig.autoDownloadUpdates;
+  });
+
+  ipcMain.on('update-flags', (_, updatedFlags) => {
+    flags = updatedFlags;
   });
 
   ipcMain.on('set-assistant-window-position', (_) => {
@@ -452,6 +498,36 @@ function onAppReady() {
   ipcMain.on('restart-normal', () => {
     restartInNormalMode();
   });
+
+  updater = new UpdaterService(mainWindow, app, assistantConfig.autoDownloadUpdates);
+
+  // Initialize Updater Service
+  updater.initializeUpdater(() => {
+    setTrayContextMenu(assistantConfig.assistantHotkey, true);
+    mainWindow.webContents.send('update:updateReady');
+
+    // Auto-install update on next startup
+    if (shouldAutoInstallUpdate()) {
+      displayNotification({
+        title: 'Installing update',
+        body: 'Assistant is installing the update and will restart once done',
+      });
+
+      setTimeout(() => {
+        updater.installUpdateAndRestart();
+      }, 500);
+    }
+    else {
+      displayNotification({
+        title: 'Update Ready',
+        body: 'Update has been downloaded. Click to install the update and restart app...',
+        onNotificationClick: () => {
+          if (!mainWindow.isVisible()) launchAssistant();
+          else mainWindow.focus();
+        },
+      });
+    }
+  });
 }
 
 /**
@@ -460,6 +536,55 @@ function onAppReady() {
 function requestMicToggle() {
   debugLog('Requested microphone toggle');
   mainWindow.webContents.send('request-mic-toggle');
+}
+
+/**
+ * Displays Notifications. On Windows, a balloon is displayed
+ * instead of using the Notification API.
+ *
+ * @param {object} opts
+ * @param {string} opts.title
+ * @param {string} opts.body
+ * @param {{type: string, text: string, onClick: Function}[]?} opts.actions
+ * @param {Function?} opts.onNotificationClick
+ */
+function displayNotification(opts) {
+  const icon = nativeImage.createFromPath(
+    path.join(__dirname, 'app', 'res', 'icons', 'icon.png'),
+  );
+
+  if (process.platform === 'win32') {
+    tray.displayBalloon({
+      title: opts.title,
+      content: opts.body,
+      icon,
+    });
+
+    tray.on('balloon-click', () => {
+      opts.onNotificationClick?.();
+    });
+  }
+  else {
+    const notification = new electron.Notification({
+      title: opts.title,
+      body: opts.body,
+      icon,
+      actions: opts.actions?.map((actionObj) => ({
+        text: actionObj.text,
+        type: actionObj.type,
+      })),
+    });
+
+    notification.on('action', (_, index) => {
+      opts.actions?.[index].onClick();
+    });
+
+    notification.on('click', () => {
+      opts.onNotificationClick?.();
+    });
+
+    notification.show();
+  }
 }
 
 /**
@@ -518,6 +643,13 @@ function restartInNormalMode() {
 }
 
 /**
+ * Checks for criterion for auto-installing downloaded update
+ */
+function shouldAutoInstallUpdate() {
+  return !didLaunchWindow && assistantConfig.autoDownloadUpdates && updater._isDownloadCached;
+}
+
+/**
  * Sets the assistant window position at the bottom-center position
  * of the given display.
  */
@@ -568,8 +700,12 @@ function getDisplayIndex(displayList) {
  * @param {string} assistantHotkey
  * Accelerator for assistant hotkey. Used for showing the
  * accelerator alongside the "Launch Assistant" label.
+ *
+ * @param {boolean} isUpdateReady
+ * If set to `true`, the update related options in the
+ * context menu will be set.
  */
-function setTrayContextMenu(assistantHotkey) {
+function setTrayContextMenu(assistantHotkey, isUpdateReady = false) {
   const trayContextMenu = Menu.buildFromTemplate([
     {
       label: 'Launch Assistant',
@@ -632,10 +768,35 @@ function setTrayContextMenu(assistantHotkey) {
       },
     },
     {
+      type: 'separator',
+    },
+    {
       label: `v${electron.app.getVersion()}`,
       enabled: false,
     },
   ]);
+
+  if (isUpdateReady) {
+    trayContextMenu.insert(
+      trayContextMenu.items.length - 1,
+      new MenuItem({
+        label: 'Update and Quit',
+        click: () => {
+          updater.installUpdateAndQuit();
+        },
+      }),
+    );
+
+    trayContextMenu.insert(
+      trayContextMenu.items.length - 1,
+      new MenuItem({
+        label: 'Update and Restart',
+        click: () => {
+          updater.installUpdateAndRestart();
+        },
+      }),
+    );
+  }
 
   tray.setContextMenu(trayContextMenu);
 }
