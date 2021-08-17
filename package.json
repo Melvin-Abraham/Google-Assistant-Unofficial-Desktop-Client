@@ -117,6 +117,7 @@
         "start": "electron .",
         "start:verbose": "electron . --verbose",
         "dist": "electron-builder",
+        "dist:ci": "electron-builder --publish never",
         "pack": "electron-builder --dir",
         "lint": "eslint .",
         "preinstall": "npm install git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
