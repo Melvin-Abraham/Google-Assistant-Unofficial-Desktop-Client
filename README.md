@@ -26,6 +26,14 @@ The design is inspired by Google Assistant in Chrome OS and comes in both Light 
 
 ## Getting Started
 
+### System requirements
+
+- Windows: 7 and above
+- Mac OS: Mojave (10.14) and above
+- Linux: latest distos *(maybe)*
+
+---
+
 In order to use the client, you must have a _"Key File"_ and _"Token"_ for authentication which you can get by going through **Device Registration** process. You can go through the wiki given below to get started.
 
 "*Setup Authentication for Google Assistant Unofficial Desktop Client*" Wiki (For both **Device Registration** & **Authentication** help):
