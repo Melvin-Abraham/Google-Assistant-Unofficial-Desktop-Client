@@ -35,4 +35,4 @@ jobs:
         run: sudo apt-get install rpm
 
       - name: Build
-        run: npm run dist
+        run: npm run dist:ci

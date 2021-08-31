@@ -35,7 +35,13 @@
         "directories": {
             "buildResources": "app/res/misc/*"
         },
-        "publish": null,
+        "publish": [
+            {
+                "provider": "github",
+                "owner": "Melvin-Abraham",
+                "repo": "Google-Assistant-Unofficial-Desktop-Client"
+            }
+        ],
         "win": {
             "target": [
                 {
@@ -60,7 +66,8 @@
             "icon": "./app/res/icons/icon.icns",
             "category": "public.app-category.productivity",
             "target": [
-                "dmg"
+                "dmg",
+                "zip"
             ],
             "darkModeSupport": true
         },
@@ -110,6 +117,7 @@
         "start": "electron .",
         "start:verbose": "electron . --verbose",
         "dist": "electron-builder",
+        "dist:ci": "electron-builder --publish never",
         "pack": "electron-builder --dir",
         "lint": "eslint .",
         "preinstall": "npm install git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
@@ -118,8 +126,11 @@
     "dependencies": {
         "bumblebee-hotword": "0.2.1",
         "electron-is-accelerator": "^0.2.0",
+        "electron-log": "^4.3.5",
+        "electron-updater": "^4.3.9",
         "google-assistant": "git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
-        "grpc": "1.24.6"
+        "grpc": "1.24.6",
+        "node-fetch": "^2.6.1"
     },
     "devDependencies": {
         "electron": "10.3.2",
