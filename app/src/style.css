@@ -850,6 +850,16 @@ blockquote {
   padding-left: 20px;
 }
 
+kbd {
+  font-family: "Roboto Mono";
+  font-size: 16px;
+  background: rgba(var(--color-fg-rgb), 0.2);
+  padding: 1px 6px;
+  border-radius: 5px;
+  border: 1px solid #ffffff50;
+  border-bottom-width: 3px;
+}
+
 ul li {
   margin-top: 5px;
 }
