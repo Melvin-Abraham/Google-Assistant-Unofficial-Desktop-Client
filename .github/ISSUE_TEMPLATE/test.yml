@@ -1,0 +1,64 @@
+# test
+name: "Bug Report"
+description: "Create a bug report to help improve Google Assistant Unofficial Desktop Client"
+labels: [bug]
+assignees: 
+  - Melvin-Abraham
+body:
+  body:
+- type: markdown
+  attributes:
+    value: "Thanks for taking the time to fill out this bug!"
+  - type: textarea
+    attributes:
+      label: "Description"
+      description: "A clear and concise description of what the bug is."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps To Reproduce"
+      description: "Steps to reproduce the behavior."
+      placeholder: |
+        1. Go to '....'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See the error
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
+    validations:
+      required: true
+      
+    - type: dropdown
+      id: assistant-version
+      attributes:
+        label: "Assistant Version"
+        description: "What version of the Assistant are you using?"
+        options:
+          - v1.0.0-rc.2
+          - v1.0.0-rc.1
+          - v1.0.0
+          - Compiled from codebase
+
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "OS & Version"
+      description: "What OS & Version are you using?"
+      placeholder: e.g. Windows 10 20H2 Build 19042.804
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Relevant Assets"
+      description: |
+        A list of assets (logs, screenshots) relevant to this bug.
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+      placeholder: |
+# this is all test
