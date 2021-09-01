@@ -11,6 +11,13 @@ const fallbackModeConfigKeys = [
   'language',
 ];
 
+const githubRepoInfo = {
+  owner: 'Melvin-Abraham',
+  repo: 'Google-Assistant-Unofficial-Desktop-Client',
+};
+
+const repoUrl = `https://github.com/${githubRepoInfo.owner}/${githubRepoInfo.repo}`;
+
 const getConfigFilePath = (userDataPath) => path.join(userDataPath, 'config.json');
 const getLogFilePath = (userDataPath) => path.join(userDataPath, 'main_process-debug.log');
 const getFlagsFilePath = (userDataPath) => path.join(userDataPath, 'flags.json');
@@ -64,6 +71,8 @@ function displayDialog(options) {
 
 module.exports = {
   fallbackModeConfigKeys,
+  githubRepoInfo,
+  repoUrl,
   isSnap,
   isAppImage,
   isDebOrRpm,

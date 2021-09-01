@@ -25,8 +25,8 @@ class KeyBindingListener extends EventEmitter {
    * Event listener for `keydown` event
    *
    * @param {KeyboardEvent} e
-   * @param {bool} stopListeningAfterKeyCombination
-   * @param {bool} escapeToCancel
+   * @param {boolean} stopListeningAfterKeyCombination
+   * @param {boolean} escapeToCancel
    */
   keyDownListener(e, stopListeningAfterKeyCombination, escapeToCancel) {
     e.preventDefault();
@@ -60,11 +60,11 @@ class KeyBindingListener extends EventEmitter {
    * Any key combinations _(excluding global shortcuts)_
    * will be ignored in the application-level.
    *
-   * @param {bool} stopListeningAfterKeyCombination
+   * @param {boolean} stopListeningAfterKeyCombination
    * Removes `keydown` event listener after a key combination
    * has been pressed by the user.
    *
-   * @param {bool} escapeToCancel
+   * @param {boolean} escapeToCancel
    * Stops listening for key combinations when `ESC` key is
    * pressed.
    */

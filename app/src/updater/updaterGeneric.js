@@ -3,11 +3,12 @@
 const fetch = require('node-fetch');
 const EventEmitter = require('events');
 const { app, shell: electronShell } = require('electron');
-const { releasesApiEndpoint, getSupportedLinuxPackageFormat } = require('./updaterUtils');
+const { releasesApiEndpoint, getSupportedLinuxPackageFormat, markdownToHtml } = require('./updaterUtils');
 const { isSnap, isAppImage } = require('../common/utils');
 
 /**
- * @typedef {'checking-for-update' | 'update-available' | 'update-not-available' | 'error'} UpdaterGenericEvent
+ * @typedef UpdaterGenericEvent
+ * @type {'checking-for-update' | 'update-available' | 'update-not-available' | 'error'}
  */
 
 /**
@@ -52,16 +53,24 @@ class UpdaterGeneric extends EventEmitter {
           throw Error(this.releases[1]);
         }
 
-        if (this.releases[0].tag_name !== appCurrentVersion) {
+        const latestReleaseVersion = this.releases[0].tag_name;
+        const releaseNotes = markdownToHtml(this.releases[0].body.trim());
+
+        if (latestReleaseVersion !== appCurrentVersion) {
           this.logger?.info(`Update available: ${this.releases[0].tag_name}`);
 
           this.emit('update-available', {
-            version: this.releases[0].tag_name.replace(/^v/, ''),
+            version: latestReleaseVersion.replace(/^v/, ''),
+            releaseNotes,
           });
         }
         else {
           this.logger?.info(`No updates available for v${app.getVersion()}`);
-          this.emit('update-not-available');
+
+          this.emit('update-not-available', {
+            version: latestReleaseVersion.replace(/^v/, ''),
+            releaseNotes,
+          });
         }
       }
       else {

@@ -35,7 +35,7 @@ const themes = require('./common/themes');
 const Microphone = require('./lib/microphone');
 const AudioPlayer = require('./lib/audio_player');
 const UpdaterRenderer = require('./updater/updaterRenderer');
-const { UpdaterStatus } = require('./updater/updaterUtils');
+const { UpdaterStatus, releasesUrl, getTagReleaseLink } = require('./updater/updaterUtils');
 
 const {
   fallbackModeConfigKeys,
@@ -43,6 +43,7 @@ const {
   isSnap,
   getConfigFilePath,
   getFlagsFilePath,
+  repoUrl,
 } = require('./common/utils');
 
 const { ipcRenderer } = electron;
@@ -70,7 +71,6 @@ let currentTypedQuery = ''; // Query that the user is typing currently
 const firstLaunch = electron.remote.getGlobal('firstLaunch');
 let initScreenFlag = 1;
 let isAssistantReady = false;
-let releases = electron.remote.getGlobal('releases');
 const assistantInput = document.querySelector('#assistant-input');
 let assistantMicrophone = document.querySelector('#assistant-mic');
 const suggestionArea = document.querySelector('#suggestion-area');
@@ -549,7 +549,7 @@ if (assistantConfig['keyFilePath'] === '') {
   `;
 
   const suggestionParent = document.querySelector('.suggestion-parent');
-  const documentationLink = 'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client';
+  const documentationLink = `${repoUrl}/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client`;
 
   suggestionParent.innerHTML = `
     <span style="
@@ -2058,7 +2058,7 @@ async function openConfig(configItem = null) {
               How to setup authentication?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client')">
+              <label class="button setting-item-button" onclick="openLink('${repoUrl}/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -2077,7 +2077,7 @@ async function openConfig(configItem = null) {
               Stuck on an issue?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)')">
+              <label class="button setting-item-button" onclick="openLink('${repoUrl}/wiki/Frequently-Asked-Questions-(FAQ)')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -2096,7 +2096,7 @@ async function openConfig(configItem = null) {
               Found a new bug?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
+              <label class="button setting-item-button" onclick="openLink('${repoUrl}/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -2115,7 +2115,7 @@ async function openConfig(configItem = null) {
               Have a suggestion or an idea?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
+              <label class="button setting-item-button" onclick="openLink('${repoUrl}/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -2177,7 +2177,7 @@ async function openConfig(configItem = null) {
                       >
                     </span>
 
-                    <span style="width: 100%;">
+                    <span id="changelog-accordion-title-text" style="width: 100%;">
                       What's new in this version
                     </span>
 
@@ -2189,48 +2189,8 @@ async function openConfig(configItem = null) {
                   </div>
                 </label>
 
-                <div class="accordion-content">
-                  <div style="margin-top: 30px;">
-                    ${releases && getReleaseObject(getVersion())
-                      ? markdownToHtml(getChangelog()) : `
-                        <span>
-                          <img src="../res/error.svg" style="
-                            height: 20px;
-                            width: 20px;
-                            vertical-align: sub;
-                            padding-right: 5px;"
-                          >
-                        </span>
-                        <span style="color: var(--color-red);">
-                          An error occurred while fetching releases
-                        </span>
-
-                        <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
-                          <i>
-                            Please check your internet
-                          </i>
-                        </div>
-                      `
-                    }
-
-                    ${releases ? `
-                      <div style="padding-top: 25px; padding-bottom: 10px;">
-                        <div class="button setting-item-button" onclick="openLink(getReleaseObject().html_url)">
-                          <span>
-                            <img src="../res/proceed.svg" style="
-                              height: 19px;
-                              width: 16px;
-                              vertical-align: sub;
-                              padding-right: 10px;
-                              ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
-                            >
-                          </span>
-
-                          Show in GitHub
-                        </div>
-                      </div>` : ''
-                    }
-                  </div>
+                <div id="changelog-accordion-content" class="accordion-content">
+                  <div style="margin-top: 30px;"></div>
                 </div>
               </div>
               <div id="config-item__update-options" style="
@@ -2279,7 +2239,7 @@ async function openConfig(configItem = null) {
                 <span style="vertical-align: -webkit-baseline-middle; margin-right: 15px;">
                   Source code available in GitHub
                 </span>
-                <label class="button setting-item-button" onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client')">
+                <label class="button setting-item-button" onclick="openLink('${repoUrl}')">
                   <span>
                     <img src="../res/github.svg" style="
                       height: 20px;
@@ -2799,10 +2759,9 @@ async function openConfig(configItem = null) {
 
     downloadExternallyButton.onclick = () => {
       const updateVersion = sessionStorage.getItem('updateVersion');
-      const releasesUrl = 'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases';
 
       if (updateVersion) {
-        const latestReleaseUrl = `${releasesUrl}/tag/v${updateVersion}`;
+        const latestReleaseUrl = getTagReleaseLink(`v${updateVersion}`);
         electronShell.openExternal(latestReleaseUrl);
       }
       else {
@@ -2842,6 +2801,72 @@ async function openConfig(configItem = null) {
     }
     else if (sessionStorage.getItem('updaterStatus') === UpdaterStatus.InstallingUpdate) {
       updaterRenderer.setInstallingUpdatesSection();
+    }
+
+    // Set Changelog ("What's new" section)
+
+    const changelogInnerContainer = document.querySelector('#changelog-accordion-content > div');
+    const changelogContent = ipcRenderer.sendSync('update:getChangelog');
+    const changelogVersion = getVersion(JSON.parse(sessionStorage.getItem('updaterCurrentInfo'))?.version);
+
+    if (changelogContent && !changelogVersion.endsWith('undefined')) {
+      // If a changelog is returned successfully, display
+      // the changelog along with the GitHub release link
+
+      const releaseLink = getTagReleaseLink(changelogVersion);
+
+      changelogInnerContainer.innerHTML = `
+        ${changelogContent}
+
+        <div style="padding-top: 25px; padding-bottom: 10px;">
+          <div class="button setting-item-button" onclick="openLink('${releaseLink}')">
+            <span>
+              <img src="../res/proceed.svg" style="
+                height: 19px;
+                width: 16px;
+                vertical-align: sub;
+                padding-right: 10px;
+                ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}"
+              >
+            </span>
+            Show in GitHub
+          </div>
+        </div>
+      `;
+
+      // If the changelog version corresponds to available update,
+      // modify the changelog accordion title text to reflect the same
+
+      if (changelogVersion !== getVersion()) {
+        const changelogAccordionTitleText = document.querySelector('#changelog-accordion-title-text');
+
+        changelogAccordionTitleText.innerHTML = `
+          What's new in the upcoming version — <strong>${changelogVersion}</strong>
+        `;
+      }
+    }
+    else {
+      // If the changelog cannot be fetched (probably due to network issues),
+      // show an error in the accordion content
+
+      changelogInnerContainer.innerHTML = `
+        <span>
+          <img src="../res/error.svg" style="
+            height: 20px;
+            width: 20px;
+            vertical-align: sub;
+            padding-right: 5px;"
+          >
+        </span>
+        <span style="color: var(--color-red);">
+          An error occurred while fetching releases
+        </span>
+        <div style="opacity: 0.5; margin-left: 28px; margin-top: 5px;">
+          <i>
+            Please check your internet
+          </i>
+        </div>
+      `;
     }
 
     document.querySelector('#cancel-config-changes').onclick = () => {
@@ -4116,15 +4141,6 @@ function quitApp() {
 }
 
 /**
- * Updates the `releases` in Main process
- * @param {*} releasesObject
- */
-function updateReleases(releasesObject) {
-  console.log(...consoleMessage('Temporarily caching releases...'));
-  ipcRenderer.send('update-releases', releasesObject);
-}
-
-/**
  * Displays `message` for short timespan near the `nav region`.
  *
  * @param {string} message
@@ -4716,47 +4732,6 @@ function showArgsDialog() {
 }
 
 /**
- * Returns a release object for given version
- *
- * @param {string} version
- * Version of assistant to get release object of.
- *
- * If this parameter is left out, the version will
- * be defaulted to currently installed version.
- */
-function getReleaseObject(version) {
-  const ver = getVersion(version);
-
-  const filteredReleaseObject = releases.filter(
-    (releaseObject) => releaseObject.name === ver,
-  )[0];
-
-  return filteredReleaseObject;
-}
-
-/**
- * Returns changelog info from releases array for a given version
- *
- * @param {string} version
- * Version of assistant to get changelog of.
- *
- * If this parameter is left out, the version will
- * be defaulted to currently installed version.
- *
- * @returns {string}
- * Changelog as a string of Markdown.
- */
-function getChangelog(version) {
-  const ver = getVersion(version);
-  console.log(...consoleMessage(`Getting Changelog for "${ver}"`));
-
-  const releaseObject = getReleaseObject(ver);
-  const content = releaseObject.body.trim();
-
-  return content;
-}
-
-/**
  * Start the microphone for transcription and visualization.
  */
 function startMic() {
@@ -4877,59 +4852,6 @@ function getCommitInfo() {
     commitHash,
     commitDate,
   };
-}
-
-/**
- * Converts a string of Markdown to a string
- * of HTML. This implements minimal parsing of the
- * markdown as per the requirements.
- *
- * @param {string} markdownString
- * String containing Markdown
- */
-function markdownToHtml(markdownString) {
-  // Put sibling blockquotes as a single blockquote element
-  const multiBlockquotes = markdownString.match(/(^>\s*(.+)\n?)+/gm);
-
-  if (multiBlockquotes) {
-    multiBlockquotes.forEach((str) => {
-      const newSubStr = str.replace(/^>[ \t]*/gm, '').replace(/\n/gm, '<br />');
-
-      // eslint-disable-next-line no-param-reassign
-      markdownString = markdownString.replace(str, `> ${newSubStr}\n`);
-    });
-  }
-
-  // Parse markdown and replace them with HTML
-  const htmlString = markdownString
-    .replace(/href=['"](.*?)['"]/gm, 'onclick="openLink(\'$1\')"')
-    .replace(/^\s*>\s*(.+)/gm, '<blockquote>$1</blockquote>')
-    .replace(
-      /(\W*?)- \[ \] (.+)/gm,
-      '$1<li class="markdown-list-checkbox"><input type="checkbox" disabled /> $2</li>',
-    )
-    .replace(
-      /(\W*?)- \[x\] (.+)/gm,
-      '$1<li class="markdown-list-checkbox"><input type="checkbox" checked disabled /> $2</li>',
-    )
-    .replace(/^-{3,}/gm, '<hr />')
-    .replace(/^={3,}/gm, '<hr />')
-    .replace(/^- (.+)/gm, '<li style="margin-top: 5px;">$1</li>')
-    .replace(/^# (.+)/gm, '<h1>$1</h1>')
-    .replace(/^## (.+)/gm, '<h2>$1</h2>')
-    .replace(/^### (.+)/gm, '<h3>$1</h3>')
-    .replace(/^#### (.+)/gm, '<h4>$1</h4>')
-    .replace(/^##### (.+)/gm, '<h5>$1</h5>')
-    .replace(/^###### (.+)/gm, '<h6>$1</h6>')
-    .replace(/^\[(.+?)\]\((.+?)\)/gm, '<a onclick="openLink(\'$2\')">$1</a>')
-    .replace(/__(.+?)__/gm, '<strong>$1</strong>')
-    .replace(/_(.+?)_/gm, '<i>$1</i>')
-    .replace(/\*\*(.+?)\*\*/gm, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/gm, '<i>$1</i>')
-    .replace(/`(.+?)`/gm, '<code>$1</code>')
-    .replace(/\n\n/g, '<br />');
-
-  return htmlString;
 }
 
 /**

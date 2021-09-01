@@ -14,6 +14,7 @@ const UpdaterService = require('./app/src/updater/updaterMain');
 
 const {
   fallbackModeConfigKeys,
+  repoUrl,
   getConfigFilePath,
   getLogFilePath,
   getFlagsFilePath,
@@ -35,7 +36,6 @@ let tray;
 let readyForLaunch = false;
 let didLaunchWindow = false;
 let assistantWindowLaunchArgs = {};
-global.releases = null;
 global.firstLaunch = true;
 global.userDataPath = app.getPath('userData');
 
@@ -460,10 +460,6 @@ function onAppReady() {
     event.returnValue = dialog.showMessageBoxSync(mainWindow, opts);
   });
 
-  ipcMain.on('update-releases', (_, releases) => {
-    global.releases = releases;
-  });
-
   ipcMain.on('update-first-launch', () => {
     global.firstLaunch = false;
   });
@@ -749,7 +745,7 @@ function setTrayContextMenu(assistantHotkey, isUpdateReady = false) {
           label: 'Check FAQ',
           click: () => {
             electronShell.openExternal(
-              'https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)',
+              `${repoUrl}/wiki/Frequently-Asked-Questions-(FAQ)`,
             );
           },
         },
