@@ -1,5 +1,5 @@
-name: Bug Report
-description: Create a bug report to help improve Google Assistant Unofficial Desktop Client 
+name: "Bug Report"
+description: "Create a bug report to help improve Google Assistant Unofficial Desktop Client"
 labels: [bug]
 assignees: 
   - Melvin-Abraham
