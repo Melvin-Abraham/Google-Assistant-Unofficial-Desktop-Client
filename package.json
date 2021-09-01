@@ -130,6 +130,8 @@
         "electron-updater": "^4.3.9",
         "google-assistant": "git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
         "grpc": "1.24.6",
+        "isomorphic-dompurify": "^0.15.0",
+        "marked": "^3.0.2",
         "node-fetch": "^2.6.1"
     },
     "devDependencies": {
