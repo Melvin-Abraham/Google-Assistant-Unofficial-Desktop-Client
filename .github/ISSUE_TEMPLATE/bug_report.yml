@@ -22,7 +22,7 @@ body:
     required: true
 - type: textarea
   id: expectations
-  atttributes:
+  attributes:
     label: What did you expect to happen?
     description: "A detailed and concise description of what you expected to happen:"
     placeholder: "What you expected to happen:"
@@ -43,10 +43,10 @@ body:
     
 - type: textarea
   id: os-version
-  atttributes:
+  attributes:
     label: What is your OS and it's version?
     description: "Your OS version:"
-    placeholder: "WHat is your OS?"
+    placeholder: "What is your OS?"
     value: "Eg: Windows 10 2004 Build 19042/MacOS Big Sur 11.2/Ubuntu 20.04 LTS"
   validations:
     required: true
