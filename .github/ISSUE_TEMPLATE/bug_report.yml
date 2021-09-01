@@ -40,13 +40,16 @@ body:
     - Compiled from codebase
   validations:
     required: true
-- - type: input
-      attributes:
-        label: OS & Version
-        description: "What OS & Version are you using?"
-        placeholder: e.g. Windows 10 20H2 19042.804/ Mac OS Big Sur 11.2/ Ubuntu 20.04 LTS
-    validations:
-      required: true
+    
+- type: textarea
+  id: os-version
+  atttributes:
+    label: What is your OS and it's version?
+    description: "Your OS version:"
+    placeholder: "WHat is your OS?"
+    value: "Eg: Windows 10 2004 Build 19042/MacOS Big Sur 11.2/Ubuntu 20.04 LTS"
+  validations:
+    required: true
   - type: textarea
     attributes:
       label: Relevant Assets
