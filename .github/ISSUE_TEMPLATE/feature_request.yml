@@ -1,6 +1,9 @@
 name: Feature Request
 description: This project thrives from differentiation from competing apps. Suggest an idea for Google Assistant  Unofficial Desktop Client
 labels: [feature_request]
+assignees:
+  - Melvin-Abraham
+
 body:
   - type: input
     attributes:
