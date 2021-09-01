@@ -1,62 +1,55 @@
-name: "Bug Report"
-description: "Create a bug report to help improve Google Assistant Unofficial Desktop Client"
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
 labels: [bug]
-assignees: 
-  - Melvin-Abraham
+assignees:
+- Melvin-Abraham
+
 body:
-  body:
 - type: markdown
   attributes:
-    value: "Thanks for taking the time to fill out this bug!"
-  - type: textarea
-    attributes:
-      label: "Description"
-      description: "A clear and concise description of what the bug is."
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: "Steps To Reproduce"
-      description: "Steps to reproduce the behavior."
-      placeholder: |
-        1. Go to '....'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See the error
-    validations:
-      required: false
-  - type: textarea
-    attributes:
-      label: "Expected behavior"
-      description: "A clear and concise description of what you expected to happen."
-    validations:
-      required: true
-      
-    - type: dropdown
-      id: assistant-version
-      attributes:
-        label: "Assistant Version"
-        description: "What version of the Assistant are you using?"
-        options:
-          - v1.0.0-rc.2
-          - v1.0.0-rc.1
-          - v1.0.0
-          - Compiled from codebase
+    value: |
+      Thanks for taking the time to fill out this bug report!
 
-    validations:
-      required: true
-  - type: input
-    attributes:
-      label: "OS & Version"
-      description: "What OS & Version are you using?"
-      placeholder: e.g. Windows 10 20H2 Build 19042.804
+- type: textarea
+  id: what-happened
+  attributes:
+    label: What happened?
+    description: A detailed and clear concise description of the bug:
+    placeholder: "Bug description:"
+    value: "What happened in the bug:"
+  validations:
+    required: true
+- type: textarea
+  id: expectations
+  atttributes:
+    label: What did you expect to happen?
+    description: A detailed and concise description of what you expected to happen:
+    placeholder: "What you expected to happen:"
+    value: "Eg: Expected to see this..."
+  
+- type: dropdown
+  id: assistant-version
+  attributes:
+    label: Version
+    description: What version of Google Assistant are you running?
+    options:
+    - 1.0.0-rc.2
+    - 1.0.0-rc.1
+    - 1.0.0
+    - Compiled from codebase
+  validations:
+    required: true
+- - type: input
+      attributes:
+        label: OS & Version
+        description: What OS & Version are you using?
+        placeholder: e.g. Windows 10 20H2 19042.804
     validations:
       required: true
   - type: textarea
     attributes:
-      label: "Relevant Assets"
+      label: Relevant Assets
       description: |
         A list of assets (logs, screenshots) relevant to this bug.
-
         Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
-      placeholder: |
