@@ -44,12 +44,26 @@ body:
         | This proposal will allow end users to accomplish X | Should |
         | This proposal will allow developers to accomplish Y | Could |
         | This proposal will allow end users to accomplish Z | Won't |
-  - type: input
+  - type: dropdown
     id: assistant-version
     attributes:
-      label: Assistant Version
-      description: What version of the Assistant are you using?
-      placeholder: v1.0.0-rc. 2
+      label: Version
+      description: "What version of Google Assistant are you running?"
+      options:
+      - 1.0.0-rc.2
+      - 1.0.0-rc.1
+      - 1.0.0
+      - Compiled from codebase
+    validations:
+      required: true
+    
+  - type: textarea
+    id: os-version
+    attributes:
+      label: What is your OS and it's version?
+      description: "Your OS version:"
+      placeholder: "What is your OS?"
+      value: "Eg: Windows 10 2004 Build 19042/MacOS Big Sur 11.2/Ubuntu 20.04 LTS"
     validations:
       required: true
   - type: input
