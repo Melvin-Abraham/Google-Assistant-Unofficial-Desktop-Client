@@ -1,6 +1,8 @@
 name: Bug Report
 description: Create a bug report to help improve Google Assistant Unofficial Desktop Client 
 labels: [bug]
+assignees: 
+  - Melvin-Abraham
 body:
   - type: markdown
     attributes:
@@ -8,14 +10,14 @@ body:
         "Thanks for taking the time to fill out this bug report!"
   - type: textarea
     attributes:
-      label: Description
-      description: A clear and concise description of what the bug is.
+      label: "Description"
+      description: "A clear and concise description of what the bug is."
     validations:
       required: true
   - type: textarea
     attributes:
       label: "Steps To Reproduce"
-      description: Steps to reproduce the behavior.
+      description: "Steps to reproduce the behavior."
       placeholder: |
         1. Go to '....'
         2. Click on '....'
@@ -25,28 +27,28 @@ body:
       required: false
   - type: textarea
     attributes:
-      label: Expected behavior
-      description: A clear and concise description of what you expected to happen.
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
     validations:
       required: true
   - type: input
     id: assistant-version
     attributes:
-      label: Assistant Version
-      description: What version of the Assistant are you using?
+      label: "Assistant Version"
+      description: "What version of the Assistant are you using?"
       placeholder: v1.0.0-rc.2
     validations:
       required: true
   - type: input
     attributes:
-      label: OS & Version
-      description: What OS & Version are you using?
+      label: "OS & Version"
+      description: "What OS & Version are you using?"
       placeholder: e.g. Windows 10 20H2 19042.804
     validations:
       required: true
   - type: textarea
     attributes:
-      label: Relevant Assets
+      label: "Relevant Assets"
       description: |
         A list of assets (logs, screenshots) relevant to this bug.
 
