@@ -15,7 +15,7 @@ body:
   id: what-happened
   attributes:
     label: What happened?
-    description: A detailed and clear concise description of the bug:
+    description: "A detailed and clear concise description of the bug:"
     placeholder: "Bug description:"
     value: "What happened in the bug:"
   validations:
