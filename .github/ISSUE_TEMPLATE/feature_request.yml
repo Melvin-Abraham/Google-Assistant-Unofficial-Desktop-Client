@@ -1,26 +1,45 @@
 name: Feature Request
-description: This project thrives from differentiation from competing apps. Suggest an idea for Google Assistant  Unofficial Desktop Client
-labels: [feature_request]
+description: Suggest an idea you have in mind for this project
+title: "[💡 Feature Request]: "
+labels: ["✨ enhancement"]
 assignees:
   - Melvin-Abraham
 
 body:
-  - type: input
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an idea for this project!
+
+        🔍 Before you proceed, make sure to search [existing issues](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues) to avoid creating duplicates.
+        💡 Limit this issue to not more than **one feature request** for clarity and discoverability.
+        ✨ Keep the issue concise and clear as much as possible.
+
+  - type: textarea
+    id: problem-description
     attributes:
       label: What's the Problem?
       description: If your feature request is related to a problem, describe it clearly.
+      placeholder: "Eg: I'm always frustrated when [...]"
+
   - type: textarea
+    id: feature-idea
     attributes:
-      label: Solution/Idea
-      description: Describe your solution/idea.
+      label: What's your solution or idea?
+      description: "A clear and concise description of what you want to happen"
+      placeholder: "Eg: I would like the assistant to ..."
     validations:
       required: true
+
   - type: textarea
+    id: feature-alternatives
     attributes:
       label: Alternatives
-      description: Describe alternatives you've considered
+      description: "Describe alternatives you've considered"
+      placeholder: "Eg: I have considered ... as an alternative to this issue"
     validations:
       required: true
+
   - type: markdown
     attributes:
       value: |
@@ -32,8 +51,9 @@ body:
         'Should' is something we should push hard for, but is not absolutely required to ship.
         'Could' is a nice-to-have; a good stretch goal that isn't painful if we don't achieve it.
         'Won't' is a clear statement that the proposal/feature will intentionally not have that capability.
-        
+
   - type: textarea
+    id: feature-priorities
     attributes:
       label: Priorities
       description: describe all the elements of your idea and how important they are.
@@ -44,36 +64,42 @@ body:
         | This proposal will allow end users to accomplish X | Should |
         | This proposal will allow developers to accomplish Y | Could |
         | This proposal will allow end users to accomplish Z | Won't |
+
   - type: dropdown
     id: assistant-version
     attributes:
-      label: Version
+      label: App Version
       description: "What version of Google Assistant are you running?"
       options:
-      - 1.0.0-rc.2
-      - 1.0.0-rc.1
-      - 1.0.0
-      - Compiled from codebase
+        - Built from source
+        - v1.0.0-rc.2
+        - v1.0.0-rc.1
+        - v1.0.0-beta
     validations:
       required: true
-    
-  - type: textarea
+
+  - type: input
     id: os-version
     attributes:
-      label: What is your OS and it's version?
-      description: "Your OS version:"
-      placeholder: "What is your OS?"
-      value: "Eg: Windows 10 2004 Build 19042/MacOS Big Sur 11.2/Ubuntu 20.04 LTS"
-    validations:
-      required: true
-  - type: input
-    attributes:
       label: OS Version
-      description: What OS are you using? 
-      placeholder: e.g. Windows 10 20H2 19042.804
+      description: "The version and build of the Operating System on which you are running this application"
+      placeholder: "Eg: Windows 10 2004 Build 19042 / MacOS Big Sur 11.2 / Ubuntu 20.04 LTS"
     validations:
-      required: true
+      required: false
+
   - type: textarea
+    id: additional-context
     attributes:
-      label: Additional comment
-      description: Add any other comment or screenshots about the feature request here. What device type/UI layout and app version?
+      label: Additional context
+      description: "Add any other comment or screenshots about the feature request here."
+      placeholder: "Any additional context or screenshots"
+
+  - type: checkboxes
+    id: feature-request-issue-checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: "I have checked [the issue tracker](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues?q=is%3Aissue+label%3A%22%E2%9C%A8+enhancement%22+) and didn't find any duplicate issue"
+          required: true
+        - label: "This issue only covers one paricular feature request"
+          required: true
