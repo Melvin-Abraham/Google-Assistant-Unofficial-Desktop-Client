@@ -10,7 +10,8 @@ body:
   attributes:
     value: |
       Thanks for taking the time to fill out this bug report!
-
+- type: markdown
+  value: "Please check if this issue is mentioned in the [FAQs](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ))
 - type: textarea
   id: what-happened
   attributes:
