@@ -1,0 +1,90 @@
+name: Bug Report
+description: File a bug report and help improve this project
+title: "[🐛 Bug]: "
+labels: ["🐛 bug"]
+assignees:
+  - Melvin-Abraham
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        🔍 Before you proceed, make sure to search [existing issues](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues) to avoid creating duplicates.
+        🤔 Be sure to check the [Frequently Asked Questions (FAQs)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)).
+        🐞 Limit this issue to not more than **one bug report** for clarity and discoverability.
+        ✨ Keep the issue concise and clear as much as possible.
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: What went wrong?
+      description: "A detailed and clear concise description of what the bug is"
+      placeholder: "Describe the bug that occurred while using the application"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What did you expect to happen?
+      description: "A detailed and concise description of what you expected to happen"
+      placeholder: "Eg: Expected to see this..."
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce the bug
+      description: "Steps to reproduce the behavior. This will be used to reproduce and understand the root cause of the bug"
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assistant-version
+    attributes:
+      label: App Version
+      description: "What version of Google Assistant are you running?"
+      options:
+        - Built from source
+        - v1.0.0-rc.2
+        - v1.0.0-rc.1
+        - v1.0.0-beta
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: OS Version
+      description: "The version and build of the Operating System on which you are running this application"
+      placeholder: "Eg: Windows 10 2004 Build 19042 / MacOS Big Sur 11.2 / Ubuntu 20.04 LTS"
+    validations:
+      required: true
+
+  - type: textarea
+    id: relevant-assets
+    attributes:
+      label: Relevant Assets
+      description: |
+        A list of assets (logs, screenshots, screen recordings, etc.) relevant to this bug.
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+      placeholder: "Any additional context, screenshots or screen recordings"
+
+  - type: checkboxes
+    id: bug-report-issue-checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Mark the checkboxes accordingly to continue submitting this bug report
+      options:
+        - label: "I have checked [the issue tracker](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues?q=is%3Aissue+label%3A%22%F0%9F%90%9B+bug%22) and didn't find any duplicate issue"
+          required: true
+        - label: "I have checked the [Frequently Asked Questions (FAQs)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)) and can confirm that there's no fixes or workarounds for this issue"
+          required: true
+        - label: "This issue only covers one paricular bug or issue"
+          required: true
