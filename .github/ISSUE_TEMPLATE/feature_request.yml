@@ -34,36 +34,11 @@ body:
   - type: textarea
     id: feature-alternatives
     attributes:
-      label: Alternatives
+      label: Alternatives Considered
       description: "Describe alternatives you've considered"
       placeholder: "Eg: I have considered ... as an alternative to this issue"
     validations:
       required: true
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
-
-        Please include a list of what the feature should and shouldn't do by filling in the table below.
-
-        'Must' implies that the feature should not ship without this capability.
-        'Should' is something we should push hard for, but is not absolutely required to ship.
-        'Could' is a nice-to-have; a good stretch goal that isn't painful if we don't achieve it.
-        'Won't' is a clear statement that the proposal/feature will intentionally not have that capability.
-
-  - type: textarea
-    id: feature-priorities
-    attributes:
-      label: Priorities
-      description: describe all the elements of your idea and how important they are.
-      value: |
-        | Capability | Priority |
-        | :---------- | :------- |
-        | This proposal will allow developers to accomplish W | Must |
-        | This proposal will allow end users to accomplish X | Should |
-        | This proposal will allow developers to accomplish Y | Could |
-        | This proposal will allow end users to accomplish Z | Won't |
 
   - type: dropdown
     id: assistant-version
@@ -98,6 +73,7 @@ body:
     id: feature-request-issue-checklist
     attributes:
       label: Pre-submission Checklist
+      description: Mark the checkboxes accordingly to continue submitting this feature request
       options:
         - label: "I have checked [the issue tracker](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues?q=is%3Aissue+label%3A%22%E2%9C%A8+enhancement%22+) and didn't find any duplicate issue"
           required: true
