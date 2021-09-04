@@ -358,7 +358,7 @@ const updaterRenderer = new UpdaterRenderer({
 
     const settingsButton = document.querySelector('#settings-btn');
 
-    if (settingsButton && (assistantConfig.autoDownloadUpdates || isDebOrRpm() || isSnap())) {
+    if (settingsButton && (!assistantConfig.autoDownloadUpdates || isDebOrRpm() || isSnap())) {
       settingsButton.classList.add('active-badge');
     }
   },
