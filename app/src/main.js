@@ -2193,29 +2193,24 @@ async function openConfig(configItem = null) {
                   <div style="margin-top: 30px;"></div>
                 </div>
               </div>
-              <div id="config-item__update-options" style="
-                margin-top: 30px;
-                padding: 10px 20px;
-                border: 2px solid var(--color-accent);
-                border-radius: 10px;
-              ">
-                <div style="display: flex; gap: 30px; padding: 5px 0;">
+              <div id="config-item__update-options">
+                <div class="setting-item">
                   <div class="setting-key">
                     Enable Auto-Update
                   </div>
-                  <div class="setting-value" style="height: 35px; margin-left: 71px;">
+                  <div class="setting-value">
                     <label class="switch">
                       <input id="auto-update" type="checkbox">
                       <span class="slider round"></span>
                     </label>
                   </div>
                 </div>
-                <hr style="border-color: var(--color-fg-light); margin: 5px 0;">
-                <div style="display: flex; gap: 30px; padding: 5px 0;">
+                <hr>
+                <div class="setting-item">
                   <div class="setting-key">
                     Download installer externally
                   </div>
-                  <div class="setting-value" style="height: 35px;">
+                  <div class="setting-value">
                     <label class="button setting-item-button" id="download-external-btn">
                       <span>
                         <img src="../res/open_link.svg" style="

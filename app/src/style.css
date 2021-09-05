@@ -631,6 +631,35 @@ body {
   border: rgba(31, 143, 255, var(--opacity-input-border-low)) 2px solid;
 }
 
+#config-item__update-options {
+  margin-top: 30px;
+  padding: 10px 20px;
+  border: 2px solid var(--color-accent);
+  border-radius: 10px;
+}
+
+#config-item__update-options > hr {
+  border-color: var(--color-fg-light);
+  margin: 5px 0;
+}
+
+#config-item__update-options .setting-item {
+  display: grid;
+  grid-template-columns: 0.75fr 1fr;
+  padding: 5px 0;
+}
+
+#config-item__update-options .setting-key {
+  height: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#config-item__update-options .setting-value {
+  margin-top: unset;
+}
+
 .config-item-highlight {
   animation: config-item-highlight-animation 5000ms forwards ease-out;
 }
