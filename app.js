@@ -36,6 +36,7 @@ let tray;
 let readyForLaunch = false;
 let didLaunchWindow = false;
 let assistantWindowLaunchArgs = {};
+let isFirstTimeUser = false;
 global.firstLaunch = true;
 global.userDataPath = app.getPath('userData');
 
@@ -136,6 +137,7 @@ if (fs.existsSync(configFilePath)) {
 }
 else {
   debugLog('Config file does not exist.');
+  isFirstTimeUser = true;
 }
 
 // Read flags
@@ -375,10 +377,19 @@ function onAppReady() {
         return;
       }
 
-      if (!assistantConfig['hideOnFirstLaunch'] || flags.appVersion !== `v${app.getVersion()}`) {
+      const shouldRevealWindowOnStart = (
+        !assistantConfig['hideOnFirstLaunch']
+        || flags.appVersion !== `v${app.getVersion()}`
+        || isFirstTimeUser
+      );
+
+      if (shouldRevealWindowOnStart) {
         if (!openedAtLogin) {
           if (!assistantConfig['hideOnFirstLaunch']) {
             debugLog('Revealing assistant ["hideOnFirstLaunch" = false]');
+          }
+          else if (isFirstTimeUser) {
+            debugLog('Revealing assistant [first-time user]');
           }
           else {
             debugLog('Revealing assistant [recently updated]');
