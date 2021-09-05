@@ -2548,6 +2548,24 @@ async function openConfig(configItem = null) {
       ].join('\n'));
     }
 
+    // Disable "Enable Auto-Update" toggle, if the platform or
+    // package format uses generic updater instad of electron updater
+    const doesUseGenericUpdater = ipcRenderer.sendSync('update:doesUseGenericUpdater');
+
+    if (doesUseGenericUpdater) {
+      autoDownloadUpdates.disabled = true;
+
+      const autoDownloadUpdatesParent = autoDownloadUpdates.parentElement;
+      autoDownloadUpdatesParent.querySelector('.slider').classList.add('disabled');
+
+      if (process.env.DEV_MODE) {
+        autoDownloadUpdatesParent.title = 'Auto-downloading updates is not supported when in development mode';
+      }
+      else {
+        autoDownloadUpdatesParent.title = 'Auto-downloading updates is not supported for this platform or package format';
+      }
+    }
+
     // Disable `enableAudioOutputForTypedQueries` option
     // whenever "Audio Output" is disabled.
     enableAudioOutput.onchange = () => {
