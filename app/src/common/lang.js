@@ -194,6 +194,19 @@ const supportedLanguages = {
     noSuggestionsText: "Nenhuma sugestão.",
     settingsUpdatedText: "Configurações Atualizadas!",
   },
+  "ru-RU": {
+    langName: "Русский",
+    welcomeMessage: "Привет! Чем могу помочь?",
+    inputPlaceholder: "Введите сообщение",
+    listeningMessage: "Слушаю...",
+    initSuggestions: [
+      { label: "Погода", query: "Погода на сегодня" },
+      { label: "Подбрось монету", query: "Подбрось монету" },
+      { label: "Что ты умеешь?", query: "Что ты умеешь?" },
+    ],
+    noSuggestionsText: "Нет подсказок.",
+    settingsUpdatedText: "Настройки обновлены!",
+  },
 };
 
 module.exports = supportedLanguages;
