@@ -131,7 +131,9 @@ else {
 if (!firstLaunch) {
   if (flags.appVersion !== getVersion()) {
     displayQuickMessage('App was updated successfully', true);
+
     flags.appVersion = getVersion();
+    flags.displayPostUpdateBanner = true;
 
     fs.writeFileSync(flagsFilePath, JSON.stringify(flags));
     ipcRenderer.send('update-flags', flags);
@@ -2163,7 +2165,16 @@ async function openConfig(configItem = null) {
                   Check for Updates
                 </label>
               </div>
-              <div class="accordion" style="margin-top: 40px; background: #1e90ff30; padding: 10px 30px 18px 30px; border-radius: 10px;">
+              <div
+                id="config-item__whats-new"
+                class="accordion"
+                style="
+                  margin-top: 40px;
+                  background: #1e90ff30;
+                  padding: 10px 30px 18px 30px;
+                  border-radius: 10px;
+                "
+              >
                 <input type="checkbox" id="whats-new" />
                 <label for="whats-new" class="accordion-tile">
                   <div style="width: 100%; display: inline-block;">
@@ -2255,10 +2266,118 @@ async function openConfig(configItem = null) {
 
     const configNotice = mainArea.querySelector('#config-notice-parent');
 
+    if (flags.displayPostUpdateBanner && sessionStorage.getItem('updaterStatus') === UpdaterStatus.UpdateNotAvailable) {
+      configNotice.style.display = 'block';
+      const postUpdateBannerParent = document.createElement('div');
+
+      postUpdateBannerParent.innerHTML = `
+        <div id="config-banner__assistant-updated" class="config-banner">
+          <div class="config-banner-main">
+            <div style="margin-top: 4px;">
+              <img src="../res/update.svg" style="
+                height: 1.2rem;
+                width: 1.2rem;
+                ${getEffectiveTheme() === 'light' ? 'filter: invert(1);' : ''}
+              ">
+            </div>
+            <div style="
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+            ">
+              <h1>Assistant was updated!</h1>
+              <p>
+                See what's new in <strong>${getVersion()}</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="config-banner-actions">
+            <button
+              id="changelog-banner-dismiss-btn"
+              class="ico-btn"
+              style="display: flex;"
+              title="Dismiss"
+            >
+              <img
+                type="icon"
+                src="../res/close_btn.svg"
+                alt="Dismiss"
+                style="${getEffectiveTheme() === 'dark' ? 'filter: invert(1);' : ''}"
+              />
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Append the banner to the config notice
+      configNotice.appendChild(postUpdateBannerParent);
+
+      /** @type {HTMLDivElement} */
+      const postUpdateBanner = postUpdateBannerParent.querySelector('#config-banner__assistant-updated');
+
+      /** @type {HTMLButtonElement} */
+      const postUpdateBannerDismissButton = postUpdateBanner.querySelector('#changelog-banner-dismiss-btn');
+
+      /**
+       * Removes the banner immediately (without animation) and sets
+       * the `displayPostUpdateBanner` flag to false.
+       *
+       * @param {boolean} animateConfigNoticeCollpase
+       * Specifies whether the `configNoice` should animate collapse
+       * when empty.
+       */
+      const removeBanner = (animateConfigNoticeCollpase = true) => {
+        postUpdateBannerParent.remove();
+
+        // Set the `displayPostUpdateBanner` flag to false.
+        // This will mark the banner as read and won't
+        // display the banner until next update.
+        flags.displayPostUpdateBanner = false;
+        fs.writeFileSync(flagsFilePath, JSON.stringify(flags));
+
+        // Collapse and hide `configNotice` if empty
+        if (configNotice.childElementCount === 0) {
+          if (animateConfigNoticeCollpase) {
+            configNotice.style.paddingTop = 0;
+
+            setTimeout(() => {
+              configNotice.style.display = 'none';
+              configNotice.style.paddingTop = '30px';
+            }, 250);
+          }
+          else {
+            configNotice.style.display = 'none';
+          }
+        }
+      };
+
+      postUpdateBanner.onclick = () => {
+        const changelogAccordion = document.querySelector('#config-item__whats-new');
+        const changelogAccordionToggle = changelogAccordion.querySelector('#whats-new');
+
+        removeBanner(false);
+        changelogAccordionToggle.checked = true;
+        changelogAccordion.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      postUpdateBannerDismissButton.onclick = (event) => {
+        event.stopPropagation();
+
+        postUpdateBanner.style.maxHeight = 0;
+        postUpdateBanner.style.paddingTop = 0;
+        postUpdateBanner.style.paddingBottom = 0;
+        postUpdateBanner.style.marginTop = 0;
+
+        setTimeout(() => removeBanner(), 250);
+      };
+    }
+
     if (isFallbackMode()) {
       configNotice.style.display = 'block';
+      const fallbackModeAccordionParent = document.createElement('div');
 
-      configNotice.innerHTML += `
+      fallbackModeAccordionParent.innerHTML += `
         <div
           class="setting-key accordion"
           style="
@@ -2316,12 +2435,15 @@ async function openConfig(configItem = null) {
           </div>
         </div>
       `;
+
+      configNotice.appendChild(fallbackModeAccordionParent);
     }
 
     if (!canAccessMicrophone) {
       configNotice.style.display = 'block';
+      const microphoneInaccessibleAccordionParent = document.createElement('div');
 
-      configNotice.innerHTML += `
+      microphoneInaccessibleAccordionParent.innerHTML += `
         <div
           class="setting-key accordion"
           style="
@@ -2372,6 +2494,8 @@ async function openConfig(configItem = null) {
           </div>
         </div>
       `;
+
+      configNotice.appendChild(microphoneInaccessibleAccordionParent);
     }
 
     const keyFilePathInput = mainArea.querySelector('#key-file-path');

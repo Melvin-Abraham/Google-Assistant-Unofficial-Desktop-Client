@@ -572,6 +572,7 @@ body {
 #config-notice-parent {
   padding-top: 30px;
   display: none;
+  transition: padding 250ms ease;
 }
 
 .setting-label {
@@ -658,6 +659,51 @@ body {
 
 #config-item__update-options .setting-value {
   margin-top: unset;
+}
+
+.config-banner {
+  cursor: pointer;
+  background-color: #1e90ff30;
+  margin-top: 10px;
+  margin-right: 30px;
+  font-size: 0.9rem;
+  padding: 30px 30px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  max-height: 4em;
+  transition: all 250ms ease;
+  overflow: hidden;
+}
+
+.config-banner h1 {
+  font-size: 1.4em;
+  margin: 0;
+}
+
+.config-banner p {
+  font-size: 1.1em;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.config-banner-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+
+.config-banner-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.config-banner-actions img {
+  -webkit-user-drag: none;
 }
 
 .config-item-highlight {
