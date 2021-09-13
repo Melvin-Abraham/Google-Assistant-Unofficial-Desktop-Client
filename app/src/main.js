@@ -346,11 +346,17 @@ if (assistantConfig['respondToHotword']) {
 
 const updaterRenderer = new UpdaterRenderer({
   onUpdateAvailable: (info) => {
-    // If auto-updates are disabled, notify the user
-    // that a new update is available
+    const doesUseGenericUpdater = ipcRenderer.sendSync('update:doesUseGenericUpdater');
 
-    if (!assistantConfig.autoDownloadUpdates) {
+    // If auto-updates are disabled, notify the user
+    // that a new update is available, else notify that
+    // an update is being downloaded
+
+    if (!assistantConfig.autoDownloadUpdates || doesUseGenericUpdater || process.env.DEV_MODE) {
       displayQuickMessage('Update Available!');
+    }
+    else {
+      displayQuickMessage('Downloading Update');
     }
 
     sessionStorage.setItem('updateVersion', info.version);
@@ -360,7 +366,16 @@ const updaterRenderer = new UpdaterRenderer({
 
     const settingsButton = document.querySelector('#settings-btn');
 
-    if (settingsButton && (!assistantConfig.autoDownloadUpdates || isDebOrRpm() || isSnap())) {
+    const displaySettingsBadge = (
+      settingsButton && (
+        !assistantConfig.autoDownloadUpdates
+        || process.env.DEV_MODE
+        || isDebOrRpm()
+        || isSnap()
+      )
+    );
+
+    if (displaySettingsBadge) {
       settingsButton.classList.add('active-badge');
     }
   },
