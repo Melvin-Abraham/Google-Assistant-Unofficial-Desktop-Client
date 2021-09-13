@@ -176,6 +176,12 @@ class UpdaterService {
       // eslint-disable-next-line no-param-reassign
       event.returnValue = UpdaterService.shouldUseGenericUpdater();
     });
+
+    ipcMain.on('update:syncUpdaterStatus', (event) => {
+      // eslint-disable-next-line no-param-reassign
+      event.returnValue = undefined;
+      this.sendStatusToWindow(this.currentStatus, this.currentInfo);
+    });
   }
 
   /**

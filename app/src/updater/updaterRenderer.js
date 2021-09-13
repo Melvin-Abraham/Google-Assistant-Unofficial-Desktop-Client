@@ -117,8 +117,11 @@ class UpdaterRenderer {
       this.onUpdateApplied();
     });
 
-    // Invoke callbacks based on current status
+    // Synchronize updater status and args from main process
+    // to the renderer process
+    ipcRenderer.sendSync('update:syncUpdaterStatus');
 
+    // Invoke callbacks based on current status
     let updaterCurrentInfo;
 
     switch (sessionStorage.getItem('updaterStatus')) {

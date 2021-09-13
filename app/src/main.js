@@ -350,7 +350,7 @@ const updaterRenderer = new UpdaterRenderer({
 
     // If auto-updates are disabled, notify the user
     // that a new update is available, else notify that
-    // an update is being downloaded
+    // an update is being downloaded.
 
     if (!assistantConfig.autoDownloadUpdates || doesUseGenericUpdater || process.env.DEV_MODE) {
       displayQuickMessage('Update Available!');
@@ -361,7 +361,7 @@ const updaterRenderer = new UpdaterRenderer({
 
     sessionStorage.setItem('updateVersion', info.version);
 
-    // Set badge in the settings button to let the user
+    // Set badge in the settings button to let the user know
     // that a new update is available (for deb, rpm, snap).
 
     const settingsButton = document.querySelector('#settings-btn');
