@@ -2140,7 +2140,10 @@ async function openConfig(configItem = null) {
               class="setting-key"
               style="margin-right: 35px; margin-left: auto; margin-top: 5px;"
             >
-              <img src="../res/Assistant Logo.svg">
+              <img
+                src="../res/Assistant Logo.svg"
+                style="filter: drop-shadow(0 4px 4px #00000020);"
+              />
             </div>
             <div class="setting-value">
               <div style="font-size: 23px; font-weight: bold;">
