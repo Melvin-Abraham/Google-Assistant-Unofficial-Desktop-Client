@@ -246,7 +246,26 @@ class UpdaterRenderer {
       const downloadUpdateButton = checkForUpdateSection.querySelector('#download-update-btn');
 
       if (!isSnap()) {
-        downloadUpdateButton.onclick = () => UpdaterRenderer.requestDownloadUpdate();
+        downloadUpdateButton.onclick = () => {
+          UpdaterRenderer.requestDownloadUpdate();
+
+          downloadUpdateButton.classList.add('disabled');
+          downloadUpdateButton.onclick = undefined;
+
+          downloadUpdateButton.innerHTML = `
+            <img
+              src="../res/throbber.svg"
+              style="
+                height: 18px;
+                width: 18px;
+                vertical-align: sub;
+                padding-right: 10px;
+              "
+            />
+
+            Preparing download
+          `;
+        };
       }
       else {
         downloadUpdateButton.onclick = () => showSnapUpdateDoc();
