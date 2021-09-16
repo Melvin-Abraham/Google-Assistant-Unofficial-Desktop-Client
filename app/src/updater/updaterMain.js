@@ -276,7 +276,12 @@ class UpdaterService {
    * Restarts the application after applying update
    */
   installUpdateAndRestart() {
+    // Prevent the app from applying the same update
+    // multiple times in a row
+    if (this.app.isUpdating) return;
+
     this.app.isQuitting = true;
+    this.app.isUpdating = true;
 
     if (process.platform !== 'darwin') {
       autoUpdater.quitAndInstall(true, true);
@@ -293,7 +298,12 @@ class UpdaterService {
    * Quits the application after applying update
    */
   installUpdateAndQuit() {
+    // Prevent the app from applying the same update
+    // multiple times in a row
+    if (this.app.isUpdating) return;
+
     this.app.isQuitting = true;
+    this.app.isUpdating = true;
 
     if (process.platform !== 'darwin') {
       autoUpdater.quitAndInstall(true);

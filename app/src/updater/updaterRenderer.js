@@ -317,7 +317,28 @@ class UpdaterRenderer {
 
       /** @type {HTMLElement} */
       const restartToUpdateButton = checkForUpdateSection.querySelector('#update-and-restart-btn');
-      restartToUpdateButton.onclick = () => UpdaterRenderer.requestUpdateAndRestart();
+
+      restartToUpdateButton.onclick = () => {
+        UpdaterRenderer.requestUpdateAndRestart();
+
+        // Prevent multiple requests for update-and-restart
+        restartToUpdateButton.classList.add('disabled');
+        restartToUpdateButton.onclick = undefined;
+
+        restartToUpdateButton.innerHTML = `
+          <img
+            src="../res/throbber.svg"
+            style="
+              height: 18px;
+              width: 18px;
+              vertical-align: sub;
+              padding-right: 10px;
+            "
+          />
+
+          Update in progress
+        `;
+      };
     }
   }
 
