@@ -6,10 +6,11 @@ const process = require('process');
 const cp = require('child_process');
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
-const { ipcMain, dialog } = require('electron');
+const { ipcMain } = require('electron');
 const { updaterGeneric } = require('./updaterGeneric');
 const { UpdaterStatus } = require('./updaterUtils');
 const { isSnap, isDebOrRpm } = require('../common/utils');
+const { displayDialogMain } = require('../common/utilsMain');
 
 /**
  * Main process updater service
@@ -245,7 +246,7 @@ class UpdaterService {
 
     cp.exec(appExtractionCmd, (err, stdout, stderr) => {
       if (err) {
-        dialog.showMessageBoxSync({
+        displayDialogMain({
           type: 'error',
           message: 'Error occurred while extracting archive',
           detail: err.message,

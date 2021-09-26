@@ -15,8 +15,22 @@ closeButton.onclick = () => {
   }
 };
 
-minimizeButton.onclick = () => assistantWindow.minimize();
 expandCollapseButton.onclick = () => toggleExpandWindow();
+
+minimizeButton.onclick = () => {
+  if (minimizeWindow !== undefined) {
+    minimizeWindow();
+  }
+  else {
+    // If `minimizeWindow` function is not available,
+    // execute `assistantWindow.minimize()`.
+    //
+    // Note: This will cause the window to close right away
+    // if float behavior is set to "Close on Blur"
+
+    assistantWindow.minimize();
+  }
+};
 
 // Library Imports
 
@@ -43,11 +57,15 @@ const {
   isSnap,
   getConfigFilePath,
   getFlagsFilePath,
+  displayDialog,
+  displayAsyncDialog,
+  displayAsyncOpenDialog,
   repoUrl,
+  minimizeWindow,
 } = require('./common/utils');
 
 const { ipcRenderer } = electron;
-const { app, dialog } = electron.remote;
+const { app } = electron.remote;
 const assistantWindow = electron.remote.getCurrentWindow();
 const electronShell = electron.shell;
 const assistantWindowLaunchArgs = ipcRenderer.sendSync('get-assistant-win-launch-args');
@@ -1199,7 +1217,7 @@ function openLink(link, autoMinimizeAssistantWindow = true) {
   electronShell.openExternal(link);
 
   if (autoMinimizeAssistantWindow) {
-    assistantWindow.minimize();
+    minimizeWindow();
   }
 }
 
@@ -1270,12 +1288,11 @@ function jumpToNext() {
  * The Title for the dialog box.
  */
 function openFileDialog(callback, openDialogTitle = null) {
-  dialog
-    .showOpenDialog(assistantWindow, {
-      title: openDialogTitle,
-      filters: [{ name: 'JSON File', extensions: ['json'] }],
-      properties: ['openFile'],
-    })
+  displayAsyncOpenDialog({
+    title: openDialogTitle,
+    filters: [{ name: 'JSON File', extensions: ['json'] }],
+    properties: ['openFile'],
+  })
     .then((result, bookmarks) => callback(result, bookmarks));
 }
 
@@ -2791,7 +2808,7 @@ async function openConfig(configItem = null) {
           ),
         );
 
-        const buttonId = dialog.showMessageBoxSync(assistantWindow, {
+        const buttonId = displayDialog({
           type: 'error',
           title: 'Language unsupported',
           message: 'Language unsupported',
@@ -2920,7 +2937,7 @@ async function openConfig(configItem = null) {
         electronShell.openExternal(latestReleaseUrl);
       }
       else {
-        const res = dialog.showMessageBoxSync(assistantWindow, {
+        const res = displayDialog({
           type: 'info',
           message: 'No new updates available',
           detail: 'There are no new updates to download at the moment',
@@ -2931,8 +2948,11 @@ async function openConfig(configItem = null) {
           cancelId: 1,
         });
 
+        console.log(ipcRenderer.sendSync('get-allow-close-on-blur'));
+
         if (res === 0) {
-          electronShell.openExternal(releasesUrl);
+          console.log(ipcRenderer.sendSync('get-allow-close-on-blur'));
+          openLink(releasesUrl);
         }
       }
     };
@@ -3036,7 +3056,7 @@ async function openConfig(configItem = null) {
       ) {
         // If `savedTokensPath` is empty
 
-        const result = dialog.showMessageBoxSync(assistantWindow, {
+        const result = displayDialog({
           type: 'question',
           title: 'Saved Tokens Path is empty',
           message: [
@@ -3062,7 +3082,7 @@ async function openConfig(configItem = null) {
       ) {
         // if `savedTokensPath` is a directory
 
-        const result = dialog.showMessageBoxSync(assistantWindow, {
+        const result = displayDialog({
           type: 'question',
           title: 'Saved Tokens Path is missing a filename',
           message: [
@@ -3088,7 +3108,7 @@ async function openConfig(configItem = null) {
       ) {
         // `savedTokensPath` is not a existing path
 
-        const result = dialog.showMessageBoxSync(assistantWindow, {
+        const result = displayDialog({
           type: 'info',
           title: 'Saved Tokens Path does not exist',
           message: [
@@ -3124,7 +3144,7 @@ async function openConfig(configItem = null) {
             'Either the path is invalid or Assistant does not have enough permissions to create one.',
           ].join('\n');
 
-          dialog.showMessageBoxSync(assistantWindow, {
+          displayDialog({
             type: 'error',
             title: 'Path Creation Failure',
             message: 'Path Creation Failure',
@@ -3169,7 +3189,7 @@ async function openConfig(configItem = null) {
           ].join('\n');
         }
 
-        dialog.showMessageBoxSync(assistantWindow, {
+        displayDialog({
           type: 'error',
           message: 'Failed to create Token File',
           detail,
@@ -3184,7 +3204,7 @@ async function openConfig(configItem = null) {
         // Warn users if saving settings in fallback mode
 
         if (isFallbackMode()) {
-          const result = dialog.showMessageBoxSync(assistantWindow, {
+          const result = displayDialog({
             message: 'Confirm settings overwrite',
             detail: [
               'Saving the settings in Fallback mode will overwrite any existing settings you have in normal mode. ',
@@ -4496,7 +4516,7 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
   `;
 
   suggestionArea.querySelector('#browser-open-failed-btn').onclick = () => {
-    const result = dialog.showMessageBoxSync(assistantWindow, {
+    const result = displayDialog({
       type: 'info',
       message: 'Your Browser failed to open the link?',
       detail: [
@@ -4848,14 +4868,13 @@ function showAboutBox() {
     `OS: ${osInfo.trimEnd()}`,
   ].join('\n');
 
-  dialog
-    .showMessageBox(assistantWindow, {
-      type: 'info',
-      title: 'Google Assistant Unofficial Desktop Client',
-      message: 'Google Assistant Unofficial Desktop Client',
-      detail: info,
-      buttons: ['OK', 'Copy'],
-    })
+  displayAsyncDialog({
+    type: 'info',
+    title: 'Google Assistant Unofficial Desktop Client',
+    message: 'Google Assistant Unofficial Desktop Client',
+    detail: info,
+    buttons: ['OK', 'Copy'],
+  })
     .then((result) => {
       if (result.response === 1) {
         // If "Copy" is pressed
@@ -4870,14 +4889,13 @@ function showAboutBox() {
 function showArgsDialog() {
   const content = process.argv.join('\n    ');
 
-  dialog
-    .showMessageBox(assistantWindow, {
-      type: 'info',
-      title: 'Google Assistant Unofficial Desktop Client',
-      message: 'Command Line Arguments',
-      detail: content,
-      buttons: ['OK', 'Copy'],
-    })
+  displayAsyncDialog({
+    type: 'info',
+    title: 'Google Assistant Unofficial Desktop Client',
+    message: 'Command Line Arguments',
+    detail: content,
+    buttons: ['OK', 'Copy'],
+  })
     .then((result) => {
       if (result.response === 1) {
         // If "Copy" is pressed
@@ -4956,13 +4974,17 @@ function stopMic() {
  */
 function closeOnBlurCallback() {
   const isDevToolsFocused = assistantWindow.webContents.isDevToolsFocused();
+  const isCloseOnBlurAllowed = ipcRenderer.sendSync('get-allow-close-on-blur');
 
   // Only close when not focusing DevTools and
   // the application is initialized properly
-  if (!isDevToolsFocused && initScreenFlag) {
+  if (!isDevToolsFocused && initScreenFlag && isCloseOnBlurAllowed) {
     stopAudioAndMic();
     close();
   }
+
+  // Reset `allowCloseOnBlur` if already set to `false`
+  ipcRenderer.sendSync('set-allow-close-on-blur', true);
 }
 
 /**
@@ -5090,7 +5112,7 @@ function getMicPermEnableHelp() {
  */
 function resetSavedTokensFile(showRelaunchScreen = true, showWarning = true) {
   if (showWarning) {
-    const res = dialog.showMessageBoxSync(assistantWindow, {
+    const res = displayDialog({
       type: 'warning',
       message: 'Are you sure to reset the tokens?',
       detail: 'After proceeding with the token reset, you will be directed to the "Get Token" screen for fetching new access tokens.',
@@ -5308,7 +5330,7 @@ window.onkeydown = (e) => {
 
   if (e.key === 'Escape') {
     if (assistantConfig['escapeKeyBehavior'] === 'minimize') {
-      assistantWindow.minimize();
+      minimizeWindow();
     }
     else if (assistantConfig['escapeKeyBehavior'] === 'close') {
       stopAudioAndMic();

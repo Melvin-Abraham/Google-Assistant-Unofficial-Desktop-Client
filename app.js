@@ -13,6 +13,14 @@ const { getNativeKeyName } = require('./app/src/keybinding');
 const UpdaterService = require('./app/src/updater/updaterMain');
 
 const {
+  displayDialogMain,
+  displayAsyncDialogMain,
+  displayAsyncOpenDialogMain,
+  displayErrorBoxMain,
+  minimizeWindow,
+} = require('./app/src/common/utilsMain');
+
+const {
   fallbackModeConfigKeys,
   repoUrl,
   getConfigFilePath,
@@ -76,7 +84,7 @@ process.on('uncaughtException', async (err) => {
   debugLog(errorMessage, 'error');
 
   if (app.isReady()) {
-    const buttonIndex = await dialog.showMessageBox(null, {
+    const buttonIndex = await displayAsyncDialogMain({
       title: 'Error',
       type: 'error',
       message: 'An unhandled exception occurred in the main process',
@@ -90,7 +98,7 @@ process.on('uncaughtException', async (err) => {
     }
   }
   else {
-    dialog.showErrorBox(
+    displayErrorBoxMain(
       'An unhandled exception occurred in the main process',
       errorMessage.trimStart(),
     );
@@ -189,7 +197,7 @@ if (!gotInstanceLock) {
   if (isDevMode()) {
     debugLog('Another instance is already running', 'warn');
 
-    dialog.showErrorBox(
+    displayErrorBoxMain(
       'Preventing launch',
       [
         'An instance of Google Assistant is already running.',
@@ -255,6 +263,9 @@ function onAppReady() {
     backgroundColor: process.platform !== 'darwin' ? '#00000000' : '#00000001',
     alwaysOnTop: true,
   });
+
+  // Store `mainWindow` as global variable
+  global.mainWindow = mainWindow;
 
   debugLog('Created Browser Window');
 
@@ -468,7 +479,29 @@ function onAppReady() {
 
   ipcMain.on('display-dialog', (event, opts) => {
     // eslint-disable-next-line no-param-reassign
-    event.returnValue = dialog.showMessageBoxSync(mainWindow, opts);
+    event.returnValue = displayDialogMain(opts);
+  });
+
+  ipcMain.handle('display-async-dialog', async (_, opts) => {
+    const result = await displayAsyncDialogMain(opts);
+    return result;
+  });
+
+  ipcMain.handle('display-async-open-dialog', async (_, opts) => {
+    const result = await displayAsyncOpenDialogMain(opts);
+    return result;
+  });
+
+  ipcMain.on('get-allow-close-on-blur', (event) => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = global.allowCloseOnBlur;
+  });
+
+  ipcMain.on('set-allow-close-on-blur', (event, value) => {
+    global.allowCloseOnBlur = value;
+
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = undefined;
   });
 
   ipcMain.on('update-first-launch', () => {
@@ -496,6 +529,13 @@ function onAppReady() {
 
   ipcMain.on('update-hotkey', (_, hotkey) => {
     updateHotkey(hotkey);
+  });
+
+  ipcMain.on('minimize-window', (event) => {
+    minimizeWindow();
+
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = undefined;
   });
 
   ipcMain.on('restart-fallback', () => {

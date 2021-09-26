@@ -69,6 +69,39 @@ function displayDialog(options) {
   return ipcRenderer.sendSync('display-dialog', options);
 }
 
+/**
+ * Displays an async dialog box
+ *
+ * @param {Electron.MessageBoxOptions} options
+ * Options for creating a dialog box
+ *
+ * @returns {Promise<Electron.MessageBoxReturnValue>}
+ * The returned value (possibly number) as promise
+ */
+function displayAsyncDialog(options) {
+  return ipcRenderer.invoke('display-async-dialog', options);
+}
+
+/**
+ * Displays an async dialog box
+ *
+ * @param {Electron.OpenDialogOptions} options
+ * Options for creating a dialog box
+ *
+ * @returns {Promise<Electron.OpenDialogReturnValue>}
+ * The returned value as promise
+ */
+function displayAsyncOpenDialog(options) {
+  return ipcRenderer.invoke('display-async-open-dialog', options);
+}
+
+/**
+ * Minimizes assistant window
+ */
+function minimizeWindow() {
+  ipcRenderer.sendSync('minimize-window');
+}
+
 module.exports = {
   fallbackModeConfigKeys,
   githubRepoInfo,
@@ -77,7 +110,10 @@ module.exports = {
   isAppImage,
   isDebOrRpm,
   displayDialog,
+  displayAsyncDialog,
+  displayAsyncOpenDialog,
   getConfigFilePath,
   getLogFilePath,
   getFlagsFilePath,
+  minimizeWindow,
 };
