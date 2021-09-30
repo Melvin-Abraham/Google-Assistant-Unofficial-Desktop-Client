@@ -57,6 +57,19 @@ function isDebOrRpm() {
 }
 
 /**
+ * Checks whether the current system session uses the Wayland
+ * windowing system
+ */
+function isWaylandSession() {
+  if (process.platform !== 'linux') return false;
+
+  return (
+    process.env['WAYLAND_DISPLAY'] !== undefined
+    || process.env['XDG_SESSION_TYPE'] !== 'x11'
+  );
+}
+
+/**
  * Displays a dialog box
  *
  * @param {Electron.MessageBoxSyncOptions} options
@@ -109,6 +122,7 @@ module.exports = {
   isSnap,
   isAppImage,
   isDebOrRpm,
+  isWaylandSession,
   displayDialog,
   displayAsyncDialog,
   displayAsyncOpenDialog,

@@ -49,12 +49,20 @@ const themes = require('./common/themes');
 const Microphone = require('./lib/microphone');
 const AudioPlayer = require('./lib/audio_player');
 const UpdaterRenderer = require('./updater/updaterRenderer');
-const { UpdaterStatus, releasesUrl, getTagReleaseLink } = require('./updater/updaterUtils');
+
+const {
+  UpdaterStatus,
+  releasesUrl,
+  getTagReleaseLink,
+  getSupportedLinuxPackageFormat,
+} = require('./updater/updaterUtils');
 
 const {
   fallbackModeConfigKeys,
   isDebOrRpm,
   isSnap,
+  isAppImage,
+  isWaylandSession,
   getConfigFilePath,
   getFlagsFilePath,
   displayDialog,
@@ -126,6 +134,14 @@ navigator.mediaDevices
     canAccessMicrophone = false;
     displayQuickMessage('Microphone is not accessible');
   });
+
+// Set Distribution Type for linux platform
+
+getSupportedLinuxPackageFormat().then((distType) => {
+  if (distType !== null) {
+    process.env.DIST_TYPE = distType;
+  }
+});
 
 // Set settings badge
 
@@ -2130,7 +2146,67 @@ async function openConfig(configItem = null) {
               Found a new bug?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('${repoUrl}/issues/new?assignees=&labels=&template=bug_report.md&title=%F0%9F%90%9B+BUG%3A+')">
+              <label
+                class="button setting-item-button"
+                onclick="openLink('${repoUrl}/issues/new?assignees=Melvin-Abraham&labels=%F0%9F%90%9B+bug&template=bug_report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+&relevant-assets=${
+                  (() => {
+                    let additionalInfo = '';
+                    const { commitHash, commitDate } = getCommitInfo();
+
+                    additionalInfo += [
+                      '### :information_source: Platform Info',
+                      `Running on **${os.type} ${os.arch} ${os.release}**`,
+                    ].join('\n');
+
+                    if (process.platform === 'linux') {
+                      // Distribution Type
+                      const distributionType = process.env.DIST_TYPE;
+                      additionalInfo += '\n**Distribution Type:** ';
+
+                      switch (distributionType) {
+                        case 'deb':
+                          additionalInfo += 'Debian';
+                          break;
+
+                        case 'rpm':
+                          additionalInfo += 'Red Hat';
+                          break;
+
+                        default:
+                          additionalInfo += 'Unknown';
+                          break;
+                      }
+
+                      // Windowing System
+                      additionalInfo += `\n**Windowing System:** ${
+                        isWaylandSession() ? 'Wayland' : 'X11'
+                      }`;
+
+                      // Package variant
+                      if (isSnap()) {
+                        additionalInfo += '\nRunning as **Snap** package';
+                      }
+                      else if (isAppImage()) {
+                        additionalInfo += '\nRunning as **AppImage** package';
+                      }
+                    }
+
+                    // Dev Mode related info
+                    if (process.env.DEV_MODE === 'true') {
+                      additionalInfo += [
+                        '\n',
+                        '### :hammer_and_wrench: Running in Dev Mode',
+                        `**Commit Hash:** ${commitHash}`,
+                        `**Commit Date:** ${commitDate}`,
+                        `**Node.js Version:** ${process.versions.node}`,
+                        `**Electron Version:** ${process.versions.electron}`,
+                      ].join('\n');
+                    }
+
+                    return encodeURIComponent(additionalInfo);
+                  })()
+                }')"
+              >
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -2149,7 +2225,10 @@ async function openConfig(configItem = null) {
               Have a suggestion or an idea?
             </div>
             <div class="setting-value" style="height: 35px;">
-              <label class="button setting-item-button" onclick="openLink('${repoUrl}/issues/new?assignees=&labels=&template=feature_request.md&title=%F0%9F%92%A1+FEATURE+REQUEST%3A+')">
+              <label
+                class="button setting-item-button"
+                onclick="openLink('${repoUrl}/issues/new?assignees=Melvin-Abraham&labels=%E2%9C%A8+enhancement&template=feature_request.yml&title=%5B%F0%9F%92%A1+Feature+Request%5D%3A+')"
+              >
                 <span>
                   <img src="../res/open_link.svg" style="
                     height: 16px;
@@ -4840,9 +4919,9 @@ function setTheme(theme = null, forceAssistantResponseThemeChange = true) {
 }
 
 /**
- * Display "About" Dialog Box.
+ * Returns the string content to display inside About Box
  */
-function showAboutBox() {
+function getAboutBoxContent() {
   const { commitHash, commitDate } = getCommitInfo();
   const appVersion = app.getVersion();
   const nodeVersion = process.versions.node;
@@ -4859,7 +4938,7 @@ function showAboutBox() {
     ? `Commit ID: ${commitHash}\nCommit Date: ${commitDate}\n`
     : '';
 
-  const info = [
+  const content = [
     `Version: ${appVersion}`,
     `${commitInfo}Electron: ${electronVersion}`,
     `Chrome: ${chromeVersion}`,
@@ -4867,6 +4946,15 @@ function showAboutBox() {
     `V8: ${v8Version}`,
     `OS: ${osInfo.trimEnd()}`,
   ].join('\n');
+
+  return content;
+}
+
+/**
+ * Display "About" Dialog Box.
+ */
+function showAboutBox() {
+  const info = getAboutBoxContent();
 
   displayAsyncDialog({
     type: 'info',
