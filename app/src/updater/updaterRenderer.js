@@ -120,28 +120,6 @@ class UpdaterRenderer {
     // Synchronize updater status and args from main process
     // to the renderer process
     ipcRenderer.sendSync('update:syncUpdaterStatus');
-
-    // Invoke callbacks based on current status
-    let updaterCurrentInfo;
-
-    switch (sessionStorage.getItem('updaterStatus')) {
-      case UpdaterStatus.UpdateAvailable:
-        updaterCurrentInfo = JSON.parse(sessionStorage.getItem('updaterCurrentInfo'));
-        this.onUpdateAvailable(updaterCurrentInfo);
-        break;
-
-      case UpdaterStatus.UpdateDownloaded:
-        updaterCurrentInfo = JSON.parse(sessionStorage.getItem('updaterCurrentInfo'));
-        this.onUpdateDownloaded(updaterCurrentInfo);
-        break;
-
-      case UpdaterStatus.UpdateApplied:
-        this.onUpdateApplied();
-        break;
-
-      default:
-        // no-op
-    }
   }
 
   /**
