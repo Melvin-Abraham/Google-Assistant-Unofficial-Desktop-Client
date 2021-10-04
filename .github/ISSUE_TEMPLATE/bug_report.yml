@@ -86,5 +86,5 @@ body:
           required: true
         - label: "I have checked the [Frequently Asked Questions (FAQs)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)) and can confirm that there's no fixes or workarounds for this issue"
           required: true
-        - label: "This issue only covers one paricular bug or issue"
+        - label: "This issue only covers one particular bug or issue"
           required: true
