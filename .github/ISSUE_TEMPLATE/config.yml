@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Have Questions?
+    url: https://github.com/Melvin-Abraham/Google-Assistant/Unofficial-Desktop-Client/discussions/new
+    about: Ask and answer questions or have a discussion with the community.
+
+  - name: Frequently Asked Questions (FAQs)
+    url: https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Frequently-Asked-Questions-(FAQ)
+    about: Questions and issues frequently encountered by others.
