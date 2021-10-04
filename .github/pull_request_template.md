@@ -25,7 +25,7 @@ Check all that applies
 
 - [ ] Built and ran the app
 - [ ] Tested my changes _(to make sure your changes don't break something, make sure to test the code)_
-- [ ] Formated code using Prettier/ESLint
+- [ ] Formatted code using Prettier/ESLint
 - [ ] Added comments/documentation in relevant places _([JSDocs](https://jsdoc.app/) for function/class body and `//` comments for other parts)_
 
 ### Screenshots (optional)
