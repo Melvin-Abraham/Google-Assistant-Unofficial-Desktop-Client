@@ -77,5 +77,5 @@ body:
       options:
         - label: "I have checked [the issue tracker](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues?q=is%3Aissue+label%3A%22%E2%9C%A8+enhancement%22+) and didn't find any duplicate issue"
           required: true
-        - label: "This issue only covers one paricular feature request"
+        - label: "This issue only covers one particular feature request"
           required: true
