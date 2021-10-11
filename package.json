@@ -2,7 +2,7 @@
     "name": "g-assist",
     "productName": "Google Assistant",
     "description": "A cross-platform unofficial desktop client for Google Assistant powered by the Google Assistant SDK",
-    "version": "1.0.0-rc.2",
+    "version": "1.0.0",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
     "homepage": "https://github.com/Melvin-Abraham",
