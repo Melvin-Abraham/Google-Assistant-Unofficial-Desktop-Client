@@ -222,27 +222,30 @@ class UpdaterRenderer {
 
       /** @type {HTMLElement} */
       const downloadUpdateButton = checkForUpdateSection.querySelector('#download-update-btn');
+      const doesUseGenericUpdater = ipcRenderer.sendSync('update:doesUseGenericUpdater');
 
       if (!isSnap()) {
         downloadUpdateButton.onclick = () => {
           UpdaterRenderer.requestDownloadUpdate();
 
-          downloadUpdateButton.classList.add('disabled');
-          downloadUpdateButton.onclick = undefined;
+          if (!doesUseGenericUpdater) {
+            downloadUpdateButton.classList.add('disabled');
+            downloadUpdateButton.onclick = undefined;
 
-          downloadUpdateButton.innerHTML = `
-            <img
-              src="../res/throbber.svg"
-              style="
-                height: 18px;
-                width: 18px;
-                vertical-align: sub;
-                padding-right: 10px;
-              "
-            />
+            downloadUpdateButton.innerHTML = `
+              <img
+                src="../res/throbber.svg"
+                style="
+                  height: 18px;
+                  width: 18px;
+                  vertical-align: sub;
+                  padding-right: 10px;
+                "
+              />
 
-            Preparing download
-          `;
+              Preparing download
+            `;
+          }
         };
       }
       else {
