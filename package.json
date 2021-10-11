@@ -1,7 +1,7 @@
 {
     "name": "g-assist",
     "productName": "Google Assistant",
-    "description": "Google Assistant Unofficial Desktop Client",
+    "description": "A cross-platform unofficial desktop client for Google Assistant powered by the Google Assistant SDK",
     "version": "1.0.0-rc.2",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
@@ -60,7 +60,8 @@
             "allowToChangeInstallationDirectory": "true",
             "installerIcon": "./app/res/icons/Installer.ico",
             "installerSidebar": "./app/res/misc/InstallerSidebar.bmp",
-            "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp"
+            "uninstallerSidebar": "./app/res/misc/UninstallerSidebar.bmp",
+            "license": "LICENSE"
         },
         "mac": {
             "icon": "./app/res/icons/icon.icns",
