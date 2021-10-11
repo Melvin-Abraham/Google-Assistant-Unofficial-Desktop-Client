@@ -1237,6 +1237,16 @@ button[disabled],
   transform: rotateZ(180deg);
 }
 
+/* Changelog Accordion */
+
+#config-item__whats-new {
+  --changelog-accordion-content-height: 1500px;
+}
+
+#config-item__whats-new input:checked ~ .accordion-content {
+  max-height: var(--changelog-accordion-content-height);
+}
+
 /********** SLIDER-SWITCH **********/
 /* SRC: https://www.w3schools.com/howto/howto_css_switch.asp */
 

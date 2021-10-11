@@ -3059,7 +3059,8 @@ async function openConfig(configItem = null) {
 
     // Set Changelog ("What's new" section)
 
-    const changelogInnerContainer = document.querySelector('#changelog-accordion-content > div');
+    const changelogContentOuterContainer = document.querySelector('#changelog-accordion-content');
+    const changelogContentInnerContainer = changelogContentOuterContainer.querySelector('div');
     const changelogContent = ipcRenderer.sendSync('update:getChangelog');
     const changelogVersion = getVersion(JSON.parse(sessionStorage.getItem('updaterCurrentInfo'))?.version);
 
@@ -3069,7 +3070,7 @@ async function openConfig(configItem = null) {
 
       const releaseLink = getTagReleaseLink(changelogVersion);
 
-      changelogInnerContainer.innerHTML = `
+      changelogContentInnerContainer.innerHTML = `
         ${changelogContent}
 
         <div style="padding-top: 25px; padding-bottom: 10px;">
@@ -3098,12 +3099,23 @@ async function openConfig(configItem = null) {
           What's new in the upcoming version — <strong>${changelogVersion}</strong>
         `;
       }
+
+      // Set changelog accordion max-height based on the content. It ensures
+      // that the accordion will maintain a proper height when expanded without
+      // trimming the content inside
+
+      const changelogAccordion = document.querySelector('#config-item__whats-new');
+
+      changelogAccordion.style.setProperty(
+        '--changelog-accordion-content-height',
+        `${changelogContentOuterContainer.scrollHeight}px`,
+      );
     }
     else {
       // If the changelog cannot be fetched (probably due to network issues),
       // show an error in the accordion content
 
-      changelogInnerContainer.innerHTML = `
+      changelogContentInnerContainer.innerHTML = `
         <span>
           <img src="../res/error.svg" style="
             height: 20px;
