@@ -5,12 +5,12 @@
     "version": "1.0.0",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
-    "homepage": "https://github.com/Melvin-Abraham",
+    "homepage": "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client",
     "repository": {
-        "url": "https://github.com/Melvin-Abraham"
+        "url": "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client"
     },
     "bugs": {
-        "url": "https://github.com/Melvin-Abraham/issues"
+        "url": "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues"
     },
     "license": "Apache-2.0",
     "keywords": [
