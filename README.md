@@ -69,30 +69,6 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 
 **Note:** Keyboard shortcut is configurable in the settings
 
-## TODO
-
-- [x] Set `build` for Mac and Linux in _package.json_
-- [x] Create Config File
-- [x] Remove 'auth' from the `app` folder
-- [x] Respond to "Ok Google" or "Hey Google"
-- [x] Activate Mic for `continuousConverstion` only when audio output is done
-- [x] Use different dependency for audio recording
-- [ ] Improve Carousel UI Rendering in the `main_area`
-- [x] Improve Error Handling
-- [x] Improve Assistant Audio Output
-- [x] Turn off `webAudio` after visualization
-- [x] "Enable Audio Output" in Settings
-- [x] Divide Settings into sections
-- [x] Don't accept empty queries
-- [x] Info for each Setting
-- [x] Animation while talking
-- [x] Ping when activating mic
-- [x] Welcome screen for first-time users
-- [x] Display images from Google Images
-- [x] Option to disable auto-scaling
-- [x] Cleanup CSS
-- [x] Remove `sox` as a dependency
-
 ## Other Libraries Used
 
 * **p5.js:**
