@@ -51,36 +51,6 @@ You are more than welcome to contribute to all kinds of contributions:
 
 Before you start, we highly recommend you check the Google Assistant Unofficial Desktop Client's [contributing guidelines](./CONTRIBUTING.md).
 
-## How to Build?
-
-### Using `npm`
----------------
-
-```bash
-# Get dependencies from npm
-npm install
-
-# Run the Assistant
-npm start
-
-# Build the Assistant
-npm run dist
-```
-
-### Using `yarn`
-----------------
-
-```bash
-# Get dependencies from npm registry
-yarn install
-
-# Run the Assistant
-yarn start
-
-# Build the Assistant
-yarn dist
-```
-
 ## Download
 
 If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
