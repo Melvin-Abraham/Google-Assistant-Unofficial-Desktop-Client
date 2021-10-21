@@ -1,7 +1,6 @@
 # Google Assistant Unofficial Desktop Client
 
 [![Build](https://img.shields.io/github/workflow/status/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/nodejs-ci?logo=github&style=for-the-badge)][build]
-[![Dependencies](https://img.shields.io/david/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client?style=for-the-badge&logo=node.js&logoColor=green)][dependencies]
 [![Downloads](https://img.shields.io/github/downloads/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/total.svg?logo=github&style=for-the-badge)][downloads]
 [![Issues](https://img.shields.io/github/issues/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?logo=github&style=for-the-badge)][issues]
 [![License](https://img.shields.io/github/license/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=blue)][license]
@@ -152,4 +151,3 @@ If you are a linux user, `Snap` build is recommended over `AppImage`. You can do
 [license]: <https://www.apache.org/licenses/LICENSE-2.0>
 [commits]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
-[dependencies]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/package.json>
