@@ -23,6 +23,68 @@ The design is inspired by Google Assistant in Chrome OS and comes in both Light 
 
 ![G Assist Screenshot](images/Assistant_light_dark.jpg)
 
+## Download
+
+You can build the assistant on your machine if you prefer _(see [How to Build](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/CONTRIBUTING.md#how-to-build))_. If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases). You can donload from other official sources as well.
+
+### Windows (using `winget`)
+
+> If you are on **Windows 11**, chances are you have `winget` pre-installed.
+> If you are on older version of Windows (Windows 10) and don't have it installed, check out
+> [Install Winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/#install-winget)
+> documentation section to learn how to install it.
+
+#### ⚡ Stable versions:
+
+```powershell
+PS> winget install "g-assist" -e
+```
+
+#### 🧪 Preview Versions (Pre-release versions):
+
+```powershell
+PS> winget install "g-assist-preview" -e
+```
+
+### MacOS (using `brew`)
+
+> Visit [brew.sh](https://brew.sh/) to learn how to install `brew` if you don't have it
+> installed on your machine.
+
+```console
+$ brew install --cask google-assistant
+```
+
+### Linux (using `snap`)
+
+> Some linux distros like Ubuntu, KDE Neon, Manjaro, Zorin OS, etc. come pre-installed with
+> `snap`. For distros without out-of-the-box support for snaps, visit [Installing snapd](https://snapcraft.io/docs/installing-snapd)
+> documentation page.
+
+Manually download from the Snapstore:
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/g-assist)
+
+#### ⚡ Stable versions:
+
+```console
+$ sudo snap install g-assist
+```
+
+#### 🧪 Preview versions (Pre-release versions):
+
+If you want to install release candidates:
+
+```console
+$ sudo snap install g-assist --candidate
+```
+
+If you want to install beta versions:
+
+```console
+$ sudo snap install g-assist --beta
+```
+
 ## Getting Started
 
 In order to use the client, you must have a _"Key File"_ and _"Token"_ for authentication which you can get by going through **Device Registration** process. You can go through the wiki given below to get started.
@@ -50,16 +112,6 @@ You are more than welcome to contribute to all kinds of contributions:
 * 💻 Contribute with the code
 
 Before you start, we highly recommend you check the Google Assistant Unofficial Desktop Client's [contributing guidelines](./CONTRIBUTING.md).
-
-## Download
-
-If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases)
-
-### Linux Build
-
-If you are a linux user, `Snap` build is recommended over `AppImage`. You can download the snap from snapstore.
-
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/g-assist)
 
 ## Default Keyboard Shortcut
 
