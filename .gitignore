@@ -5,7 +5,7 @@ out/
 dist/
 false/
 yarn-error.log
-yarn.lock
+package-lock.json
 .npm
 .vscode/
 .idea/workspace.xml
