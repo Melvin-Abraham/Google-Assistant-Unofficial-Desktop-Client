@@ -114,7 +114,7 @@
         }
     },
     "scripts": {
-        "start": "electron ./out/app.js",
+        "start": "electron .",
         "dev": "concurrently \"yarn watch:renderer\" \"yarn watch:main\"",
         "build": "yarn compile:renderer && yarn compile:main",
         "dist": "yarn build && electron-builder",
