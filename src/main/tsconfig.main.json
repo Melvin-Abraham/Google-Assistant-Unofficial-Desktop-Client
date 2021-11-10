@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "../../out/",
+    "noEmit": false,
+    "module": "CommonJS",
+    "rootDir": "./"
+  },
+  "exclude": ["../renderer/**/*"],
+  "extends": "../../tsconfig.json"
+}

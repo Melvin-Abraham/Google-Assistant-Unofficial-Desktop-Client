@@ -1,6 +1,7 @@
 .DS_Store
 Thumbs.db
 node_modules/
+out/
 dist/
 false/
 yarn-error.log

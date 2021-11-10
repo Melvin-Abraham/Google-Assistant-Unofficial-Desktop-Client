@@ -1,50 +1,74 @@
 {
-  "env": {
-      "browser": true,
-      "commonjs": true,
-      "es2021": true,
-      "node": true
-  },
-  "extends": [
-      "airbnb-base"
-  ],
-  "parserOptions": {
-      "ecmaVersion": 12
-  },
-  "ignorePatterns": [
-    "*.min.js"
-  ],
-  "rules": {
-    "linebreak-style": "off",
-    "no-restricted-globals": "off",
-    "no-use-before-define": "off",
-    "dot-notation": "off",
-    "no-console": "off",
-    "no-plusplus": "off",
-    "no-underscore-dangle": "off",
-    "brace-style": ["warn", "stroustrup"],
-    "radix": ["error", "as-needed"],
-    "import/no-extraneous-dependencies": [
-      "error",
-      // This will prevent error for "electron" imports
-      // as a dev-dependency
-      { "devDependencies": true }
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "extends": [
+        "airbnb",
+        "plugin:react/recommended"
     ],
-    "no-unused-vars": [
-      "warn",
-      { "argsIgnorePattern": "^_" }
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
     ],
-    "prefer-destructuring": [
-      "warn",
-      { "object": true, "array": false }
-    ],
-    "indent": [
-      "error",
-      2,
-      {
-        "ignoredNodes": ["TemplateLiteral > *"],
-        "SwitchCase": 1
-      }
-    ]
-  }
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx", ".json", ".svg"]
+            },
+            "typescript": {
+                "alwaysTryTypes": true,
+                "project": "./tsconfig.json"
+            }
+        },
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        }
+    },
+    "rules": {
+        "linebreak-style": "off",
+        "no-restricted-globals": "off",
+        "no-use-before-define": "off",
+        "dot-notation": "off",
+        "no-console": "off",
+        "no-plusplus": "off",
+        "no-underscore-dangle": "off",
+        "brace-style": ["warn", "stroustrup"],
+        "radix": ["error", "as-needed"],
+        "quote-props": ["error", "consistent-as-needed"],
+        "import/extensions": "off",
+        "import/prefer-default-export": "off",
+        "import/no-unresolved": ["error", {
+            "ignore": [".svg"]
+        }],
+        "import/no-extraneous-dependencies": ["error", {
+            // This will prevent error for "electron" imports
+            // as a dev-dependency
+            "devDependencies": true
+        }],
+        "no-unused-vars": ["warn", {
+            "argsIgnorePattern": "^_"
+        }],
+        "prefer-destructuring": ["warn", {
+            "object": true,
+            "array": false
+        }],
+        "indent": ["error", 2, {
+            "ignoredNodes": ["TemplateLiteral > *"],
+            "SwitchCase": 1
+        }],
+
+        // React specific linting rules
+
+        "react/jsx-filename-extension": "off",
+        "react/jsx-one-expression-per-line": "off"
+    }
 }

@@ -2,7 +2,7 @@
     "name": "g-assist",
     "productName": "Google Assistant",
     "description": "A cross-platform unofficial desktop client for Google Assistant powered by the Google Assistant SDK",
-    "version": "1.0.0",
+    "version": "2.0.0-beta",
     "private": true,
     "author": "Melvin Abraham <melvinredvirus@gmail.com>",
     "homepage": "https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client",
@@ -23,14 +23,13 @@
         "assistant",
         "cross-platform"
     ],
-    "main": "app.js",
+    "main": "./out/app.js",
     "build": {
         "appId": "com.redvirus.g-assist",
         "files": [
-            "app/**/*",
-            "node_modules/**/*",
-            "package.json",
-            "app.js"
+            "src/main/res/**/*",
+            "out/**/*",
+            "package.json"
         ],
         "directories": {
             "buildResources": "app/res/misc/*"
@@ -115,13 +114,20 @@
         }
     },
     "scripts": {
-        "start": "electron .",
-        "start:verbose": "electron . --verbose",
-        "dist": "electron-builder",
-        "dist:ci": "electron-builder --publish never",
-        "pack": "electron-builder --dir",
-        "lint": "eslint .",
-        "preinstall": "npm install git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
+        "start": "electron ./out/app.js",
+        "dev": "concurrently \"yarn watch:renderer\" \"yarn watch:main\"",
+        "build": "yarn compile:renderer && yarn compile:main",
+        "dist": "yarn build && electron-builder",
+        "dist:ci": "yarn dist --publish never",
+        "clean": "rimraf ./dist/ && rimraf ./out/",
+        "serve": "vite preview --port=3000",
+        "compile:main": "tsc -p ./src/main/tsconfig.main.json",
+        "compile:renderer": "yarn test && vite build",
+        "watch:main": "yarn compile:main --watch --preserveWatchOutput",
+        "watch:renderer": "vite",
+        "lint": "eslint --ext \".ts, .tsx, .js\" .",
+        "test": "tsc --build tsconfig.json .",
+        "preinstall": "yarn add git://github.com/Melvin-Abraham/google-assistant.git#g-assist --ignore-scripts",
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
@@ -133,15 +139,37 @@
         "grpc": "1.24.6",
         "isomorphic-dompurify": "^0.15.0",
         "marked": "^3.0.2",
-        "node-fetch": "^2.6.1"
+        "node-fetch": "^2.6.1",
+        "react": "^17.0.0",
+        "react-dom": "^17.0.0"
     },
     "devDependencies": {
+        "@types/eslint": "^7.28.2",
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
+        "@types/vite-plugin-react-svg": "^0.2.0",
+        "@typescript-eslint/eslint-plugin": "^5.3.0",
+        "@typescript-eslint/parser": "^5.3.0",
+        "@vitejs/plugin-react": "^1.0.0",
+        "concurrently": "^6.3.0",
         "electron": "10.3.2",
         "electron-builder": "22.10.5",
-        "eslint": "^7.27.0",
+        "eslint": "^8.2.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-airbnb-base": "^14.2.1",
-        "eslint-plugin-import": "^2.23.3",
-        "prettier": "^2.3.0"
-    }
+        "eslint-import-resolver-typescript": "^2.5.0",
+        "eslint-plugin-import": "^2.25.2",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-react": "^7.26.1",
+        "prettier": "^2.4.1",
+        "rimraf": "^3.0.2",
+        "sass": "^1.43.4",
+        "typescript": "^4.4.4",
+        "vite": "^2.6.13",
+        "vite-plugin-checker": "^0.3.4",
+        "vite-plugin-react-svg": "^0.2.0"
+    },
+    "browserslist": [
+        "chrome >= 85"
+    ]
 }

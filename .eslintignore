@@ -1,0 +1,4 @@
+*.min.js
+*.d.ts
+app/src/lib/pv_workers/**/*
+out/**/*
