@@ -145,6 +145,7 @@
     },
     "devDependencies": {
         "@types/eslint": "^7.28.2",
+        "@types/node": "^16.11.7",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/vite-plugin-react-svg": "^0.2.0",
