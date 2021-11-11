@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as process from 'process';
 import * as url from 'url';
 import { BrowserWindow, app, ipcMain } from 'electron';
 
@@ -61,9 +62,13 @@ function onAppReady() {
   else {
     // DEV
 
-    // During the development, the dev server will host the HTML in
-    // localhost (specifically, port 3000)
-    rendererEntryPointUri = 'http://localhost:3000/';
+    // If the dev server is running on a port other than the
+    // default of 3000, the port can be configured in the environment
+    const port = parseInt(process.env['PORT'] || '3000');
+
+    // During the development, the dev server will host the HTML
+    // in localhost (in the configured port)
+    rendererEntryPointUri = `http://localhost:${port}/`;
   }
 
   assistantWindow.loadURL(rendererEntryPointUri);

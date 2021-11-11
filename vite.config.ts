@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import { env } from 'process';
 import { defineConfig, AliasOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
@@ -36,6 +37,19 @@ export default defineConfig({
     }),
     checker({ typescript: true }),
   ],
+
+  server: {
+    /**
+     * Allow setting PORT manually using env vars if required
+     *
+     * @example Powershell
+     * PS> $env:PORT=3000; yarn dev
+     *
+     * @example Bash
+     * $ PORT=3000 yarn dev
+     */
+    port: parseInt(env['PORT'] || '3000'),
+  },
 
   // Specify output directory
   build: {
