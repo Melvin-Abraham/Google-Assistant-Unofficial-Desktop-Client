@@ -1,3 +1,5 @@
+import { serialize } from './ipcUtils';
+
 // Require syntax used here to avoid problems with
 // importing 'electron'.
 // @src: https://github.com/electron/electron/issues/9920#issuecomment-313827210
@@ -25,13 +27,26 @@ export class RendererIpcBroker {
   }
 
   /**
+   * Prepares the request object to be transferred via the IPC
+   * @param request
+   */
+  static marshal(request: IpcRequest): IpcRequest {
+    return {
+      ...request,
+
+      // Serialize args to string format
+      args: request.args.map(serialize),
+    }
+  }
+
+  /**
    * Sends synchronous IPC request to the main process and
    * waits till a response is received.
    *
    * @param request
    */
   static sendIpcRequestToMainSync<T = unknown>(request: IpcRequest): T {
-    const { ipcChannel, args } = request;
+    const { ipcChannel, args } = RendererIpcBroker.marshal(request);
 
     if (RendererIpcBroker.isAllowedIpcChannel(ipcChannel)) {
       return ipcRenderer.sendSync(ipcChannel, ...args);
@@ -47,7 +62,7 @@ export class RendererIpcBroker {
    * @param request
    */
   static sendIpcRequestToMainAsync<T = unknown>(request: IpcRequest): Promise<T> {
-    const { ipcChannel, args } = request;
+    const { ipcChannel, args } = RendererIpcBroker.marshal(request);
 
     if (RendererIpcBroker.isAllowedIpcChannel(ipcChannel)) {
       return ipcRenderer.invoke(ipcChannel, ...args);
@@ -63,7 +78,7 @@ export class RendererIpcBroker {
    * @param request
    */
   static sendIpcMessageToMain(request: IpcRequest) {
-    const { ipcChannel, args } = request;
+    const { ipcChannel, args } = RendererIpcBroker.marshal(request);
 
     if (RendererIpcBroker.isAllowedIpcChannel(ipcChannel)) {
       return ipcRenderer.send(ipcChannel, ...args);
