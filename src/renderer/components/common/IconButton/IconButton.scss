@@ -1,0 +1,26 @@
+.icon-button {
+  --icon-size: 20px;
+
+  border-radius: 50%;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 250ms ease;
+
+  &:hover, &:focus-within {
+    background-color: #ffffff0d;
+  }
+
+  &:active {
+    background-color: #ffffff20;
+  }
+
+  svg {
+    height: var(--icon-size);
+    width: var(--icon-size);
+  }
+}

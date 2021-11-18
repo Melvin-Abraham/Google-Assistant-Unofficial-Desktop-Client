@@ -1,0 +1,17 @@
+.title-bar-root {
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  -webkit-app-region: drag;
+
+  .title-bar-actions-group {
+    display: flex;
+    gap: 2px;
+  }
+
+  .icon-button {
+    // In order to make the icon buttons clickable,
+    // `-webkit-app-region` must be set to "no-drag"
+    -webkit-app-region: no-drag;
+  }
+}

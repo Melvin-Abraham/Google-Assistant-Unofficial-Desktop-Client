@@ -1,0 +1,28 @@
+:root {
+  --window-border-radius: 20px;
+  --window-border-color-minimal: #505050;
+  --window-border-color-prominent: #1e90ff;
+  --window-color-bg: #121212;
+  --window-color-fg: #ffffff;
+}
+
+.assistant-root-container {
+  background-color: var(--window-color-bg);
+  color: var(--window-color-fg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 1px;
+  right: 1px;
+  border-radius: var(--window-border-radius);
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+.assistant-root-container[data-border-type="minimal"] {
+  border-color: var(--window-border-color-minimal);
+}
+
+.assistant-root-container[data-border-type="prominent"] {
+  border-color: var(--window-border-color-minimal);
+}
