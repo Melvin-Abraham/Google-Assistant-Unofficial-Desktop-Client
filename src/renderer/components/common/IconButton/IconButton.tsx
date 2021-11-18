@@ -23,7 +23,7 @@ export interface IconButtonProps {
    * Controls whether the `label` should be displayed as
    * a tooltip.
    */
-  showTooltips?: boolean;
+  showTooltip?: boolean;
 }
 
 /**
@@ -33,14 +33,14 @@ function IconButton({
   Icon,
   label,
   onClick,
-  showTooltips = true,
+  showTooltip = true,
 }: IconButtonProps) {
   return (
     <button
       className="icon-button"
       type="button"
-      title={showTooltips ? label : ''}
-      aria-label={!showTooltips ? label : ''}
+      title={showTooltip ? label : ''}
+      aria-label={!showTooltip ? label : ''}
       onClick={onClick}
     >
       <Icon />
