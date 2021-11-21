@@ -1,0 +1,14 @@
+.initview-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .logo {
+    height: 4em;
+  }
+
+  .initview-message {
+    margin-top: 1.5em;
+    font-size: 1.75em;
+  }
+}

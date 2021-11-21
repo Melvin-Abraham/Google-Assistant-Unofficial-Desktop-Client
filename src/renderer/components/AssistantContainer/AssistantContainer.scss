@@ -17,6 +17,9 @@
   border-radius: var(--window-border-radius);
   border-width: 1.5px;
   border-style: solid;
+  display: flex;
+  flex-direction: column;
+  transition: all 250ms ease;
 }
 
 .assistant-root-container[data-border-type="minimal"] {

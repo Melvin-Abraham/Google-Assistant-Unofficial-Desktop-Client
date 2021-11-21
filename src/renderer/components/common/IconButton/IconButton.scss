@@ -1,5 +1,5 @@
 .icon-button {
-  --icon-size: 20px;
+  --icon-button-icon-size: 20px;
 
   border-radius: 50%;
   background-color: transparent;
@@ -20,7 +20,8 @@
   }
 
   svg {
-    height: var(--icon-size);
-    width: var(--icon-size);
+    height: var(--icon-button-icon-size);
+    width: var(--icon-button-icon-size);
+    transition: all 250ms ease;
   }
 }

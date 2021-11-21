@@ -1,0 +1,45 @@
+:root {
+  --suggestion-chip-fg-color: #ffffff;
+  --suggestion-chip-bg-color: #ffffff0d;
+  --suggestion-chip-bg-color-hover: #ffffff1c;
+  --suggestion-chip-bg-color-active: #ffffff0d;
+  --suggestion-chip-border-color: transparent;
+  --suggestion-chip-border-color-hover: #ffffff80;
+  --suggestion-chip-border-color-active: #ffffff40;
+  --suggestion-chip-leading-icon-size: 1.2em;
+}
+
+button.suggestion-chip {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--suggestion-chip-fg-color);
+  background-color: var(--suggestion-chip-bg-color);
+  border: 1px solid var(--suggestion-chip-border-color);
+  outline: none;
+  border-radius: 30px;
+  padding: 8px 20px;
+  transition: all 150ms ease-in;
+
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+  &:hover, &:focus {
+    background-color: var(--suggestion-chip-bg-color-hover);
+    border-color: var(--suggestion-chip-border-color-hover);
+  }
+
+  &:active {
+    background-color: var(--suggestion-chip-bg-color-active);
+    border-color: var(--suggestion-chip-border-color-active);
+  }
+
+  .leading > * {
+    height: var(--suggestion-chip-leading-icon-size);
+    width: var(--suggestion-chip-leading-icon-size);
+    display: flex;
+    align-items: center;
+  }
+}

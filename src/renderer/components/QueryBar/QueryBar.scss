@@ -1,0 +1,27 @@
+:root {
+  --query-bar-bg-color: #ffffff0d;
+  --query-bar-fg-color: #ffffff;
+  --query-bar-cursor-color: #1e90ff;
+}
+
+#query-bar-root {
+  overflow-x: hidden;
+  border-bottom-left-radius: var(--window-border-radius);
+  border-bottom-right-radius: var(--window-border-radius);
+  background-color: var(--query-bar-bg-color);
+  flex-shrink: 0;
+  transition: all 250ms ease;
+
+  input#query-bar {
+    width: 90%;
+    background-color: transparent;
+    color: var(--query-bar-fg-color);
+    caret-color: var(--query-bar-cursor-color);
+    font-family: inherit;
+    font-size: 1.3em;
+    padding: 0.5em 1em;
+    border: none;
+    outline: none;
+    transition: all 250ms ease;
+  }
+}

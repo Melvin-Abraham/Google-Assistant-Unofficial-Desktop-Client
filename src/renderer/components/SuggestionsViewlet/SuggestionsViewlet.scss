@@ -1,0 +1,10 @@
+.suggestions-viewlet-root {
+  padding: 5px 20px 18px 20px;
+
+  .suggestions-container {
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+}

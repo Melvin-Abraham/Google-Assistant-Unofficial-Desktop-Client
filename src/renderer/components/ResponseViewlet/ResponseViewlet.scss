@@ -1,0 +1,7 @@
+.viewlet-root {
+  overflow: auto;
+  margin: 5px 10px;
+
+  // Take all available space
+  flex: 1 1 auto;
+}
