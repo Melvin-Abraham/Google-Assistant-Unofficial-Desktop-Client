@@ -1,0 +1,49 @@
+:root {
+  --scrollbar-size: 5px;
+  --scrollbar-border-radius: 5px;
+  --scrollbar-bg-color: #0d0d0d;
+  --scrollbar-track-color: #ffffff1a;
+  --scrollbar-thumb-color: #ffffff26;
+  --scrollbar-thumb-hover-color: #ffffff33;
+  --scrollbar-thumb-active-color: #ffffff1a;
+}
+
+/* Size & Background */
+::-webkit-scrollbar {
+  height: var(--scrollbar-size);
+  width: var(--scrollbar-size);
+  background: var(--scrollbar-bg-color);
+  transition: all 250ms ease;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+  border-radius: var(--scrollbar-border-radius);
+  transition: all 250ms ease;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+  border-radius: var(--scrollbar-border-radius);
+  transition: all 250ms ease;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
+  transition: all 250ms ease;
+}
+
+/* Handle on click */
+::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-thumb-active-color);
+  transition: all 250ms ease;
+}
+
+/* Appearance of scrollbar corner */
+::-webkit-scrollbar-corner {
+  background: transparent;
+  transition: all 250ms ease;
+}
