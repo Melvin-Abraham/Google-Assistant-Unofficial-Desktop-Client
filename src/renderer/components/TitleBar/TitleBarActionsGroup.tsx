@@ -1,5 +1,6 @@
 import React from 'react';
 import IconButton, { IconButtonProps } from '../common/IconButton/IconButton';
+import './TitleBarActionsGroup.scss';
 
 interface TitleBarActionsGroupProps {
   actions: IconButtonProps[];
