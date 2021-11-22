@@ -2,6 +2,7 @@
   --query-bar-bg-color: #ffffff0d;
   --query-bar-fg-color: #ffffff;
   --query-bar-cursor-color: #1e90ff;
+  --query-bar-placeholder-color: #ffffff60;
 }
 
 #query-bar-root {
@@ -23,5 +24,9 @@
     border: none;
     outline: none;
     transition: all 250ms ease;
+
+    &::placeholder {
+      color: var(--query-bar-placeholder-color);
+    }
   }
 }
