@@ -1,0 +1,11 @@
+:root {
+  --icon-size: 20px;
+  --icon-fg-color: #707070;
+}
+
+svg[data-icon] {
+  fill: var(--icon-fg-color);
+  height: var(--icon-size);
+  width: var(--icon-size);
+  transition: all 250ms ease;
+}

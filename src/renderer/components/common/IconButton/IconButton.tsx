@@ -43,7 +43,7 @@ function IconButton({
       aria-label={!showTooltip ? label : ''}
       onClick={onClick}
     >
-      <Icon />
+      <Icon data-icon />
     </button>
   );
 }

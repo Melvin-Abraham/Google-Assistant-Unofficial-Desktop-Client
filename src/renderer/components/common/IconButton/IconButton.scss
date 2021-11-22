@@ -1,6 +1,4 @@
 .icon-button {
-  --icon-button-icon-size: 20px;
-
   border-radius: 50%;
   background-color: transparent;
   outline: none;
@@ -17,11 +15,5 @@
 
   &:active {
     background-color: #ffffff20;
-  }
-
-  svg {
-    height: var(--icon-button-icon-size);
-    width: var(--icon-button-icon-size);
-    transition: all 250ms ease;
   }
 }
