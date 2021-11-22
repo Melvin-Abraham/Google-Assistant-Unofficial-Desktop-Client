@@ -1,13 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="#707070">
   <g id="Group_88" data-name="Group 88" transform="translate(-119 -222)">
     <rect id="Rectangle_22" data-name="Rectangle 22" width="28" height="28" transform="translate(119 222)" fill="rgba(51,51,51,0)"/>
-    <g id="Group_8" data-name="Group 8" transform="translate(-1233.408 -403.408)">
-      <path id="Path_6" data-name="Path 6" d="M0,6.23,6.23,0" transform="translate(1368.085 631.5)" fill="none" stroke="#707070" stroke-width="2"/>
-      <line id="Line_4" data-name="Line 4" y1="6.23" x2="6.23" transform="translate(1358.5 641.085)" fill="none" stroke="#707070" stroke-width="2"/>
-      <line id="Line_5" data-name="Line 5" x2="4.792" transform="translate(1369.523 631.5)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
-      <line id="Line_6" data-name="Line 6" x2="4.792" transform="translate(1358.5 647.315)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
-      <line id="Line_7" data-name="Line 7" y2="4.792" transform="translate(1374.315 631.5)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
-      <line id="Line_8" data-name="Line 8" y2="4.792" transform="translate(1358.5 642.523)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
-    </g>
+    <path id="expand-converted" d="M19.227,5.13c-2.36.026-2.456.03-2.613.122a.973.973,0,0,0-.457.738.944.944,0,0,0,.521.977c.183.1.255.1,1.519.118l1.326.015-2.26,2.26L15,11.62l.688.688L16.38,13l2.26-2.259,2.26-2.26L20.915,9.8c.014,1.264.02,1.336.118,1.519a.944.944,0,0,0,.977.521.96.96,0,0,0,.749-.482c.1-.184.1-.2.111-2.845.009-2.908.015-2.842-.264-3.119a.889.889,0,0,0-.669-.284c-.143-.005-1.363,0-2.71.017M9.356,17.267l-2.239,2.24-.024-1.318c-.022-1.237-.029-1.331-.123-1.506a.952.952,0,0,0-.88-.536.939.939,0,0,0-.865.517c-.08.156-.086.348-.1,2.848-.011,2.961-.026,2.8.291,3.107a1.137,1.137,0,0,0,.3.2,26.635,26.635,0,0,0,2.8.047c2.643-.008,2.661-.009,2.845-.11a.96.96,0,0,0,.482-.749.944.944,0,0,0-.521-.977c-.183-.1-.255-.1-1.519-.118L8.477,20.9l2.259-2.26L13,16.38,12.32,15.7c-.371-.373-.686-.677-.7-.677s-1.032,1.008-2.264,2.24" transform="translate(119.001 222.009)" fill-rule="evenodd"/>
   </g>
 </svg>

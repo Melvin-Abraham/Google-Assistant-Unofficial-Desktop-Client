@@ -1,9 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="#707070">
   <g id="Group_85" data-name="Group 85" transform="translate(-119 -222)">
     <rect id="Rectangle_22" data-name="Rectangle 22" width="28" height="28" transform="translate(119 222)" fill="rgba(51,51,51,0)"/>
-    <g id="Group_6" data-name="Group 6" transform="translate(112.233 214.976)">
-      <line id="Line_1" data-name="Line 1" x2="17" y2="17" transform="translate(12.267 12.524)" fill="none" stroke="#707070" stroke-width="2"/>
-      <line id="Line_2" data-name="Line 2" x1="17" y2="17" transform="translate(12.267 12.524)" fill="none" stroke="#707070" stroke-width="2"/>
-    </g>
+    <path id="close-converted" d="M5.506,5.53l-.675.677,3.9,3.9,3.9,3.9-3.9,3.9-3.9,3.9.689.688.688.689,3.9-3.9,3.9-3.9,3.9,3.9,3.9,3.9.688-.689.689-.688-3.9-3.9-3.9-3.9,3.9-3.9,3.9-3.9-.689-.688-.688-.689-3.9,3.9-3.9,3.9L10.115,8.738C7.978,6.6,6.219,4.853,6.206,4.853s-.328.3-.7.677" transform="translate(119 222)" fill-rule="evenodd"/>
   </g>
 </svg>

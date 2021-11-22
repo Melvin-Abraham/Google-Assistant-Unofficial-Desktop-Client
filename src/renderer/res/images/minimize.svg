@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="#707070">
   <g id="Group_87" data-name="Group 87" transform="translate(-119 -222)">
     <rect id="Rectangle_22" data-name="Rectangle 22" width="28" height="28" transform="translate(119 222)" fill="rgba(51,51,51,0)"/>
-    <path id="Path_4" data-name="Path 4" d="M0,0H20.857" transform="translate(122.571 236)" fill="none" stroke="#707070" stroke-width="2"/>
+    <path id="minimize-converted" d="M3.593,14v.98H24.407V13.02H3.593V14" transform="translate(119.407 222)" fill-rule="evenodd"/>
   </g>
 </svg>
