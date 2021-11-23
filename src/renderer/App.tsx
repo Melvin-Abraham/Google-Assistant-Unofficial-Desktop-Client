@@ -3,7 +3,7 @@ import AssistantContainer from 'components/AssistantContainer/AssistantContainer
 import TitleBar from 'components/TitleBar/TitleBar';
 import ResponseViewlet from 'components/ResponseViewlet/ResponseViewlet';
 import SuggestionsViewlet, { Suggestions } from 'components/SuggestionsViewlet/SuggestionsViewlet';
-import QueryBar from 'renderer/components/QueryBar/QueryBar';
+import QueryBar from 'components/QueryBar/QueryBar';
 import './App.scss';
 
 function App() {

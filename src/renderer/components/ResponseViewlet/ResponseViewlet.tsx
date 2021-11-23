@@ -1,5 +1,5 @@
 import React from 'react';
-import InitView from 'renderer/components/views/InitView/InitView';
+import InitView from 'components/views/InitView/InitView';
 import './ResponseViewlet.scss';
 
 function ResponseViewlet() {
