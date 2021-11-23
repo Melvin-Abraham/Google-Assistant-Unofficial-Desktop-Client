@@ -2847,7 +2847,7 @@ globby@^11.0.4:
 
 "google-assistant@git://github.com/Melvin-Abraham/google-assistant.git#g-assist":
   version "0.6.6"
-  resolved "git://github.com/Melvin-Abraham/google-assistant.git#4358b01c38f1db8e8632fcc9a48e40b562418489"
+  resolved "git://github.com/Melvin-Abraham/google-assistant.git#17fbc78a7f02ac2231a7dab137047132327666e0"
   dependencies:
     google-auth-library "^7.0.4"
     grpc "^1.24.6"
