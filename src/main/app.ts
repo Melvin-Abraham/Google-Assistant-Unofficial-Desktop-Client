@@ -6,10 +6,10 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 const didGetInstanceLock = app.requestSingleInstanceLock();
 
 let assistantWindow: BrowserWindow;
-app.isQuitting = false;
+global.sessionFlags.isQuitting = false;
 
 if (!didGetInstanceLock) {
-  app.isQuitting = true;
+  global.sessionFlags.isQuitting = true;
   app.quit();
 }
 else {
@@ -33,6 +33,7 @@ function onAppReady() {
     transparent: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       scrollBounce: true,
       devTools: true,
     },
