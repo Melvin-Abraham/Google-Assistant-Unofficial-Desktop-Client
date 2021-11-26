@@ -10,6 +10,11 @@
     },
     "typeRoots": [
       "types"
+    ],
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
     ]
   },
   "include": ["./"],

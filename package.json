@@ -121,7 +121,7 @@
         "dist:ci": "yarn dist --publish never",
         "clean": "rimraf ./dist/ && rimraf ./out/",
         "serve": "vite preview --port=3000",
-        "compile:main": "tsc -p ./src/main/tsconfig.json",
+        "compile:main": "ttsc -p ./src/main/tsconfig.json",
         "compile:renderer": "yarn test && vite build",
         "watch:main": "yarn compile:main --watch --preserveWatchOutput",
         "watch:renderer": "vite",
@@ -167,7 +167,9 @@
         "prettier": "^2.4.1",
         "rimraf": "^3.0.2",
         "sass": "^1.43.4",
+        "ttypescript": "^1.5.13",
         "typescript": "^4.4.4",
+        "typescript-transform-paths": "^3.3.1",
         "vite": "^2.6.13",
         "vite-plugin-checker": "^0.3.4",
         "vite-plugin-react-svg": "^0.2.0"
