@@ -5,7 +5,11 @@
       "renderer/*": ["./src/renderer/*"],
       "components/*": ["./src/renderer/components/*"],
       "res/*": ["./src/renderer/res/*"]
-    }
+    },
+    "rootDir": "./",
+    "typeRoots": [
+      "types"
+    ]
   },
   "include": ["./"],
   "exclude": ["../main/**/*"]
