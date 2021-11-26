@@ -26,7 +26,11 @@
             },
             "typescript": {
                 "alwaysTryTypes": true,
-                "project": "./tsconfig.json"
+                "project": [
+                    "./src/main/tsconfig.json",
+                    "./src/renderer/tsconfig.json",
+                    "./tsconfig.json"
+                ]
             }
         },
         "import/parsers": {
@@ -46,6 +50,9 @@
         "quote-props": ["error", "consistent-as-needed"],
         "import/extensions": "off",
         "import/prefer-default-export": "off",
+        "no-dupe-class-members": "off",
+        "no-unused-vars": "off",
+        "no-redeclare": "off",
         "import/no-unresolved": ["error", {
             "ignore": [".svg"]
         }],
@@ -54,9 +61,6 @@
             // as a dev-dependency
             "devDependencies": true
         }],
-        "no-unused-vars": ["warn", {
-            "argsIgnorePattern": "^_"
-        }],
         "prefer-destructuring": ["warn", {
             "object": true,
             "array": false
@@ -64,6 +68,14 @@
         "indent": ["error", 2, {
             "ignoredNodes": ["TemplateLiteral > *"],
             "SwitchCase": 1
+        }],
+
+        // Typescript eslint linting rules
+
+        "@typescript-eslint/no-dupe-class-members": "error",
+        "@typescript-eslint/no-redeclare": "error",
+        "@typescript-eslint/no-unused-vars": ["warn", {
+            "argsIgnorePattern": "^_"
         }],
 
         // React specific linting rules
