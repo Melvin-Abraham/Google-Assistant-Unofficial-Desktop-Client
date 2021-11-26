@@ -121,7 +121,7 @@
         "dist:ci": "yarn dist --publish never",
         "clean": "rimraf ./dist/ && rimraf ./out/",
         "serve": "vite preview --port=3000",
-        "compile:main": "tsc -p ./src/main/tsconfig.main.json",
+        "compile:main": "tsc -p ./src/main/tsconfig.json",
         "compile:renderer": "yarn test && vite build",
         "watch:main": "yarn compile:main --watch --preserveWatchOutput",
         "watch:renderer": "vite",
