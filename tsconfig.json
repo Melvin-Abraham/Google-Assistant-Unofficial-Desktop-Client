@@ -16,16 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./",
-    "paths": {
-      "main/*": ["./src/main/*"],
-      "renderer/*": ["./src/renderer/*"],
-      "components/*": ["./src/renderer/components/*"],
-      "res/*": ["./src/renderer/res/*"]
-    },
-    "typeRoots": [
-      "./types"
-    ]
+    "baseUrl": "./"
   },
-  "include": ["./src", "./types"]
+  "include": ["./src"]
 }

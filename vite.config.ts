@@ -4,7 +4,7 @@ import { defineConfig, AliasOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import reactSvgPlugin from 'vite-plugin-react-svg';
-import * as tsconfig from './tsconfig.json';
+import * as tsconfig from './src/renderer/tsconfig.json';
 
 // Resolve path aliases from `tsconfig.json`
 const tsconfigAliases = tsconfig.compilerOptions.paths;
@@ -35,7 +35,12 @@ export default defineConfig({
       expandProps: 'end',
       defaultExport: 'url',
     }),
-    checker({ typescript: true }),
+    checker({
+      typescript: {
+        tsconfigPath: resolve(__dirname, 'src', 'renderer', 'tsconfig.json'),
+      },
+      enableBuild: false,
+    }),
   ],
 
   server: {
@@ -54,6 +59,7 @@ export default defineConfig({
   // Specify output directory
   build: {
     outDir: resolve(__dirname, 'out'),
+    emptyOutDir: false,
   },
 
   resolve: {

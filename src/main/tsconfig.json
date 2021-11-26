@@ -1,10 +1,17 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out/",
     "noEmit": false,
     "module": "CommonJS",
-    "rootDir": "./"
+    "rootDir": "./",
+    "paths": {
+      "main/*": ["./src/main/*"]
+    },
+    "typeRoots": [
+      "types"
+    ]
   },
-  "exclude": ["../renderer/**/*"],
-  "extends": "../../tsconfig.json"
+  "include": ["./"],
+  "exclude": ["../renderer/**/*"]
 }

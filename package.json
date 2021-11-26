@@ -116,7 +116,7 @@
     "scripts": {
         "start": "electron .",
         "dev": "concurrently \"yarn watch:renderer\" \"yarn watch:main\"",
-        "build": "yarn compile:renderer && yarn compile:main",
+        "build": "rimraf ./out/ && yarn compile:renderer && yarn compile:main",
         "dist": "yarn build && electron-builder",
         "dist:ci": "yarn dist --publish never",
         "clean": "rimraf ./dist/ && rimraf ./out/",
@@ -126,7 +126,9 @@
         "watch:main": "yarn compile:main --watch --preserveWatchOutput",
         "watch:renderer": "vite",
         "lint": "eslint --ext \".ts, .tsx, .js\" .",
-        "test": "tsc --build tsconfig.json .",
+        "tscheck:main": "tsc -p ./src/main/tsconfig.json --noEmit",
+        "tscheck:renderer": "tsc -p ./src/renderer/tsconfig.json --noEmit",
+        "test": "yarn tscheck:main && yarn tscheck:renderer",
         "preinstall": "yarn add git://github.com/Melvin-Abraham/google-assistant.git#g-assist --ignore-scripts",
         "postinstall": "electron-builder install-app-deps"
     },
