@@ -6,7 +6,10 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 const didGetInstanceLock = app.requestSingleInstanceLock();
 
 let assistantWindow: BrowserWindow;
-global.sessionFlags.isQuitting = false;
+
+global.sessionFlags = {
+  isQuitting: false,
+};
 
 if (!didGetInstanceLock) {
   global.sessionFlags.isQuitting = true;
