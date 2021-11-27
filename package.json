@@ -23,7 +23,7 @@
         "assistant",
         "cross-platform"
     ],
-    "main": "./out/app.js",
+    "main": "./out/main/app.js",
     "build": {
         "appId": "com.redvirus.g-assist",
         "files": [

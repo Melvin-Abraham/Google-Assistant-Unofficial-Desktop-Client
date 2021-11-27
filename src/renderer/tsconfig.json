@@ -6,7 +6,6 @@
       "components/*": ["./src/renderer/components/*"],
       "res/*": ["./src/renderer/res/*"]
     },
-    "rootDir": "./",
     "typeRoots": [
       "types"
     ]

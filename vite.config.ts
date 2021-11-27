@@ -68,5 +68,5 @@ export default defineConfig({
 
   // Enforce relative path
   base: '',
-  root: resolve(__dirname, 'src', 'renderer'),
+  root: resolve(__dirname, 'src'),
 });
