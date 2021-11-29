@@ -35,8 +35,8 @@ function onAppReady() {
     title: 'Google Assistant Unofficial Desktop Client',
     transparent: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
+      preload: path.resolve(__dirname, 'preload.js'),
       scrollBounce: true,
       devTools: true,
     },
@@ -53,9 +53,10 @@ function onAppReady() {
   if (app.isPackaged) {
     // PROD
 
-    // After compilation, the web contents and the main process entry-point
-    // will be dumped in root of the `build` directory
-    const htmlPath = path.join(__dirname, 'index.html');
+    // After compilation, the main process entry-point will be dumped
+    // in `out/main` directory and the renderer process entry-point,
+    // i.e., HTML file will be dumped in `out` directory.
+    const htmlPath = path.resolve(__dirname, '..', 'index.html');
 
     rendererEntryPointUri = url.format({
       pathname: htmlPath,

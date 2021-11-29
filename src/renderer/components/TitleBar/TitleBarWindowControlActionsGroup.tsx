@@ -1,5 +1,5 @@
 import React from 'react';
-import * as gassist from 'renderer/utils/utils';
+import gassist from 'gassist';
 import CloseIcon from 'res/images/close.svg?component';
 import MinimizeIcon from 'res/images/minimize.svg?component';
 import ExpandIcon from 'res/images/expand.svg?component';

@@ -4,7 +4,8 @@
     "paths": {
       "renderer/*": ["./src/renderer/*"],
       "components/*": ["./src/renderer/components/*"],
-      "res/*": ["./src/renderer/res/*"]
+      "res/*": ["./src/renderer/res/*"],
+      "gassist": ["./src/renderer/api.ts"]
     },
     "typeRoots": [
       "types"
