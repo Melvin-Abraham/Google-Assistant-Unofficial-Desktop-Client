@@ -3,6 +3,7 @@ Thumbs.db
 node_modules/
 dist/
 false/
+out/
 yarn-error.log
 yarn.lock
 .npm
