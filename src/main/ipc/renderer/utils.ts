@@ -9,6 +9,9 @@ export interface IpcRequest {
 export const outboundIpcChannelsWhitelist = [
   'window:closeAssistantWindow',
   'window:minimizeAssistantWindow',
+  'app:getAppConfig',
+  'app:setAppConfig',
+  'app:quit',
 ] as const;
 
 export const inboundIpcChannelsWhitelist = [

@@ -1,7 +1,8 @@
 import * as path from 'path';
 import * as process from 'process';
 import * as url from 'url';
-import { BrowserWindow, app, ipcMain } from 'electron';
+import { BrowserWindow, app } from 'electron';
+import { initIpcListeners } from './ipc/main';
 
 const didGetInstanceLock = app.requestSingleInstanceLock();
 
@@ -79,7 +80,5 @@ function onAppReady() {
   assistantWindow.loadURL(rendererEntryPointUri);
 }
 
-ipcMain.on('window:closeAssistantWindow', () => {
-  console.log('Received request to quit window');
-  app.quit();
-});
+// Initialize IPC listeners
+initIpcListeners();
