@@ -61,6 +61,9 @@
             // as a dev-dependency
             "devDependencies": true
         }],
+        "lines-between-class-members": ["error", "always", {
+            "exceptAfterSingleLine": true
+        }],
         "prefer-destructuring": ["warn", {
             "object": true,
             "array": false
