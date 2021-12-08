@@ -25,7 +25,7 @@ The design is inspired by Google Assistant in Chrome OS and comes in both Light 
 
 ## Download
 
-You can build the assistant on your machine if you prefer _(see [How to Build](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/CONTRIBUTING.md#how-to-build))_. If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases). You can donload from other official sources as well.
+You can build the assistant on your machine if you prefer _(see [How to Build](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/blob/master/CONTRIBUTING.md#how-to-build))_. If you don't want to build the project for yourself, you can download the Assistant Setup/Installer for the respective platform from [here (releases)](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/releases). You can download from other official sources as well.
 
 ### Windows (using `winget`)
 
