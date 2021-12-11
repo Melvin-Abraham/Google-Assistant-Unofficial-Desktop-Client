@@ -2,28 +2,20 @@ import { ipcRenderer } from 'electron';
 import { serialize } from 'main/ipc/common/ipcUtils';
 
 import {
-  outboundIpcChannelsWhitelist,
-  IpcRequest,
-  InboundIpcChannel,
-  OutboundIpcChannel,
+  isAllowedRendererOutboundIpcChannel,
+  isRendererAsyncRequestIpcChannel,
+  RendererIpcRequest,
+  RendererIpcMessage,
+  RendererGenericIpcObject,
+  RendererInboundIpcChannel,
 } from './utils';
 
 export class RendererIpcBroker {
   /**
-   * Checks if the provided IPC Channel is allowed to be sent
-   * to the main process.
-   *
-   * @param ipcChannel
-   */
-  static isAllowedOutboundIpcChannel(ipcChannel: string) {
-    return ((outboundIpcChannelsWhitelist).includes(<OutboundIpcChannel>ipcChannel));
-  }
-
-  /**
    * Prepares the request object to be transferred via the IPC
    * @param request
    */
-  static marshal(request: IpcRequest): IpcRequest {
+  static marshal<T extends RendererGenericIpcObject>(request: T): T {
     return {
       ...request,
 
@@ -33,36 +25,31 @@ export class RendererIpcBroker {
   }
 
   /**
-   * Sends synchronous IPC request to the main process and
-   * waits till a response is received.
-   *
-   * @param request
-   */
-  static sendIpcRequestToMainSync<T = unknown>(request: IpcRequest): T {
-    const { ipcChannel, args } = RendererIpcBroker.marshal(request);
-
-    if (RendererIpcBroker.isAllowedOutboundIpcChannel(ipcChannel)) {
-      return ipcRenderer.sendSync(ipcChannel, ...args);
-    }
-
-    throw Error(`Disallowed IPC Channel "${ipcChannel}" found in the request`);
-  }
-
-  /**
    * Sends asynchronous IPC request to the main process and
    * returns a promise.
    *
    * @param request
    */
-  static sendIpcRequestToMainAsync<T = unknown>(request: IpcRequest): Promise<T> {
+  static sendIpcRequest(request: RendererIpcRequest): any | Promise<any> {
     const { ipcChannel, args } = RendererIpcBroker.marshal(request);
 
-    if (RendererIpcBroker.isAllowedOutboundIpcChannel(ipcChannel)) {
+    if (!isAllowedRendererOutboundIpcChannel(ipcChannel)) {
+      throw Error(`Disallowed IPC Channel "${ipcChannel}" found in the request`);
+    }
+
+    // If the IPC Channel is for async request,
+    // call `invoke` method
+    if (isRendererAsyncRequestIpcChannel(ipcChannel)) {
       return ipcRenderer.invoke(ipcChannel, ...args);
     }
 
-    throw Error(`Disallowed IPC Channel "${ipcChannel}" found in the request`);
+    // If the IPC Channel is for sync request,
+    // call `sendSync` method
+    return ipcRenderer.sendSync(ipcChannel, ...args);
   }
+
+  static sendIpcMessage(request: { ipcChannel: 'window:closeAssistantWindow', args: [] }): void;
+  static sendIpcMessage(request: { ipcChannel: 'window:minimizeAssistantWindow', args: [] }): void;
 
   /**
    * Sends asynchronous IPC message to the main process.
@@ -70,10 +57,10 @@ export class RendererIpcBroker {
    *
    * @param request
    */
-  static sendIpcMessageToMain(request: IpcRequest) {
+  static sendIpcMessage(request: RendererIpcMessage) {
     const { ipcChannel, args } = RendererIpcBroker.marshal(request);
 
-    if (RendererIpcBroker.isAllowedOutboundIpcChannel(ipcChannel)) {
+    if (isAllowedRendererOutboundIpcChannel(ipcChannel)) {
       return ipcRenderer.send(ipcChannel, ...args);
     }
 
@@ -82,7 +69,13 @@ export class RendererIpcBroker {
 
   static on(channel: 'assistant:showOauthTokenPrompt', listener: (authUrl: string) => void): void;
 
-  static on(channel: InboundIpcChannel, listener: Function) {
+  /**
+   * Adds a listener for specified `channel`
+   *
+   * @param channel
+   * @param listener
+   */
+  static on(channel: RendererInboundIpcChannel, listener: Function) {
     ipcRenderer.on(channel, (_event, ...args) => {
       listener(...args);
     });

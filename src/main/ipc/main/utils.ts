@@ -1,51 +1,38 @@
 import {
-  OutboundIpcChannel as RendererOutboundChannel,
-  outboundIpcChannelsWhitelist as rendererOutboundChannels,
+  rendererAsyncRequestIpcChannels,
+  rendererSyncRequestIpcChannels,
+  rendererMessageIpcChannels,
 } from 'main/ipc/renderer/utils';
+
+export type MainOutboundIpcChannel = typeof mainOutboundIpcChannels[number];
+export type MainInboundIpcChannel = typeof mainInboundIpcChannels[number];
+
+export interface MainIpcMessage {
+  ipcChannel: MainOutboundIpcChannel;
+  args: any[];
+}
+
+export type MainIpcTarget = 'renderer';
+
+/**
+ * List of outbound IPC channels emitted by the renderer
+ * process
+ */
+const rendererOutboundChannels = [
+  ...rendererSyncRequestIpcChannels,
+  ...rendererAsyncRequestIpcChannels,
+  ...rendererMessageIpcChannels,
+];
 
 /**
  * Known IPC channels for emitting IPC events to external
  * process and services
  */
-export const outboundIpcChannels = [] as const;
+export const mainOutboundIpcChannels = [] as const;
 
 /**
  * Known IPC channels for listening inbound IPC events
  */
-export const inboundIpcChannels = [
+export const mainInboundIpcChannels = [
   ...rendererOutboundChannels,
 ] as const;
-
-/**
- * IPC requests which are made **synchronously** by the _renderer_
- * process. These channels expect a response to be returned back.
- */
-const rendererSyncRequests: RendererOutboundChannel[] = [
-  'app:getAppConfig',
-];
-
-/**
- * IPC requests which are made **asynchronously** by the _renderer_
- * process. These channels expect a response to be returned back.
- */
-const rendererAsyncRequests: RendererOutboundChannel[] = [];
-
-/**
- * Returns `true`, if the given channel is a synchronous request
- * from renderer process.
- *
- * @param channel
- */
-export function isRendererSyncRequest(channel: string) {
-  return (rendererSyncRequests as string[]).includes(channel);
-}
-
-/**
- * Returns `true`, if the given channel is a synchronous request
- * from renderer process.
- *
- * @param channel
- */
-export function isRendererAsyncRequest(channel: string) {
-  return (rendererAsyncRequests as string[]).includes(channel);
-}
