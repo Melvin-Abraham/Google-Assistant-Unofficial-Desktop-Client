@@ -98,7 +98,7 @@ export function isRendererMessageIpcChannel(channel: string) {
 export function isAllowedRendererOutboundIpcChannel(ipcChannel: string) {
   return (
     isRendererAsyncRequestIpcChannel(ipcChannel)
-    || isRendererAsyncRequestIpcChannel(ipcChannel)
+    || isRendererSyncRequestIpcChannel(ipcChannel)
     || isRendererMessageIpcChannel(ipcChannel)
   );
 }
