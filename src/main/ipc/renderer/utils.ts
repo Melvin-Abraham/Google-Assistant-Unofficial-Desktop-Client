@@ -12,21 +12,6 @@ export type RendererIpcRequestChannel =
 export type RendererOutboundIpcChannel = RendererIpcRequestChannel | RendererIpcMessageChannel;
 export type RendererInboundIpcChannel = typeof rendererInboundIpcChannels[number];
 
-export interface RendererGenericIpcObject {
-  ipcChannel: RendererOutboundIpcChannel;
-  args: any[];
-}
-
-export interface RendererIpcRequest extends RendererGenericIpcObject {
-  ipcChannel: RendererIpcRequestChannel;
-  args: any[];
-}
-
-export interface RendererIpcMessage extends RendererGenericIpcObject {
-  ipcChannel: RendererIpcMessageChannel;
-  args: any[];
-}
-
 /**
  * List of allowed IPC channels for listening inbound IPC events
  * from main process
