@@ -53,6 +53,11 @@
         "no-dupe-class-members": "off",
         "no-unused-vars": "off",
         "no-redeclare": "off",
+        "no-restricted-syntax": [
+            "error",
+            "LabeledStatement",
+            "WithStatement"
+        ],
         "import/no-unresolved": ["error", {
             "ignore": [".svg"]
         }],
