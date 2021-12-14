@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as process from 'process';
 import * as url from 'url';
 import { BrowserWindow, app } from 'electron';
+import { resolveAppConfig, getUserConfig } from './utils/config';
 import { initIpcListeners } from './ipc/main';
 
 const didGetInstanceLock = app.requestSingleInstanceLock();
@@ -18,6 +19,12 @@ if (!didGetInstanceLock) {
 }
 else {
   app.on('ready', () => setTimeout(onAppReady, 800));
+
+  // Initialize App Config
+  const savedConfig = getUserConfig();
+  const appConfig = resolveAppConfig(savedConfig);
+
+  global.appConfig = appConfig;
 }
 
 /**

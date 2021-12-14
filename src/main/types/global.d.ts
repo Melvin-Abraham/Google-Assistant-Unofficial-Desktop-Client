@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { AssistantAppConfig } from 'main/utils/config/types';
 
 interface SessionFlags {
   /**
@@ -15,6 +16,11 @@ declare global {
        * Reference to the assistant renderer process window
        */
       assistantWindow: BrowserWindow;
+
+      /**
+       * Resolved application configuration/preferences.
+       */
+      appConfig: AssistantAppConfig;
 
       /**
        * Flags associated with current session.
