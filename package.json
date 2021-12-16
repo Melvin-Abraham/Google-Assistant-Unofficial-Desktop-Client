@@ -130,8 +130,8 @@
         "watch:renderer": "vite",
         "lint": "eslint --ext \".ts, .tsx, .js\" .",
         "tscheck:common": "tsc -p ./src/common/tsconfig.json --noEmit",
-        "tscheck:main": "tsc -p ./src/main/tsconfig.json --noEmit",
-        "tscheck:renderer": "tsc -p ./src/renderer/tsconfig.json --noEmit",
+        "tscheck:main": "tsc -p ./src/main/tsconfig.tscheck.json --noEmit",
+        "tscheck:renderer": "tsc -p ./src/renderer/tsconfig.tscheck.json --noEmit",
         "test": "yarn tscheck:common && yarn tscheck:main && yarn tscheck:renderer",
         "preinstall": "yarn add git://github.com/Melvin-Abraham/google-assistant.git#g-assist --ignore-scripts",
         "postinstall": "electron-builder install-app-deps"
