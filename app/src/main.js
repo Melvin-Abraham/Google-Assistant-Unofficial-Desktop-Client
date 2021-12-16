@@ -2147,65 +2147,8 @@ async function openConfig(configItem = null) {
             </div>
             <div class="setting-value" style="height: 35px;">
               <label
+                id="bug-report-button"
                 class="button setting-item-button"
-                onclick="openLink('${repoUrl}/issues/new?assignees=Melvin-Abraham&labels=%F0%9F%90%9B+bug&template=bug_report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+&relevant-assets=${
-                  (() => {
-                    let additionalInfo = '';
-                    const { commitHash, commitDate } = getCommitInfo();
-
-                    additionalInfo += [
-                      '### :information_source: Platform Info',
-                      `Running on **${os.type} ${os.arch} ${os.release}**`,
-                    ].join('\n');
-
-                    if (process.platform === 'linux') {
-                      // Distribution Type
-                      const distributionType = process.env.DIST_TYPE;
-                      additionalInfo += '\n**Distribution Type:** ';
-
-                      switch (distributionType) {
-                        case 'deb':
-                          additionalInfo += 'Debian';
-                          break;
-
-                        case 'rpm':
-                          additionalInfo += 'Red Hat';
-                          break;
-
-                        default:
-                          additionalInfo += 'Unknown';
-                          break;
-                      }
-
-                      // Windowing System
-                      additionalInfo += `\n**Windowing System:** ${
-                        isWaylandSession() ? 'Wayland' : 'X11'
-                      }`;
-
-                      // Package variant
-                      if (isSnap()) {
-                        additionalInfo += '\nRunning as **Snap** package';
-                      }
-                      else if (isAppImage()) {
-                        additionalInfo += '\nRunning as **AppImage** package';
-                      }
-                    }
-
-                    // Dev Mode related info
-                    if (process.env.DEV_MODE === 'true') {
-                      additionalInfo += [
-                        '\n',
-                        '### :hammer_and_wrench: Running in Dev Mode',
-                        `**Commit Hash:** ${commitHash}`,
-                        `**Commit Date:** ${commitDate}`,
-                        `**Node.js Version:** ${process.versions.node}`,
-                        `**Electron Version:** ${process.versions.electron}`,
-                      ].join('\n');
-                    }
-
-                    return encodeURIComponent(additionalInfo);
-                  })()
-                }')"
               >
                 <span>
                   <img src="../res/open_link.svg" style="
@@ -2486,6 +2429,68 @@ async function openConfig(configItem = null) {
         setTimeout(() => removeBanner(), 250);
       };
     }
+
+    // Button for opening a new bug report
+    const bugReportButton = mainArea.querySelector('#bug-report-button');
+
+    bugReportButton.onclick = () => {
+      let additionalInfo = '';
+      const bugReportLink = `${repoUrl}/issues/new?assignees=Melvin-Abraham&labels=%F0%9F%90%9B+bug&template=bug_report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+`;
+      const { commitHash, commitDate } = getCommitInfo();
+
+      additionalInfo += [
+        '### :information_source: Platform Info',
+        `Running on **${os.type} ${os.arch} ${os.release}**`,
+      ].join('\n');
+
+      if (process.platform === 'linux') {
+        // Distribution Type
+        const distributionType = process.env.DIST_TYPE;
+        additionalInfo += '\n**Distribution Type:** ';
+
+        switch (distributionType) {
+          case 'deb':
+            additionalInfo += 'Debian';
+            break;
+
+          case 'rpm':
+            additionalInfo += 'Red Hat';
+            break;
+
+          default:
+            additionalInfo += 'Unknown';
+            break;
+        }
+
+        // Windowing System
+        additionalInfo += `\n**Windowing System:** ${
+          isWaylandSession() ? 'Wayland' : 'X11'
+        }`;
+
+        // Package variant
+        if (isSnap()) {
+          additionalInfo += '\nRunning as **Snap** package';
+        }
+        else if (isAppImage()) {
+          additionalInfo += '\nRunning as **AppImage** package';
+        }
+      }
+
+      // Dev Mode related info
+      if (process.env.DEV_MODE === 'true') {
+        additionalInfo += [
+          '\n',
+          '### :hammer_and_wrench: Running in Dev Mode',
+          `**Commit Hash:** ${commitHash}`,
+          `**Commit Date:** ${commitDate}`,
+          `**Node.js Version:** ${process.versions.node}`,
+          `**Electron Version:** ${process.versions.electron}`,
+        ].join('\n');
+      }
+
+      additionalInfo = encodeURIComponent(additionalInfo);
+      openLink(`${bugReportLink}&relevant-assets=${additionalInfo}`);
+    };
 
     if (isFallbackMode()) {
       configNotice.style.display = 'block';
