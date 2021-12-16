@@ -1,14 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out/main",
+    "outDir": "../../out/common",
     "noEmit": false,
     "module": "CommonJS",
+    "composite": true,
     "incremental": true,
-    "tsBuildInfoFile": "../../out/tscache/main.tsbuildinfo",
+    "tsBuildInfoFile": "../../out/tscache/common.tsbuildinfo",
     "paths": {
-      "common/*": ["./src/common/*"],
-      "main/*": ["./src/main/*"]
+      "common/*": ["./src/common/*"]
     },
     "typeRoots": [
       "types"
@@ -20,10 +20,5 @@
     ]
   },
   "include": ["./"],
-  "exclude": ["../renderer/**/*"],
-  "references": [
-    {
-      "path": "../common"
-    }
-  ]
+  "exclude": ["../renderer/**/*", "../main/**/*"]
 }

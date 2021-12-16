@@ -1,11 +1,25 @@
+# Misc
 .DS_Store
 Thumbs.db
+
+# Project dependencies
 node_modules/
+
+# Package cache
+false/
+
+# Build and Distribution
 out/
 dist/
-false/
+
+# Package manager specific logs, config and lock files
 yarn-error.log
 package-lock.json
 .npm
+
+# Editor specific configs
 .vscode/
 .idea/workspace.xml
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo

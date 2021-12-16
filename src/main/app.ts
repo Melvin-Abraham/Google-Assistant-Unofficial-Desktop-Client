@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as process from 'process';
 import * as url from 'url';
 import { BrowserWindow, app } from 'electron';
-import { resolveAppConfig, getUserConfig } from './utils/config';
+import { resolveAppConfig, getUserConfig } from 'common/config';
 import { initIpcListeners } from './ipc/main';
 
 const didGetInstanceLock = app.requestSingleInstanceLock();

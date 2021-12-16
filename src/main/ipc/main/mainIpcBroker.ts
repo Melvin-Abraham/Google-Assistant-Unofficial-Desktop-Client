@@ -1,6 +1,6 @@
 import { ipcMain, IpcMainEvent } from 'electron';
 import { serialize } from 'main/ipc/common/ipcUtils';
-import { AssistantAppConfig } from 'main/utils/config/types';
+import { AssistantAppConfig } from 'common/config/types';
 import { isRendererSyncRequestIpcChannel, isRendererAsyncRequestIpcChannel } from 'main/ipc/renderer/utils';
 import { MainIpcMessage, MainInboundIpcChannel, MainIpcTarget } from './utils';
 

@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron';
-import { AssistantAppConfig } from 'main/utils/config/types';
+import { AssistantAppConfig } from 'common/config/types';
 
 interface SessionFlags {
   /**

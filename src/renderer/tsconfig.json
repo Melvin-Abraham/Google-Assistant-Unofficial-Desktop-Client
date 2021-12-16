@@ -1,7 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "../../out/tscache/renderer.tsbuildinfo",
     "paths": {
+      "common/*": ["./src/common/*"],
       "renderer/*": ["./src/renderer/*"],
       "components/*": ["./src/renderer/components/*"],
       "res/*": ["./src/renderer/res/*"],
@@ -12,5 +15,10 @@
     ]
   },
   "include": ["./"],
-  "exclude": ["../main/**/*"]
+  "exclude": ["../main/**/*"],
+  "references": [
+    {
+      "path": "../common"
+    }
+  ]
 }
