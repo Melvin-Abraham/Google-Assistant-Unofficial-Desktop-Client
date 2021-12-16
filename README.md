@@ -7,6 +7,7 @@
 [![Top Language](https://img.shields.io/github/languages/top/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge&color=yellow)][top-lang]
 [![Last Commit](https://img.shields.io/github/last-commit/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client.svg?style=for-the-badge)][commits]
 [![Commits since last release](https://img.shields.io/github/commits-since/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/latest.svg?style=for-the-badge)][commits]
+[![Milestone v2.0.0](https://img.shields.io/badge/Milestone%20v2.0.0-Next-blueviolet?style=for-the-badge)][next-milestone]
 
 ![G Assist Banner](images/Banner.png)
 
@@ -149,3 +150,4 @@ Before you start, we highly recommend you check the Google Assistant Unofficial 
 [license]: <https://www.apache.org/licenses/LICENSE-2.0>
 [commits]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
+[next-milestone]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/discussions/576>
