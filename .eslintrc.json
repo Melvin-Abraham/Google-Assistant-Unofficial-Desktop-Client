@@ -91,5 +91,16 @@
         "react/jsx-filename-extension": "off",
         "react/jsx-one-expression-per-line": "off",
         "react/require-default-props": "off"
-    }
+    },
+    "overrides": [
+        // Override "no-undef" for typescript files as this check
+        // is done by TS compiler natively. This prevents caveats
+        // associated with "no-undef" rule for TS files
+        {
+            "files": ["**/*.ts"],
+            "rules": {
+                "no-undef": "off"
+            }
+        }
+    ]
 }
