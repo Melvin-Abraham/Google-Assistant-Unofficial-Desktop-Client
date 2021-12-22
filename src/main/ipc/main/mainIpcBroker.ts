@@ -1,60 +1,45 @@
-import { ipcMain, IpcMainEvent } from 'electron';
-import { serialize } from 'main/ipc/common/ipcUtils';
-import { AssistantAppConfig } from 'common/config/types';
-import { isRendererSyncRequestIpcChannel, isRendererAsyncRequestIpcChannel } from 'main/ipc/renderer/utils';
-import { MainIpcMessage, MainInboundIpcChannel, MainIpcTarget } from './utils';
+import { ipcMain, IpcMainEvent, IpcMainInvokeEvent } from 'electron';
+import { RendererOutboundIpcMetadata } from 'main/ipc/renderer/ipcOutboundMetadata';
+import { RendererInboundIpcMetadata } from 'main/ipc/renderer/ipcInboundMetadata';
+
+import {
+  isRendererSyncRequestIpcChannel,
+  isRendererAsyncRequestIpcChannel,
+} from 'main/ipc/renderer/utils';
 
 export class MainIpcBroker {
   /**
-   * Prepares the request object to be transferred via the IPC
-   * @param request
+   * Sends asynchronous IPC message to the renderer process.
    */
-  static marshal(request: MainIpcMessage): MainIpcMessage {
-    return {
-      ...request,
-
-      // Serialize args to string format
-      args: request.args.map(serialize),
-    };
+  static sendIpcMessageToRenderer<K extends keyof RendererInboundIpcMetadata>(
+    channel: K,
+    payload: RendererInboundIpcMetadata[K]['payload'],
+  ): void {
+    global.assistantWindow.webContents.send(channel, payload);
   }
 
   /**
-   * Sends asynchronous IPC message to `target` process.
+   * Listens for incoming IPC messages and requests from renderer
+   * process.
    *
-   * @param request
-   * @param target
+   * @param channel
+   * @param listener
    */
-  static sendIpcMessage(request: MainIpcMessage, target: MainIpcTarget) {
-    const { ipcChannel, args } = MainIpcBroker.marshal(request);
-
-    switch (target) {
-      case 'renderer':
-        global.assistantWindow.webContents.send(ipcChannel, ...args);
-        break;
-
-      default:
-        // no-op
-    }
-  }
-
-  static on(channel: 'app:quit', listener: (event: IpcMainEvent) => void): void;
-  static on(channel: 'app:getAppConfig', listener: (event: IpcMainEvent) => AssistantAppConfig): void;
-  static on(channel: 'app:setAppConfig', listener: (event: IpcMainEvent, newConfig: AssistantAppConfig) => void): void;
-  static on(channel: 'window:closeAssistantWindow', listener: (event: IpcMainEvent) => void): void;
-  static on(channel: 'window:minimizeAssistantWindow', listener: (event: IpcMainEvent) => void): void;
-
-  static on(channel: MainInboundIpcChannel, listener: Function) {
+  static onRendererEmit<K extends keyof RendererOutboundIpcMetadata>(
+    channel: K,
+    listener: RendererListenerCallback<K>,
+  ) {
     if (isRendererAsyncRequestIpcChannel(channel)) {
-      ipcMain.handle(channel, (event, ...args) => {
-        const returnValue = listener(event, ...args);
+      ipcMain.handle(channel, (event, payload) => {
+        const returnValue = listener(event, payload);
         return returnValue;
       });
 
       return;
     }
 
-    ipcMain.on(channel, (event, ...args) => {
-      const returnValue = listener(event, ...args);
+    ipcMain.on(channel, (event, payload) => {
+      const returnValue = listener(event, payload);
 
       if (isRendererSyncRequestIpcChannel(channel)) {
         // eslint-disable-next-line no-param-reassign
@@ -63,3 +48,8 @@ export class MainIpcBroker {
     });
   }
 }
+
+type RendererListenerCallback<K extends keyof RendererOutboundIpcMetadata> = (
+  event: IpcMainEvent | IpcMainInvokeEvent,
+  payload: RendererOutboundIpcMetadata[K]['payload'],
+) => RendererOutboundIpcMetadata[K]['returnType'];

@@ -26,7 +26,6 @@ export const rendererInboundIpcChannels = [
  */
 export const rendererSyncRequestIpcChannels = [
   'app:getAppConfig',
-  'app:quit',
 ] as const;
 
 /**
@@ -44,6 +43,8 @@ export const rendererAsyncRequestIpcChannels = [
 export const rendererMessageIpcChannels = [
   'window:closeAssistantWindow',
   'window:minimizeAssistantWindow',
+  'assistant:oauthCode',
+  'app:quit',
 ] as const;
 
 /**
@@ -52,7 +53,8 @@ export const rendererMessageIpcChannels = [
  *
  * @param channel
  */
-export function isRendererSyncRequestIpcChannel(channel: string) {
+export function isRendererSyncRequestIpcChannel(channel: string):
+  channel is RendererIpcSyncRequestChannel {
   return (<unknown>rendererSyncRequestIpcChannels as string[]).includes(channel);
 }
 
@@ -62,7 +64,8 @@ export function isRendererSyncRequestIpcChannel(channel: string) {
  *
  * @param channel
  */
-export function isRendererAsyncRequestIpcChannel(channel: string) {
+export function isRendererAsyncRequestIpcChannel(channel: string):
+  channel is RendererIpcAsyncRequestChannel {
   return (<unknown>rendererAsyncRequestIpcChannels as string[]).includes(channel);
 }
 
@@ -70,7 +73,8 @@ export function isRendererAsyncRequestIpcChannel(channel: string) {
  * Returns `true`, if the given channel is a message from renderer process.
  * @param channel
  */
-export function isRendererMessageIpcChannel(channel: string) {
+export function isRendererMessageIpcChannel(channel: string):
+  channel is RendererIpcMessageChannel {
   return (<unknown>rendererMessageIpcChannels as string[]).includes(channel);
 }
 
@@ -80,7 +84,8 @@ export function isRendererMessageIpcChannel(channel: string) {
  *
  * @param ipcChannel
  */
-export function isAllowedRendererOutboundIpcChannel(ipcChannel: string) {
+export function isAllowedRendererOutboundIpcChannel(ipcChannel: string):
+  ipcChannel is RendererOutboundIpcChannel {
   return (
     isRendererAsyncRequestIpcChannel(ipcChannel)
     || isRendererSyncRequestIpcChannel(ipcChannel)

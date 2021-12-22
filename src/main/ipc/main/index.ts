@@ -6,15 +6,21 @@ import { MainIpcBroker } from './mainIpcBroker';
  */
 export function initIpcListeners() {
   // Quit Application
-  MainIpcBroker.on('app:quit', () => {
+  MainIpcBroker.onRendererEmit('app:quit', () => {
     console.log('Received request to quit application');
 
     global.sessionFlags.isQuitting = true;
     app.quit();
   });
 
+  // Send App Config
+  MainIpcBroker.onRendererEmit('app:getAppConfig', () => {
+    const { appConfig } = global;
+    return appConfig;
+  });
+
   // Close Window
-  MainIpcBroker.on('window:closeAssistantWindow', () => {
+  MainIpcBroker.onRendererEmit('window:closeAssistantWindow', () => {
     console.log('Received request to close window');
 
     global.sessionFlags.isQuitting = false;
@@ -22,7 +28,7 @@ export function initIpcListeners() {
   });
 
   // Minimize Window
-  MainIpcBroker.on('window:minimizeAssistantWindow', () => {
+  MainIpcBroker.onRendererEmit('window:minimizeAssistantWindow', () => {
     console.log('Received request to minimize window');
   });
 }

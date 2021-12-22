@@ -1,12 +1,12 @@
-import { ipcRenderer } from 'electron';
-import { serialize } from 'main/ipc/common/ipcUtils';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { RendererOutboundIpcMetadata } from './ipcOutboundMetadata';
+import { RendererInboundIpcMetadata } from './ipcInboundMetadata';
 
 import {
   isAllowedRendererOutboundIpcChannel,
   isRendererAsyncRequestIpcChannel,
   RendererIpcRequestChannel,
   RendererIpcMessageChannel,
-  RendererInboundIpcChannel,
 } from './utils';
 
 export class RendererIpcBroker {
@@ -16,26 +16,24 @@ export class RendererIpcBroker {
    *
    * @param request
    */
-  static sendIpcRequest(channel: RendererIpcRequestChannel, ...args: any[]): any | Promise<any> {
+  static sendIpcRequest<K extends keyof RendererOutboundIpcMetadata & RendererIpcRequestChannel>(
+    channel: K,
+    payload: RendererOutboundIpcMetadata[K]['payload'],
+  ): RendererOutboundIpcMetadata[K]['returnType'] {
     if (!isAllowedRendererOutboundIpcChannel(channel)) {
-      throw Error(`Disallowed IPC Channel "${channel}" found in the request`);
+      throw Error(`Disallowed IPC Channel "${channel}" passed`);
     }
-
-    const serializedArgs = args.map(serialize);
 
     // If the IPC Channel is for async request,
     // call `invoke` method
     if (isRendererAsyncRequestIpcChannel(channel)) {
-      return ipcRenderer.invoke(channel, ...serializedArgs);
+      return ipcRenderer.invoke(channel, payload);
     }
 
     // If the IPC Channel is for sync request,
     // call `sendSync` method
-    return ipcRenderer.sendSync(channel, ...serializedArgs);
+    return ipcRenderer.sendSync(channel, payload);
   }
-
-  static sendIpcMessage(channel: 'window:closeAssistantWindow'): void;
-  static sendIpcMessage(channel: 'window:minimizeAssistantWindow'): void;
 
   /**
    * Sends asynchronous IPC message to the main process.
@@ -43,27 +41,34 @@ export class RendererIpcBroker {
    *
    * @param request
    */
-  static sendIpcMessage(channel: RendererIpcMessageChannel, ...args: any[]) {
-    const serializedArgs = args.map(serialize);
-
-    if (isAllowedRendererOutboundIpcChannel(channel)) {
-      return ipcRenderer.send(channel, ...serializedArgs);
+  static sendIpcMessage<K extends keyof RendererOutboundIpcMetadata & RendererIpcMessageChannel>(
+    channel: K,
+    payload: RendererOutboundIpcMetadata[K]['payload'],
+  ): void {
+    if (!isAllowedRendererOutboundIpcChannel(channel)) {
+      throw Error(`Disallowed IPC Channel "${channel}" passed`);
     }
 
-    throw Error(`Disallowed IPC Channel "${channel}" found in the request`);
+    ipcRenderer.send(channel, payload);
   }
 
-  static on(channel: 'assistant:showOauthTokenPrompt', listener: (authUrl: string) => void): void;
-
   /**
-   * Adds a listener for specified `channel`
+   * Listens for incoming IPC messages from main process.
    *
    * @param channel
    * @param listener
    */
-  static on(channel: RendererInboundIpcChannel, listener: Function) {
-    ipcRenderer.on(channel, (_event, ...args) => {
-      listener(...args);
+  static onMainEmit<K extends keyof RendererInboundIpcMetadata>(
+    channel: K,
+    listener: MainListenerCallback<K>,
+  ) {
+    ipcRenderer.on(channel, (event, payload) => {
+      listener(event, payload);
     });
   }
 }
+
+type MainListenerCallback<K extends keyof RendererInboundIpcMetadata> = (
+  event: IpcRendererEvent,
+  payload: RendererInboundIpcMetadata[K]['payload'],
+) => void;
