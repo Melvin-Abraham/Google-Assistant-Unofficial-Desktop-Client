@@ -1,4 +1,4 @@
-import { EventEmitter } from 'renderer/lib/eventEmitter';
+import { EventEmitter } from 'lib/eventEmitter';
 import pingStart from 'res/audio/pingStart.mp3';
 import pingStop from 'res/audio/pingStop.mp3';
 import pingSuccess from 'res/audio/pingSuccess.mp3';
@@ -146,7 +146,7 @@ export class AudioPlayer extends EventEmitter {
    * Sets the `sinkId` of the audio element to the given
    * speaker's device ID.
    *
-   * @param {string} audioOutDeviceId
+   * @param audioOutDeviceId
    * Device ID of desired speaker source
    */
   setDeviceId(audioOutDeviceId: string) {

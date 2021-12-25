@@ -1,4 +1,4 @@
-import { EventEmitter } from 'renderer/lib/eventEmitter';
+import { EventEmitter } from 'lib/eventEmitter';
 
 export interface Microphone {
   on(type: 'mic:ready', listener: () => void): this;
@@ -84,7 +84,7 @@ export class Microphone extends EventEmitter {
   /**
    * Sets the `audioInDeviceId` to provided Device ID.
    *
-   * @param {string} audioInDeviceId
+   * @param audioInDeviceId
    * Device ID of desired microphone source
    */
   setDeviceId(audioInDeviceId: string) {
@@ -93,8 +93,6 @@ export class Microphone extends EventEmitter {
 
   /**
    * Processes the audio to be ready for Google.
-   *
-   * @param event event
    */
   onAudioProcess(event: AudioProcessingEvent) {
     const data = event.inputBuffer.getChannelData(0);
@@ -105,23 +103,26 @@ export class Microphone extends EventEmitter {
   }
 
   /**
-   * Downsamles the buffer if needed to right sampleRate & converts the data into an int16 buffer
-   *
-   * @param buffer buffer
+   * Downsamles the audio buffer if needed to right sampleRate and
+   * converts the data into an int16 buffer
    */
   downsampleBuffer(buffer: Float32Array) {
     if (this.audioContext.sampleRate === this.sampleRate) {
       return buffer;
     }
+
     const sampleRateRatio = this.audioContext.sampleRate / this.sampleRate;
     const newLength = Math.round(buffer.length / sampleRateRatio);
     const result = new Int16Array(newLength);
+
     let offsetResult = 0;
     let offsetBuffer = 0;
+
     while (offsetResult < result.length) {
       const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
       let accum = 0;
       let count = 0;
+
       for (
         let i = offsetBuffer;
         i < nextOffsetBuffer && i < buffer.length;
@@ -130,10 +131,12 @@ export class Microphone extends EventEmitter {
         accum += buffer[i];
         count += 1;
       }
+
       result[offsetResult] = Math.min(1, accum / count) * 0x7fff;
       offsetResult += 1;
       offsetBuffer = nextOffsetBuffer;
     }
+
     return result.buffer;
   }
 }
