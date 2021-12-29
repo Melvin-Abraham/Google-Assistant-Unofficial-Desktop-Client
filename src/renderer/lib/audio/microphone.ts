@@ -1,10 +1,29 @@
 import { EventEmitter } from 'lib/eventEmitter';
 
 export interface Microphone {
+  /**
+   * Event emitted when microphone is ready for use
+   */
   on(type: 'mic:ready', listener: () => void): this;
+
+  /**
+   * Event emitted when microphone starts
+   */
   on(type: 'mic:started', listener: () => void): this;
+
+  /**
+   * Event emitted when microphone stops
+   */
   on(type: 'mic:stopped', listener: () => void): this;
-  on(type: 'mic:data', listener: (buffer: ArrayBufferLike) => void): this;
+
+  /**
+   * Returns a downsampled audio buffer to be relayed to
+   * the assistant service
+   */
+  on(type: 'mic:data', listener: (data: {
+    buffer: ArrayBufferLike,
+    level: number,
+  }) => void): this;
 }
 
 export class Microphone extends EventEmitter {
@@ -97,9 +116,12 @@ export class Microphone extends EventEmitter {
   onAudioProcess(event: AudioProcessingEvent) {
     const data = event.inputBuffer.getChannelData(0);
     const downsampledData = this.downsampleBuffer(data);
+    const level = Microphone.getLevel(data);
 
-    // [TODO]: Implement piping?
-    this.emit('mic:data', downsampledData);
+    this.emit('mic:data', {
+      buffer: downsampledData,
+      level,
+    });
   }
 
   /**
@@ -138,6 +160,39 @@ export class Microphone extends EventEmitter {
     }
 
     return result.buffer;
+  }
+
+  /**
+   * Returns the instantaneous level or loudness of input audio
+   */
+  static getLevel(buffer: Float32Array) {
+    const bufLength = buffer.length;
+    let sum = 0;
+
+    // Do a root-mean-square on the samples: sum up the squares
+    for (const sample of buffer) {
+      sum += sample ** 2;
+    }
+
+    // Take the square root of the average of sum
+    const rms = Math.sqrt(sum / bufLength);
+
+    // Map the level from 0 to 1 based on threshold
+    const levelThreshold = 0.1;
+    const actualLower = 0;
+    const actualUpper = levelThreshold;
+    const mapLower = 0;
+    const mapUpper = 1;
+
+    const mappedLevel = ((rms - actualLower) / (actualUpper - actualLower))
+      * (mapUpper - mapLower)
+      + mapLower;
+
+    // Constrain the level strictly between 0 and 1
+    const constrainedLevel = Math.min(Math.max(mappedLevel, 0), 1);
+
+    // Return the constrained level
+    return constrainedLevel;
   }
 }
 
