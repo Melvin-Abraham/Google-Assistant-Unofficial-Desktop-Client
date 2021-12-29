@@ -3651,6 +3651,18 @@ loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lottie-react@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/lottie-react/-/lottie-react-2.1.0.tgz#24d20ea41dc10791b1253f408dcb6f3e995780be"
+  integrity sha512-sHDJb5aeh1letUIWqwidHoHZj07ZOZQoLuUgy0gqt9FB/XiCtAZ2+421Cn+ZkHR7anVvWljKhGgctQCtgFloUA==
+  dependencies:
+    lottie-web "^5.7.3"
+
+lottie-web@^5.7.3:
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.8.1.tgz#807e0af0ad22b59bf867d964eb684cb3368da0ef"
+  integrity sha512-9gIizWADlaHC2GCt+D+yNpk5l2clZQFqnVWWIVdY0LnxC/uLa39dYltAe3fcmC/hrZ2IUQ8dLlY0O934Npjs7Q==
+
 lowercase-keys@^1.0.0, lowercase-keys@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.1.tgz#6f9e30b47084d971a7c820ff15a6c5167b74c26f"

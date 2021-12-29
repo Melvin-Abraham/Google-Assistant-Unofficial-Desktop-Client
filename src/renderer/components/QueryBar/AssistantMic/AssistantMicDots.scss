@@ -1,0 +1,62 @@
+#assistant-mic-dots-container {
+  --microphone-level: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
+
+  .assistant-mic-dot {
+    background-color: var(--assistant-blue);  // Fallback color
+    min-height: 0.45em;
+    width: 0.45em;
+    border-radius: 0.45em;
+    opacity: 0;
+    transition: all 200ms ease;
+
+    animation-name: reveal-mic-dot;
+    animation-timing-function: cubic-bezier(0.18, 0.89, 0.65, 1.38);
+    animation-duration: 250ms;
+    animation-fill-mode: forwards;
+  }
+
+  .blue-dot {
+    background-color: var(--assistant-blue);
+    animation-delay: 0ms;
+    max-height: 2em;
+    height: calc(var(--microphone-level) * 2em);
+  }
+
+  .red-dot {
+    background-color: var(--assistant-red);
+    animation-delay: 50ms;
+    max-height: 1.5em;
+    height: calc(var(--microphone-level) * 1.5em);
+  }
+
+  .yellow-dot {
+    background-color: var(--assistant-yellow);
+    animation-delay: 100ms;
+    max-height: 2.3em;
+    height: calc(var(--microphone-level) * 2.3em);
+  }
+
+  .green-dot {
+    background-color: var(--assistant-green);
+    animation-delay: 150ms;
+    max-height: 1.7em;
+    height: calc(var(--microphone-level) * 1.7em);
+  }
+}
+
+@keyframes reveal-mic-dot {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

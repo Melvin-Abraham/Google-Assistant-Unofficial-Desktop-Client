@@ -6,15 +6,15 @@
 }
 
 #query-bar-root {
-  overflow-x: hidden;
   border-bottom-left-radius: var(--window-border-radius);
   border-bottom-right-radius: var(--window-border-radius);
   background-color: var(--query-bar-bg-color);
   flex-shrink: 0;
   transition: all 250ms ease;
+  display: flex;
 
   input#query-bar {
-    width: 90%;
+    width: calc(100vw - 110px);
     background-color: transparent;
     color: var(--query-bar-fg-color);
     caret-color: var(--query-bar-cursor-color);

@@ -144,6 +144,7 @@
         "google-assistant": "git://github.com/Melvin-Abraham/google-assistant.git#g-assist",
         "grpc": "1.24.6",
         "isomorphic-dompurify": "^0.15.0",
+        "lottie-react": "^2.1.0",
         "marked": "^3.0.2",
         "node-fetch": "^2.6.1",
         "react": "^17.0.0",

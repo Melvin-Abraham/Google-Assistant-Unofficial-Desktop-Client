@@ -1,0 +1,19 @@
+button#assistant-mic {
+  &:hover, &:focus {
+    svg {
+      transform: translateY(-6px) scale(1.3) !important;
+    }
+  }
+
+  &:active svg {
+    transform: none !important;
+    opacity: 0.6;
+  }
+
+  svg {
+    max-height: 50px;
+    max-width: 50px;
+
+    transition: all 250ms ease;
+  }
+}

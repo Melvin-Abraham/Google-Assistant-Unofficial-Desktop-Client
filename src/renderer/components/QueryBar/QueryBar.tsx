@@ -1,4 +1,5 @@
 import React from 'react';
+import AssistantMic from './AssistantMic/AssistantMic';
 import './QueryBar.scss';
 
 function QueryBar() {
@@ -10,6 +11,8 @@ function QueryBar() {
         id="query-bar"
         placeholder="Ask me anything..."
       />
+
+      <AssistantMic />
     </div>
   );
 }
