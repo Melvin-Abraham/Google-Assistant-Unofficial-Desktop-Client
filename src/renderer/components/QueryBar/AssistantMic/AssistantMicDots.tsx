@@ -14,18 +14,18 @@ function AssistantMicDots() {
   useEffect(() => {
     // Set a max threshold as it could trigger a false-positive
     // of the user speaking when "ping" sound is played
-    let speakingLevelThrehold = 1;
+    let speakingLevelThreshold = 1;
 
     // Reset the threshold only after the "ping" is played
     setTimeout(() => {
-      speakingLevelThrehold = 0.3;
+      speakingLevelThreshold = 0.3;
     }, 300);
 
     // Manage mic audio data
     microphone.on('mic:data', (data) => {
       const { buffer, level } = data;
 
-      if (level > speakingLevelThrehold) {
+      if (level > speakingLevelThreshold) {
         setIsSpeaking(true);
       }
 
