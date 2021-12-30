@@ -18,6 +18,13 @@ export type RendererInboundIpcChannel = typeof rendererInboundIpcChannels[number
  */
 export const rendererInboundIpcChannels = [
   'assistant:showOauthTokenPrompt',
+  'assistant:audioResponse',
+  'assistant:transcription',
+  'assistant:screenData',
+  'assistant:endOfUtterance',
+  'assistant:conversationEnded',
+  'assistant:startMic',
+  'assistant:stopMic',
 ] as const;
 
 /**
@@ -44,6 +51,9 @@ export const rendererMessageIpcChannels = [
   'window:closeAssistantWindow',
   'window:minimizeAssistantWindow',
   'assistant:oauthCode',
+  'assistant:micAudioData',
+  'assistant:invoke',
+  'assistant:endConversation',
   'app:quit',
 ] as const;
 

@@ -51,6 +51,25 @@ export interface RendererOutboundIpcMetadata extends RendererOutboundIpcMetadata
     returnType: void,
   };
 
+  'assistant:micAudioData': {
+    payload: {
+      audioBuffer: ArrayBufferLike,
+    },
+    returnType: void,
+  };
+
+  'assistant:invoke': {
+    payload: {
+      query?: string;
+    },
+    returnType: void,
+  };
+
+  'assistant:endConversation': {
+    payload: undefined,
+    returnType: void,
+  };
+
   'app:setAppConfig': {
     payload: {
       newConfig: AssistantAppConfig,

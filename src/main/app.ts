@@ -3,6 +3,7 @@ import * as process from 'process';
 import * as url from 'url';
 import { BrowserWindow, app } from 'electron';
 import { resolveAppConfig, getUserConfig } from 'common/config';
+import { AssistantService } from './services/assistantService';
 import { initIpcListeners } from './ipc/main';
 
 const didGetInstanceLock = app.requestSingleInstanceLock();
@@ -19,13 +20,19 @@ if (!didGetInstanceLock) {
 }
 else {
   app.on('ready', () => setTimeout(onAppReady, 800));
-
-  // Initialize App Config
-  const savedConfig = getUserConfig();
-  const appConfig = resolveAppConfig(savedConfig);
-
-  global.appConfig = appConfig;
 }
+
+// Initialize App Config
+const savedConfig = getUserConfig();
+const appConfig = resolveAppConfig(savedConfig);
+
+global.appConfig = appConfig;
+
+// Initialize assistant service
+const assistantService = new AssistantService();
+assistantService.initialize();
+
+global.assistantService = assistantService;
 
 /**
  * Function invoked when the application is ready to start.

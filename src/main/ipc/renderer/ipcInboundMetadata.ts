@@ -26,4 +26,57 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
       authUrl: string,
     },
   };
+
+  'assistant:audioResponse': {
+    payload: {
+      /**
+       * Chunk of audio buffer received as a voice response
+       */
+      audioBuffer: Buffer,
+    }
+  },
+
+  'assistant:transcription': {
+    payload: {
+      /**
+       * Transcribed text for audio query recognized by assistant
+       */
+      transcription: string,
+
+      /**
+       * Specifies whether transcription is complete
+       */
+      done: boolean,
+    }
+  },
+
+  'assistant:screenData': {
+    payload: {
+      /**
+       * Screen data as a buffer. Possibly encoded HTML
+       */
+      data: Buffer,
+
+      /**
+       * Format of screen data
+       */
+      format: 'HTML' | string,
+    }
+  },
+
+  'assistant:endOfUtterance': {
+    payload: undefined,
+  },
+
+  'assistant:conversationEnded': {
+    payload: undefined,
+  },
+
+  'assistant:startMic': {
+    payload: undefined,
+  },
+
+  'assistant:stopMic': {
+    payload: undefined,
+  },
 }
