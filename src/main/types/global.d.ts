@@ -19,7 +19,7 @@ declare global {
       assistantWindow: BrowserWindow;
 
       /**
-       * Reference to the assistant renderer process window
+       * Reference to the assistant service
        */
       assistantService: AssistantService;
 
