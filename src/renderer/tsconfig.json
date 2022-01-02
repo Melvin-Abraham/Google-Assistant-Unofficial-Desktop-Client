@@ -9,6 +9,8 @@
       "components/*": ["./src/renderer/components/*"],
       "res/*": ["./src/renderer/res/*"],
       "lib/*": ["./src/renderer/lib/*"],
+      "context/*": ["./src/renderer/context/*"],
+      "hooks/*": ["./src/renderer/hooks/*"],
       "gassist": ["./src/renderer/api.ts"]
     },
     "typeRoots": [
