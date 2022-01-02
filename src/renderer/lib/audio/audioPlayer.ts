@@ -8,11 +8,40 @@ type HTMLAudioElementExtended = HTMLAudioElement & {
 };
 
 export interface AudioPlayer {
+  /**
+   * Event emitted when the player is idle
+   */
   on(type: 'player:waiting', listener: () => void): this;
+  off(type: 'player:waiting', listener: () => void): this;
+
+  /**
+   * Event emitted when the audio processor has been set
+   * and the player has initialized
+   */
   on(type: 'player:ready', listener: () => void): this;
+  off(type: 'player:ready', listener: () => void): this;
+
+  /**
+   * Event emitted when the player starts playing the ping-start
+   * sound usually played when mic starts
+   */
   on(type: 'player:pingStart', listener: () => void): this;
+  off(type: 'player:pingStart', listener: () => void): this;
+
+  /**
+   * Event emitted when the player starts playing the ping-stop
+   * sound usually played when mic stops
+   */
   on(type: 'player:pingStop', listener: () => void): this;
+  off(type: 'player:pingStop', listener: () => void): this;
+
+  /**
+   * Event emitted when the player starts playing the ping-success
+   * sound usually played when the user audio has been successfully
+   * transcripted
+   */
   on(type: 'player:pingSuccess', listener: () => void): this;
+  off(type: 'player:pingSuccess', listener: () => void): this;
 }
 
 /**

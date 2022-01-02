@@ -1,29 +1,35 @@
 import { EventEmitter } from 'lib/eventEmitter';
 
+export interface MicrophoneData {
+  buffer: ArrayBufferLike;
+  level: number;
+}
+
 export interface Microphone {
   /**
    * Event emitted when microphone is ready for use
    */
   on(type: 'mic:ready', listener: () => void): this;
+  off(type: 'mic:ready', listener: () => void): this;
 
   /**
    * Event emitted when microphone starts
    */
   on(type: 'mic:started', listener: () => void): this;
+  off(type: 'mic:started', listener: () => void): this;
 
   /**
    * Event emitted when microphone stops
    */
   on(type: 'mic:stopped', listener: () => void): this;
+  off(type: 'mic:stopped', listener: () => void): this;
 
   /**
    * Returns a downsampled audio buffer to be relayed to
    * the assistant service
    */
-  on(type: 'mic:data', listener: (data: {
-    buffer: ArrayBufferLike,
-    level: number,
-  }) => void): this;
+  on(type: 'mic:data', listener: (data: MicrophoneData) => void): this;
+  off(type: 'mic:data', listener: (data: MicrophoneData) => void): this;
 }
 
 export class Microphone extends EventEmitter {
