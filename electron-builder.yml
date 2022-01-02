@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json
+
+appId: com.redvirus.g-assist
+
+files:
+  - src/main/res/**/*
+  - out/**/*
+  - package.json
+
+directories:
+  buildResources: app/res/misc/*
+
+publish:
+  - provider: github
+    owner: Melvin-Abraham
+    repo: Google-Assistant-Unofficial-Desktop-Client
+
+# Windows Config
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - ia32
+  icon: ./app/res/icons/favicon.ico
+
+nsis:
+  oneClick: false
+  artifactName: ${productName}-Setup-${version}.${ext}
+  allowToChangeInstallationDirectory: true
+  installerIcon: ./app/res/icons/Installer.ico
+  installerSidebar: ./app/res/misc/InstallerSidebar.bmp
+  uninstallerSidebar: ./app/res/misc/UninstallerSidebar.bmp
+  license: LICENSE
+
+# MacOS Config
+
+mac:
+  icon: ./app/res/icons/icon.icns
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+  darkModeSupport: true
+
+dmg:
+  background: ./app/res/misc/DMG Background.png
+  icon: ./app/res/icons/icon.icns
+  iconSize: 100
+  contents:
+    - x: 350
+      y: 280
+      type: link
+      path: /Applications
+
+    - x: 80
+      y: 280
+      type: file
+
+  window:
+    width: 600
+    height: 410
+
+# Linux Config
+
+linux:
+  artifactName: ${productName}-Setup-${version}-${arch}.${ext}
+  category: Productivity
+  target:
+    - AppImage
+    - snap
+    - deb
+    - rpm
+  icon: ./app/res/icons/icon.icns
+
+snap:
+  confinement: strict
+  grade: stable
+  plugs:
+    - default
+    - audio-record
