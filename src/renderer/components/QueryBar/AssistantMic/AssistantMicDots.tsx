@@ -1,36 +1,36 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { microphone } from 'lib/audio/microphone';
+import useMicrohone from 'hooks/useMicrophone';
+import gassist from 'gassist';
 import './AssistantMicDots.scss';
+
+// Set a max threshold as it could trigger a false-positive
+// of the user speaking when "ping" sound is played
+let speakingLevelThreshold = 1;
 
 /**
  * Renders mic dots which responds to user's loudness and
  * manages audio data from microhone.
  */
 function AssistantMicDots() {
-  const [micLevel, setMicLevel] = useState(0);
+  const microphoneData = useMicrohone();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const micDotsContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set a max threshold as it could trigger a false-positive
-    // of the user speaking when "ping" sound is played
-    let speakingLevelThreshold = 1;
+    if (microphoneData === undefined) return;
 
+    if (!isSpeaking && microphoneData.level > speakingLevelThreshold) {
+      setIsSpeaking(true);
+    }
+
+    gassist.assistant.sendMicAudioData(microphoneData.buffer);
+  }, [microphoneData]);
+
+  useEffect(() => {
     // Reset the threshold only after the "ping" is played
     setTimeout(() => {
       speakingLevelThreshold = 0.3;
     }, 300);
-
-    // Manage mic audio data
-    microphone.on('mic:data', (data) => {
-      const { buffer, level } = data;
-
-      if (level > speakingLevelThreshold) {
-        setIsSpeaking(true);
-      }
-
-      setMicLevel(level);
-    });
 
     // Interval handles for mic dots "waiting-to-speak" animation
     let intervalHandles: number[] = [];
@@ -41,12 +41,12 @@ function AssistantMicDots() {
 
     // Cleanup on unmount
     return () => {
-      // Remove "mic:data" event listener when unmounting
-      microphone.off('mic:data');
-
       // Cleanup intervals if the user hasn't spoken anything to disable
       // the "waiting-to-speak" animation
       intervalHandles.forEach((intervalId) => clearInterval(intervalId));
+
+      // Force end conversation
+      gassist.assistant.endConversation();
     };
   }, []);
 
@@ -56,7 +56,7 @@ function AssistantMicDots() {
       data-isspeaking={isSpeaking}
       ref={micDotsContainer}
       style={{
-        '--microphone-level': isSpeaking ? micLevel : 0,
+        '--microphone-level': (isSpeaking) ? microphoneData?.level : 0,
       } as React.CSSProperties}
     >
       <div className="blue-dot assistant-mic-dot" />
