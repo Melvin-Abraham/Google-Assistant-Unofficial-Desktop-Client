@@ -1,0 +1,18 @@
+:root {
+  --transcription-default-color: #ffffff80;
+  --transcription-done-color: #ffffff;
+}
+
+.transcription-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  text-overflow: ellipsis;
+  color: var(--transcription-default-color);
+  font-size: 1.18em;
+
+  &[data-transcription-done=true] {
+    color: var(--transcription-done-color);
+  }
+}
