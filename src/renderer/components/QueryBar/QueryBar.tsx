@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import gassist from 'gassist';
-import AssistantMic from './AssistantMic/AssistantMic';
+import AssistantMic from 'components/AssistantMic/AssistantMic';
 import './QueryBar.scss';
 
 function QueryBar() {
