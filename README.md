@@ -56,6 +56,30 @@ PS> winget install "g-assist-preview" -e
 $ brew install --cask google-assistant
 ```
 
+### Arch Linux (using AUR)
+
+#### Using AUR Helpers
+
+##### [Yay](https://github.com/Jguer/yay)
+
+```console
+$ yay -S google-assistant-unofficial-desktop-bin
+```
+
+##### [Paru](https://github.com/Morganamilo/paru)
+
+```console
+$ paru -S google-assistant-unofficial-desktop-bin
+```
+
+#### Manual
+
+```console
+$ git clone https://aur.archlinux.org/google-assistant-unofficial-desktop-client-bin.git
+$ cd google-assistant-unofficial-desktop-client-bin
+$ makepkg -si
+```
+
 ### Linux (using `snap`)
 
 > Some linux distros like Ubuntu, KDE Neon, Manjaro, Zorin OS, etc. come pre-installed with
