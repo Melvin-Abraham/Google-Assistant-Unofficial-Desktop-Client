@@ -18,7 +18,7 @@ export function onAssistantConversationComplete(listener: () => void) {
   });
 }
 
-export function onScreenData(listener: (data: Buffer, format: 'HTML' | string) => void) {
+export function onScreenData(listener: (data: string, format: 'HTML' | string) => void) {
   RendererIpcBroker.onMainEmit('assistant:screenData', (_, { data, format }) => {
     listener(data, format);
   });

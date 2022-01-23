@@ -33,7 +33,7 @@ interface GAssistApi {
      * Callback called when assistant service emits a screen
      * data event.
      */
-    onScreenData(listener: (data: Uint8Array, format: 'HTML' | string) => void): void;
+    onScreenData(listener: (data: string, format: 'HTML' | string) => void): void;
 
     /**
      * Callback called when assistant service emits "end-of-utterance"

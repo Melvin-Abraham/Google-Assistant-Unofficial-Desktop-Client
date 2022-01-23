@@ -117,7 +117,10 @@ export class AssistantService {
     });
 
     conversation.on('screen-data', (screenData) => {
-      MainIpcBroker.sendIpcMessageToRenderer('assistant:screenData', screenData);
+      MainIpcBroker.sendIpcMessageToRenderer('assistant:screenData', {
+        ...screenData,
+        data: screenData.data.toString(),
+      });
     });
 
     conversation.on('end-of-utterance', () => {

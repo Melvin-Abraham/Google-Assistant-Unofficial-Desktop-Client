@@ -55,7 +55,7 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
       /**
        * Screen data as a buffer. Possibly encoded HTML
        */
-      data: Buffer,
+      data: string,
 
       /**
        * Format of screen data

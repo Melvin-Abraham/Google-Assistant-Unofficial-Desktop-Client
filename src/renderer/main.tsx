@@ -22,7 +22,7 @@ gassist.assistant.onAssistantConversationComplete(() => {
 // Handle screen data returned by the assistant
 gassist.assistant.onScreenData((data, format) => {
   if (format === 'HTML') {
-    const htmlString = data.toString();
+    const htmlString = data;
     const htmlDocument = (new DOMParser()).parseFromString(htmlString, 'text/html');
 
     console.log('Screen Data', htmlDocument);
