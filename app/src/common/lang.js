@@ -139,6 +139,19 @@ const supportedLanguages = {
     noSuggestionsText: "Pas de suggestions.",
     settingsUpdatedText: "Réglages a Réussi!",
   },
+  "id-ID": {
+    langName: "Indonesia (Indonesia)",
+    welcomeMessage: "Hai! Ada yang bisa saya bantu?",
+    inputPlaceholder: "Tanyakan apa saja...",
+    listeningMessage: "Mendengarkan...",
+    initSuggestions: [
+      { label: "Cuaca", query: "Bagaimana cuaca hari ini?" },
+      { label: "Lempar koin", query: "Lempar koin" },
+      { label: "Apa yang bisa kamu lakukan?", query: "Apa yang bisa kamu lakukan?" },
+    ],
+    noSuggestionsText: "Tidak ada saran.",
+    settingsUpdatedText: "Pengaturan Diperbarui!",
+  },
   "it-IT": {
     langName: "Italiano (Italia)",
     welcomeMessage: "Ciao! Come posso aiutarti?",
