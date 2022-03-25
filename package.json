@@ -136,7 +136,7 @@
         "node-fetch": "^2.6.1"
     },
     "devDependencies": {
-        "electron": "10.3.2",
+        "electron": "13.6.6",
         "electron-builder": "22.10.5",
         "eslint": "^7.27.0",
         "eslint-config-airbnb": "^18.2.1",
