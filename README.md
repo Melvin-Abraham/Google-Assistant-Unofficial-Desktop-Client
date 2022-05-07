@@ -18,6 +18,8 @@ Google Assistant Unofficial Desktop Client is a cross-platform desktop client fo
 >
 > The **"Google Assistant Unofficial Desktop Client"** is under development. So, if you find any bugs or have any suggestion, feel free to post an _issue_ or a _pull request_.
 
+**Facing an error or bug while using the app? Click [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/edit/master/README.md#errors), to find a fix**
+
 ## Inspiration
 
 The design is inspired by Google Assistant in Chrome OS and comes in both Light Mode _(beta)_ and Dark Mode 😉.
@@ -151,3 +153,35 @@ Before you start, we highly recommend you check the Google Assistant Unofficial 
 [commits]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/commits/master>
 [top-lang]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client>
 [next-milestone]: <https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/discussions/576>
+
+ ## Errors
+> Note:
+> ---
+>
+> These errors are reported by fellow users. We are already working on it. Below are the Errors/bugs and their fixes. Hope this helps you to fix the error you are facing. The **"Google Assistant Unofficial Desktop Client"** is under development. So, if you find any bugs or have any suggestion which is not listed below, then feel free to post an _issue_ or a _pull request_.
+
+* **Authentication Failure [Error: Invalid Key file]**
+
+  * **Screenshot of the error:**
+    ![image](https://user-images.githubusercontent.com/83071573/167242875-a5540921-83a9-4779-b424-6447caabaed9.png)
+    
+  * **How to Fix?**<br>
+    You can fix this error by going to **credentials** and clicking the **download button** at the end of Web client (**auto created by Google Service**) and use these     as the key credentials instead..Refer the image below
+   ![image](https://user-images.githubusercontent.com/83071573/167243609-5074a9de-4b2a-410e-8f78-081999bd2c58.png)
+    The Key File will be downloaded to your Device.
+    
+    
+    <br>
+* **Error:Unable to process request due to missing initial stage.**
+
+  * **Screenshot of the error:**<BR>
+    ![image](https://user-images.githubusercontent.com/83071573/167244130-1b30eb92-1516-4ca1-816b-8bc56a9625d5.png)
+
+
+  * **How to Fix?**<br>
+    When the client ask you for the code and you get the error "Unable to process request due to missing initial state...." in the browser, just copy from the url         bar the code under the "code" GET parameter. Thid is the code you must paste in the client.
+    ![image](https://user-images.githubusercontent.com/83071573/167244077-095993ff-5bf9-4f32-9d3b-790353109952.png)
+  
+  
+   Not able to find the fix for the bug you are searching for...? Create an issue by clicking [here](https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/issues/new?assignees=Melvin-Abraham&labels=%F0%9F%90%9B+bug&template=bug_report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+)
+    
