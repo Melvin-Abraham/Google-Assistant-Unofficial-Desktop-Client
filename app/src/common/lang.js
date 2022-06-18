@@ -194,6 +194,19 @@ const supportedLanguages = {
     noSuggestionsText: "Nenhuma sugestão.",
     settingsUpdatedText: "Configurações Atualizadas!",
   },
+  "tr-TR": {
+    langName: "Turkish (Turkey)",
+    welcomeMessage: "Merhaba! Nasıl yardımcı olabilirim?",
+    inputPlaceholder: "Bana istediğini sor...",
+    listeningMessage: "Dinliyorum...",
+    initSuggestions: [
+      { label: "Hava", query: "Bugün hava nasıl?" },
+      { label: "Yazı Tura", query: "Yazı Tura atmak" },
+      { label: "Ne yapabilirsin?", query: "Ne yapabilirsin?" },
+    ],
+    noSuggestionsText: "Öneri yok.",
+    settingsUpdatedText: "Ayarlar güncellendi!",
+  },
 };
 
 module.exports = supportedLanguages;
