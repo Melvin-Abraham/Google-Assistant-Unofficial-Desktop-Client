@@ -194,7 +194,7 @@ const supportedLanguages = {
     noSuggestionsText: "Nenhuma sugestão.",
     settingsUpdatedText: "Configurações Atualizadas!",
   },
-  "tr": {
+  "tr-TR": {
     langName: "Turkish (Turkey)",
     welcomeMessage: "Merhaba! Nasıl yardımcı olabilirim?",
     inputPlaceholder: "Bana istediğini sor...",
