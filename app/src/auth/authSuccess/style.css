@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
+
+html {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+html::before {
+  content: '';
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-image: url(./cloud_confetti.png);
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: 25rem;
+}
+
+html::after {
+  content: '';
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-image: url(./cloud_confetti.png);
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: 25rem;
+  transform: rotate(180deg);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 55ch;
+  text-align: center;
+}

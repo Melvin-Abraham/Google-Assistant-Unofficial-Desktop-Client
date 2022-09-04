@@ -42,6 +42,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+require('./auth/authHandler');
 const { KeyBindingListener, getNativeKeyName } = require('./keybinding');
 const { getHotwordDetectorInstance } = require('./hotword');
 const supportedLanguages = require('./common/lang');
@@ -4558,7 +4559,7 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
       >
         Countdown timer
       </span>
-      <div class="no-auth-grid" style="margin-top: 60px;">
+      <div class="no-auth-grid" name="get-token" style="margin-top: 60px;">
         <div class="no-auth-grid-icon">
           <img src="../res/auth.svg" alt="Auth" />
         </div>
