@@ -82,6 +82,11 @@ jobs:
           path: ~/.npm
           key: ubuntu-node-14-${{ hashFiles('**/package-lock.json') }}
 
+      - name: Reconfigure git to use HTTPS authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+
       - name: Install Dependencies
         run: npm ci
 
