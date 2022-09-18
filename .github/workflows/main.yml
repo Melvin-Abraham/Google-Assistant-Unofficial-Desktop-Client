@@ -50,7 +50,18 @@ jobs:
         with:
           draft: true
           files: |
-            dist/*.(zip|dmg|dmg.blockmap|deb|snap|rpm|AppImage|exe|exe.blockmap)
+            dist/*.zip
+            dist/*.dmg
+            dist/*.dmg.blockmap
+
+            dist/*.deb
+            dist/*.snap
+            dist/*.rpm
+            dist/*.AppImage
+
+            dist/*.exe
+            dist/*.exe.blockmap
+
             dist/latest*.yml
 
   lint:
