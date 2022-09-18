@@ -44,6 +44,15 @@ jobs:
       - name: Build
         run: npm run dist:ci
 
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: |
+            dist/*.(zip|dmg|dmg.blockmap|deb|snap|rpm|AppImage|exe|exe.blockmap)
+            dist/latest*.yml
+
   lint:
     runs-on: ubuntu-latest
 
