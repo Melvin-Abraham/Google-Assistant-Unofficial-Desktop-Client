@@ -4582,6 +4582,19 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
             placeholder="Paste the code..."
             style="margin-top: 20px;"
           />
+
+          <a
+            onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client#configure-credentials')"
+            name="configure-creds-link"
+            style="
+              display: none;
+              font-size: 16px;
+              margin-top: 24px;
+              color: var(--color-accent);
+            "
+          >
+              Read updated Credential Configuration Guide
+          </a>
         </div>
       </div>
     </div>
@@ -4818,6 +4831,26 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
       };
     }
   };
+
+  // Show the user new link to configure credential guide
+  // if not already using updated oauth key file
+  if (fs.existsSync(config.auth.keyFilePath)) {
+    const oauthKey = JSON.parse(fs.readFileSync(config.auth.keyFilePath));
+
+    // Check if the oauth key file uses old redirect URI or type
+    const isOldKeyFile = (
+      oauthKey.web === undefined
+      || !oauthKey.web.redirect_uris[0].startsWith('http://localhost:5754')
+    );
+
+    if (isOldKeyFile) {
+      const configureCredsGuideLink = document.querySelector('a[name=configure-creds-link]');
+      configureCredsGuideLink.style.display = 'block';
+
+      const getTokenView = document.querySelector('[name=get-token]');
+      getTokenView.style.marginTop = '30px';
+    }
+  }
 }
 
 /**
