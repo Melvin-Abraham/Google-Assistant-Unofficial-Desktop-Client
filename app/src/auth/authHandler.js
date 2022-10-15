@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const electron = require('electron');
 
 const app = express();
 const port = 5754;
@@ -42,6 +43,10 @@ app.get(authHandleRedirectUri, (req, res) => {
 
   // Let the user know that the auth was successful
   res.redirect(authSuccessPath);
+
+  // Bring assistant window to the foreground
+  const assistantWindow = electron.remote.getCurrentWindow();
+  assistantWindow.show();
 });
 
 app.listen(port, () => {
