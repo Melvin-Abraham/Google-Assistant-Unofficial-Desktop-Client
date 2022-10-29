@@ -127,22 +127,22 @@
     "dependencies": {
         "bumblebee-hotword": "0.2.1",
         "electron-is-accelerator": "^0.2.0",
-        "electron-log": "^4.3.5",
-        "electron-updater": "^4.3.9",
-        "express": "^4.18.1",
+        "electron-log": "^4.4.8",
+        "electron-updater": "^5.3.0",
+        "express": "^4.18.2",
         "google-assistant": "github:Melvin-Abraham/google-assistant#g-assist",
-        "grpc": "1.24.6",
-        "isomorphic-dompurify": "^0.15.0",
-        "marked": "^3.0.2",
+        "grpc": "1.24.7",
+        "isomorphic-dompurify": "^0.23.0",
+        "marked": "^4.1.1",
         "node-fetch": "^2.6.1"
     },
     "devDependencies": {
         "electron": "10.3.2",
-        "electron-builder": "23.3.3",
-        "eslint": "^7.27.0",
-        "eslint-config-airbnb": "^18.2.1",
-        "eslint-config-airbnb-base": "^14.2.1",
-        "eslint-plugin-import": "^2.23.3",
-        "prettier": "^2.3.0"
+        "electron-builder": "23.6.0",
+        "eslint": "^8.26.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "prettier": "^2.7.1"
     }
 }
