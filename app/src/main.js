@@ -4200,7 +4200,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
     }
 
     history.push({
-      query: getCurrentQuery(),
+      'query': getCurrentQuery(),
       'screen-data': screenData,
     });
 

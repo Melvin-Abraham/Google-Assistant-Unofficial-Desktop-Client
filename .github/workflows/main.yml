@@ -22,6 +22,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
 
+      # Force git to use https instead of SSH while fetching packages
+      # https://github.com/actions/setup-node/issues/214#issuecomment-810829250
+      - name: Reconfigure git to use HTTPS authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
@@ -30,3 +37,47 @@ jobs:
 
       - name: Build
         run: yarn dist:ci
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: |
+            dist/*.zip
+            dist/*.dmg
+            dist/*.dmg.blockmap
+
+            dist/*.deb
+            dist/*.snap
+            dist/*.rpm
+            dist/*.AppImage
+
+            dist/*.exe
+            dist/*.exe.blockmap
+
+            dist/latest*.yml
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: yarn
+
+      - name: Reconfigure git to use HTTPS authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Run ESLint
+        run: yarn lint
