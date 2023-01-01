@@ -11,27 +11,23 @@ interface SessionFlags {
 }
 
 declare global {
-  namespace NodeJS {
-    interface Global {
-      /**
-       * Reference to the assistant renderer process window
-       */
-      assistantWindow: BrowserWindow;
+  /**
+   * Reference to the assistant renderer process window
+   */
+  var assistantWindow: BrowserWindow;
 
-      /**
-       * Reference to the assistant service
-       */
-      assistantService: AssistantService;
+  /**
+   * Reference to the assistant service
+   */
+  var assistantService: AssistantService;
 
-      /**
-       * Resolved application configuration/preferences.
-       */
-      appConfig: AssistantAppConfig;
+  /**
+   * Resolved application configuration/preferences.
+   */
+  var appConfig: AssistantAppConfig;
 
-      /**
-       * Flags associated with current session.
-       */
-      sessionFlags: SessionFlags;
-    }
-  }
+  /**
+   * Flags associated with current session.
+   */
+  var sessionFlags: SessionFlags;
 }
