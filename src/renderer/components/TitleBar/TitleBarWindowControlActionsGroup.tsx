@@ -1,8 +1,8 @@
 import React from 'react';
 import gassist from 'gassist';
-import CloseIcon from 'res/images/close.svg?component';
-import MinimizeIcon from 'res/images/minimize.svg?component';
-import ExpandIcon from 'res/images/expand.svg?component';
+import { ReactComponent as CloseIcon } from 'res/images/close.svg';
+import { ReactComponent as MinimizeIcon } from 'res/images/minimize.svg';
+import { ReactComponent as ExpandIcon } from 'res/images/expand.svg';
 import TitleBarActionsGroup from './TitleBarActionsGroup';
 import { IconButtonProps } from '../common/IconButton/IconButton';
 
@@ -26,9 +26,7 @@ function TitleBarWindowControlActionsGroup() {
   ];
 
   return (
-    <>
-      <TitleBarActionsGroup actions={actions} />
-    </>
+    <TitleBarActionsGroup actions={actions} />
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { microphone } from 'lib/audio/microphone';
-import AssistantLogoClear from 'res/images/assistant_logo_clear.svg?component';
+import { ReactComponent as AssistantLogoClear } from 'res/images/assistant_logo_clear.svg';
 import './InitView.scss';
 
 function InitView() {

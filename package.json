@@ -59,7 +59,8 @@
         "marked": "^3.0.2",
         "node-fetch": "^2.6.1",
         "react": "^17.0.0",
-        "react-dom": "^17.0.0"
+        "react-dom": "^17.0.0",
+        "vite-plugin-svgr": "^2.4.0"
     },
     "devDependencies": {
         "@types/eslint": "^7.28.2",
@@ -87,8 +88,7 @@
         "typescript": "^4.4.4",
         "typescript-transform-paths": "^3.3.1",
         "vite": "^2.6.13",
-        "vite-plugin-checker": "^0.3.4",
-        "vite-plugin-react-svg": "^0.2.0"
+        "vite-plugin-checker": "^0.3.4"
     },
     "browserslist": [
         "chrome >= 85"

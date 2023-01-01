@@ -3,7 +3,7 @@ import { env } from 'process';
 import { defineConfig, AliasOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
-import reactSvgPlugin from 'vite-plugin-react-svg';
+import reactSvgPlugin from 'vite-plugin-svgr';
 import * as tsconfig from './src/renderer/tsconfig.json';
 
 // Resolve path aliases from `tsconfig.json`
@@ -30,11 +30,7 @@ Object.entries(tsconfigAliases).forEach((aliasEntry) => {
 export default defineConfig({
   plugins: [
     react(),
-    reactSvgPlugin({
-      titleProp: true,
-      expandProps: 'end',
-      defaultExport: 'url',
-    }),
+    reactSvgPlugin(),
     checker({
       typescript: {
         tsconfigPath: resolve(__dirname, 'src', 'renderer', 'tsconfig.json'),

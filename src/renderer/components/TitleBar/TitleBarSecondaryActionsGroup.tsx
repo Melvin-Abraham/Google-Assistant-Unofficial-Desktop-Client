@@ -1,5 +1,5 @@
 import React from 'react';
-import SettingsIcon from 'res/images/settings.svg?component';
+import { ReactComponent as SettingsIcon } from 'res/images/settings.svg';
 import TitleBarActionsGroup from './TitleBarActionsGroup';
 import { IconButtonProps } from '../common/IconButton/IconButton';
 
@@ -13,9 +13,7 @@ function TitleBarSecondaryActionsGroup() {
   ];
 
   return (
-    <>
-      <TitleBarActionsGroup actions={actions} />
-    </>
+    <TitleBarActionsGroup actions={actions} />
   );
 }
 
