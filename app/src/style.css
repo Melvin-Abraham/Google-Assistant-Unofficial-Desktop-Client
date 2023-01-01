@@ -350,7 +350,7 @@ body {
   width: 75%;
   -webkit-user-select: none;
 
-  transition: all 150ms ease-in;
+  transition: background 150ms ease-in;
 }
 
 .google-search-result:hover {
