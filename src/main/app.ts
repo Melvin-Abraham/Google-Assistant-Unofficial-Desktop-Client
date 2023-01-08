@@ -54,8 +54,9 @@ function onAppReady() {
       preload: path.resolve(__dirname, 'preload.js'),
       scrollBounce: true,
       devTools: true,
+      sandbox: false,
     },
-    backgroundColor: (process.platform !== 'darwin') ? '#00000000' : '#00000001',
+    backgroundColor: '#00000000',
     alwaysOnTop: true,
   });
 
