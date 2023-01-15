@@ -1,6 +1,7 @@
 import React from 'react';
 import TitleBarSecondaryActionsGroup from './TitleBarSecondaryActionsGroup';
 import TitleBarWindowControlActionsGroup from './TitleBarWindowControlActionsGroup';
+import TitleBarQuery from './TitleBarQuery';
 import './TitleBar.scss';
 
 interface TitleBarProps {
@@ -11,6 +12,7 @@ function TitleBar({ query = '' }: TitleBarProps) {
   return (
     <div className="title-bar-root">
       <TitleBarSecondaryActionsGroup />
+      <TitleBarQuery query={query} />
       <TitleBarWindowControlActionsGroup />
     </div>
   );

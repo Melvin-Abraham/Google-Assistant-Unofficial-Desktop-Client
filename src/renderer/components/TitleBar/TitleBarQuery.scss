@@ -1,0 +1,15 @@
+.title-bar-query {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+  font-size: 18px;
+}
