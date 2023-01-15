@@ -1,4 +1,5 @@
 import React from 'react';
+import gassist from 'gassist';
 import './SuggestionChip.scss';
 
 export interface SuggestionChipProps {
@@ -20,12 +21,14 @@ export interface SuggestionChipProps {
 }
 
 function SuggestionChip({ LeadingIcon, label, onClick }: SuggestionChipProps) {
+  const invokeAssistantWithQuery = () => gassist.assistant.invokeAssistant(label);
+
   return (
     <button
       aria-label={`${label} - Suggestion`}
       className="suggestion-chip"
       type="button"
-      onClick={onClick}
+      onClick={onClick ?? invokeAssistantWithQuery}
     >
       {LeadingIcon && (
         <div className="leading">
