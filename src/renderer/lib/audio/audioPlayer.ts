@@ -93,7 +93,7 @@ export class AudioPlayer extends EventEmitter {
 
     this.audioPlayer.preload = 'none';
     this.audioPlayer.autoplay = true;
-    this.audioPlayer.src = URL.createObjectURL(this.mediaSource);
+    this.audioPlayer.src = (this.mediaSource !== undefined) ? URL.createObjectURL(this.mediaSource) : '';
   }
 
   /**
