@@ -65,9 +65,7 @@ export class Microphone extends EventEmitter {
         this.rawStream = rawStream;
         this.stream = this.audioContext.createMediaStreamSource(this.rawStream);
 
-        this.audioProcessor = this.audioContext.createScriptProcessor(
-          this.bufferSize, 1, 1,
-        );
+        this.audioProcessor = this.audioContext.createScriptProcessor(this.bufferSize, 1, 1);
 
         this.audioProcessor.onaudioprocess = (event) => {
           this.onAudioProcess(event);
