@@ -3,12 +3,13 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  pointer-events: none;
 
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 56px;
 
   font-weight: bold;
   font-size: 18px;
