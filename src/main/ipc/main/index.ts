@@ -30,5 +30,6 @@ export function initIpcListeners() {
   // Minimize Window
   MainIpcBroker.onRendererEmit('window:minimizeAssistantWindow', () => {
     console.log('Received request to minimize window');
+    global.assistantWindow.minimize();
   });
 }
