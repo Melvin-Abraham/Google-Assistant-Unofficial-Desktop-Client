@@ -89,6 +89,9 @@
         "vite": "^4.0.4",
         "vite-plugin-checker": "^0.5.3"
     },
+    "resolutions": {
+        "@types/node": "18.11.18"
+    },
     "browserslist": [
         "chrome >= 108"
     ]
