@@ -3,8 +3,9 @@ import * as process from 'process';
 import * as url from 'url';
 import { BrowserWindow, app } from 'electron';
 import { resolveAppConfig, getUserConfig } from 'common/config';
-import { AssistantService } from './services/assistantService';
 import { initIpcListeners } from './ipc/main';
+import MiddlewareService from './services/middlewareService/middlewareService';
+import AssistantResponseHistory from './services/assistantResponseHistory/assistantResponseHistory';
 
 const didGetInstanceLock = app.requestSingleInstanceLock();
 
@@ -28,11 +29,12 @@ const appConfig = resolveAppConfig(savedConfig);
 
 global.appConfig = appConfig;
 
-// Initialize assistant service
-const assistantService = new AssistantService();
-assistantService.initialize();
+// Initialize middleware service
+const middlewareService = new MiddlewareService();
+const assistantResponseHistory = new AssistantResponseHistory();
 
-global.assistantService = assistantService;
+global.middlewareService = middlewareService;
+global.assistantResponseHistory = assistantResponseHistory;
 
 /**
  * Function invoked when the application is ready to start.

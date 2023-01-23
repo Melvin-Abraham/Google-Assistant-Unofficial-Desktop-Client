@@ -1,3 +1,4 @@
+import AssistantResponse from 'common/assistantResponse/assistantResponse';
 import { RendererInboundIpcChannel } from './utils';
 
 type RendererInboundIpcMetadataShape = {
@@ -71,6 +72,12 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
   'assistant:conversationEnded': {
     payload: undefined,
   },
+
+  'assistant:syncAssistantResponseHistory': {
+    payload: {
+      assistantResponseHistory: AssistantResponse[],
+    },
+  }
 
   'assistant:startMic': {
     payload: undefined,

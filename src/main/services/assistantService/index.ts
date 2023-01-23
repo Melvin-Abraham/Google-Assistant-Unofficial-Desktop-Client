@@ -1,5 +1,6 @@
 import GoogleAssistantApiDelegate from 'google-assistant';
 import { MainIpcBroker } from 'main/ipc/main/mainIpcBroker';
+import AssistantServiceEventHandlers from './assistantServiceEventHandler';
 import { AssistantServiceConfig, AssistantConversation } from './types';
 
 // This will load the actual module without any caveats
@@ -23,6 +24,11 @@ export class AssistantService {
    * Reference to the active assistant conversation object
    */
   conversation?: AssistantConversation;
+
+  /**
+   * Event handlers for assistant service
+   */
+  handlers: AssistantServiceEventHandlers;
 
   constructor() {
     this.config = {
@@ -48,14 +54,21 @@ export class AssistantService {
         },
       },
     };
+
+    this.handlers = {
+      onQuery: () => {},
+      onScreenData: () => {},
+      onAudioData: () => {},
+    };
   }
 
   /**
    * Initializes the assistant service
    */
-  initialize() {
+  initialize(handlers: AssistantServiceEventHandlers) {
     try {
       this.assistantApiDelegate = new GoogleAssistant(this.config.auth);
+      this.handlers = handlers;
 
       this.assistantApiDelegate?.on('ready', () => {});
       this.assistantApiDelegate?.on('started', this.handleConversation.bind(this));
@@ -66,6 +79,7 @@ export class AssistantService {
       // When the user invokes the assiatnt
       MainIpcBroker.onRendererEmit('assistant:invoke', (_, { query }) => {
         this.invokeAssistant(query);
+        this.handlers.onQuery(query ?? '');
       });
 
       // Write audio input buffer to the conversation when the user speaks
@@ -110,10 +124,15 @@ export class AssistantService {
 
       const audioBuffer = Buffer.from(data);
       MainIpcBroker.sendIpcMessageToRenderer('assistant:audioResponse', { audioBuffer });
+      this.handlers.onAudioData(audioBuffer);
     });
 
     conversation.on('transcription', (transcriptionObject) => {
       MainIpcBroker.sendIpcMessageToRenderer('assistant:transcription', transcriptionObject);
+
+      if (transcriptionObject.done) {
+        this.handlers.onQuery(transcriptionObject.transcription);
+      }
     });
 
     conversation.on('screen-data', (screenData) => {
@@ -121,6 +140,8 @@ export class AssistantService {
         ...screenData,
         data: screenData.data.toString(),
       });
+
+      this.handlers.onScreenData(screenData.data.toString());
     });
 
     conversation.on('end-of-utterance', () => {

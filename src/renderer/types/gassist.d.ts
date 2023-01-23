@@ -1,3 +1,5 @@
+import type AssistantResponse from 'common/assistantResponse/assistantResponse';
+
 interface GAssistApi {
   window: {
     /**
@@ -12,6 +14,12 @@ interface GAssistApi {
   };
 
   assistant: {
+    /**
+     * Callback called when there's an update in assistant
+     * response history
+     */
+    onAssistantResponseHistory(listener: (assistantResponseHistory: AssistantResponse[]) => void): void;
+
     /**
      * Callback called when assistant service emits an audio
      * response buffer.

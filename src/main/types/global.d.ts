@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron';
 import { AssistantAppConfig } from 'common/config/types';
-import { AssistantService } from 'main/services/assistantService';
+import AssistantResponseHistory from 'main/services/assistantResponseHistory/assistantResponseHistory';
+import MiddlewareService from 'main/services/middlewareService/middlewareService';
 
 interface SessionFlags {
   /**
@@ -17,9 +18,9 @@ declare global {
   var assistantWindow: BrowserWindow;
 
   /**
-   * Reference to the assistant service
+   * Reference to the middleware service
    */
-  var assistantService: AssistantService;
+  var middlewareService: MiddlewareService;
 
   /**
    * Resolved application configuration/preferences.
@@ -30,4 +31,10 @@ declare global {
    * Flags associated with current session.
    */
   var sessionFlags: SessionFlags;
+
+  /**
+   * Maintains history of assistant responses. This is
+   * synced with renderer process on start
+   */
+  var assistantResponseHistory: AssistantResponseHistory;
 }

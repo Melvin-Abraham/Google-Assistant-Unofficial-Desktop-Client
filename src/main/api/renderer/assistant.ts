@@ -1,4 +1,13 @@
+import type AssistantResponse from 'common/assistantResponse/assistantResponse';
 import { RendererIpcBroker } from 'main/ipc/renderer/rendererIpcBroker';
+
+export function onAssistantResponseHistory(
+  listener: (assistantResponseHistory: AssistantResponse[]) => void,
+) {
+  RendererIpcBroker.onMainEmit('assistant:syncAssistantResponseHistory', (_, { assistantResponseHistory }) => {
+    listener(assistantResponseHistory);
+  });
+}
 
 export function onAssistantAudioResponse(listener: (buffer: Buffer) => void) {
   RendererIpcBroker.onMainEmit('assistant:audioResponse', (_, { audioBuffer }) => {
