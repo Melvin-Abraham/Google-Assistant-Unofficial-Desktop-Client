@@ -58,6 +58,9 @@
             "LabeledStatement",
             "WithStatement"
         ],
+        "no-restricted-exports": ["error", {
+            "restrictedNamedExports": ["then"]
+        }],
         "import/no-unresolved": ["error", {
             "ignore": [".svg"]
         }],

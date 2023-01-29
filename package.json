@@ -39,7 +39,7 @@
         "watch:common": "yarn compile:common --watch --preserveWatchOutput",
         "watch:main": "yarn compile:main --watch --preserveWatchOutput",
         "watch:renderer": "vite",
-        "lint": "eslint --ignore-pattern \"app/**/*\" --ext \".ts, .tsx, .js\" .",
+        "lint": "eslint --ext \".ts, .tsx, .js\" .",
         "tscheck:common": "tsc -p ./src/common/tsconfig.json --noEmit",
         "tscheck:main": "tsc -p ./src/main/tsconfig.tscheck.json --noEmit",
         "tscheck:renderer": "tsc -p ./src/renderer/tsconfig.tscheck.json --noEmit",
