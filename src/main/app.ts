@@ -45,7 +45,7 @@ function onAppReady() {
     minWidth: 790,
     minHeight: 395,
     width: 1000,
-    height: 420,
+    height: 430,
     resizable: true,
     icon: path.join(__dirname, 'res', 'icon.png'),
     frame: false,
