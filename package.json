@@ -26,7 +26,7 @@
     "main": "./out/main/app.js",
     "scripts": {
         "start": "electron .",
-        "dev": "concurrently \"yarn watch:common\" \"yarn watch:renderer\" \"yarn watch:main\"",
+        "dev": "yarn compile:common && yarn watch",
         "build": "rimraf ./out/ && yarn compile:common && yarn compile:renderer && yarn compile:main && yarn clean:tscache",
         "dist": "yarn build && electron-builder",
         "dist:ci": "yarn dist --publish never",
@@ -36,6 +36,7 @@
         "compile:common": "ttsc --build ./src/common/tsconfig.json",
         "compile:main": "ttsc --build ./src/main/tsconfig.json",
         "compile:renderer": "yarn tscheck:renderer && vite build",
+        "watch": "concurrently -n common,renderer,main \"yarn watch:common\" \"yarn watch:renderer\" \"yarn watch:main\"",
         "watch:common": "yarn compile:common --watch --preserveWatchOutput",
         "watch:main": "yarn compile:main --watch --preserveWatchOutput",
         "watch:renderer": "vite",
