@@ -4,4 +4,13 @@
 
   // Take all available space
   flex: 1 1 auto;
+
+  .response-wrapper {
+    height: 100%;
+  }
+
+  .no-x-scroll {
+    overflow-x: hidden;
+    height: 100%;
+  }
 }
