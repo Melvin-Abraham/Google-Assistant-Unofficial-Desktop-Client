@@ -1,4 +1,4 @@
-import AssistantResponse from 'common/assistantResponse/assistantResponse';
+import type AssistantResponse from 'common/assistant-response/assistantResponseNode';
 import { MainIpcBroker } from 'main/ipc/main/mainIpcBroker';
 import { AssistantService } from '../assistantService';
 import AssistantResponseStage from './assistantResponseStage';

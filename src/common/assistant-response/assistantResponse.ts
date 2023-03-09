@@ -1,7 +1,7 @@
-interface AssistantResponse {
+interface AssistantResponse<T> {
   query: string;
   screenData: string | null;
-  audioData: Buffer | null;
+  audioData: T | null;
   addtionalSuggestions?: [];
 }
 

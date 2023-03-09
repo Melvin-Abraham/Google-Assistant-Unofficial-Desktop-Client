@@ -1,4 +1,4 @@
-import AssistantResponse from 'common/assistantResponse/assistantResponse';
+import type AssistantResponse from 'common/assistant-response/assistantResponseNode';
 import { RendererInboundIpcChannel } from './utils';
 
 type RendererInboundIpcMetadataShape = {

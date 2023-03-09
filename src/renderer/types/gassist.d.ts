@@ -1,4 +1,4 @@
-import type AssistantResponse from 'common/assistantResponse/assistantResponse';
+import type AssistantResponse from 'renderer/types/assistantResponse';
 
 interface GAssistApi {
   window: {

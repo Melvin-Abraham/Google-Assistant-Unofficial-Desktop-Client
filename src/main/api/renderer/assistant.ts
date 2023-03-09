@@ -1,4 +1,4 @@
-import type AssistantResponse from 'common/assistantResponse/assistantResponse';
+import type AssistantResponse from 'common/assistant-response/assistantResponseNode';
 import { RendererIpcBroker } from 'main/ipc/renderer/rendererIpcBroker';
 
 export function onAssistantResponseHistory(

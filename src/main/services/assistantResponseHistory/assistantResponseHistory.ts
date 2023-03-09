@@ -1,4 +1,4 @@
-import AssistantResponse from 'common/assistantResponse/assistantResponse';
+import type AssistantResponse from 'common/assistant-response/assistantResponseNode';
 
 class AssistantResponseHistory {
   history: AssistantResponse[];
