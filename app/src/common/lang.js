@@ -125,19 +125,19 @@ const supportedLanguages = {
   },
   "fr-FR": {
     langName: "Français (France)",
-    welcomeMessage: "Salut! Comment puis-je aider?",
-    inputPlaceholder: "Demande-moi n'importe quoi...",
-    listeningMessage: "Écoute...",
+    welcomeMessage: "Salut ! Comment puis-je aider ?",
+    inputPlaceholder: "Demandez-moi n'importe quoi…",
+    listeningMessage: "J'écoute…",
     initSuggestions: [
-      { label: "Temps", query: "Quel temps fait-il aujourd\\'hui?" },
+      { label: "Météo d\'aujourd\'hui", query: "Quel temps fait-il aujourd\\'hui ?" },
       { label: "Un tirage au sort", query: "Un tirage au sort" },
       {
-        label: "Que pouvez-vous faire?",
-        query: "Que pouvez-vous faire?",
+        label: "Que pouvez-vous faire ?",
+        query: "Que pouvez-vous faire ?",
       },
     ],
     noSuggestionsText: "Pas de suggestions.",
-    settingsUpdatedText: "Réglages a Réussi!",
+    settingsUpdatedText: "Réglages enregistrés !",
   },
   "it-IT": {
     langName: "Italiano (Italia)",
