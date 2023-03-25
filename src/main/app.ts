@@ -36,6 +36,13 @@ const assistantResponseHistory = new AssistantResponseHistory();
 global.middlewareService = middlewareService;
 global.assistantResponseHistory = assistantResponseHistory;
 
+// Prevent the audio output from being controlled by media keys like play/pause,
+// prev/next, seek, etc. which might interfere with other media content being played
+app.commandLine.appendSwitch(
+  'disable-features',
+  'HardwareMediaKeyHandling',
+);
+
 /**
  * Function invoked when the application is ready to start.
  */
