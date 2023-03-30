@@ -194,6 +194,19 @@ const supportedLanguages = {
     noSuggestionsText: "Nenhuma sugestão.",
     settingsUpdatedText: "Configurações Atualizadas!",
   },
+  "zh-TW": {
+    langName: "正體中文 (台灣)",
+    welcomeMessage: "你好！需要什麼協助嗎？",
+    inputPlaceholder: "試試看問我任何問題...",
+    listeningMessage: "聆聽中...",
+    initSuggestions: [
+      { label: "天氣", query: "今天天氣如何？" },
+      { label: "擲硬幣", query: "擲硬幣" },
+      { label: "你可以做什麼？", query: "你可以做什麼" },
+    ],
+    noSuggestionsText: "沒有建議。 ",
+    settingsUpdatedText: "設定已經更新！",
+  },
 };
 
 module.exports = supportedLanguages;
