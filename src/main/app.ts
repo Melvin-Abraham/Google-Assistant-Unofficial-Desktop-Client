@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as process from 'process';
 import * as url from 'url';
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, session } from 'electron';
 import { resolveAppConfig, getUserConfig } from 'common/config';
 import { initIpcListeners } from './ipc/main';
 import MiddlewareService from './services/middlewareService/middlewareService';
@@ -99,6 +99,9 @@ function onAppReady() {
     // During the development, the dev server will host the HTML
     // in localhost (in the configured port)
     rendererEntryPointUri = `http://localhost:${port}/`;
+
+    // Install React DevTools in development mode
+    installDevExtension();
   }
 
   assistantWindow.loadURL(rendererEntryPointUri);
@@ -106,3 +109,31 @@ function onAppReady() {
 
 // Initialize IPC listeners
 initIpcListeners();
+
+async function installDevExtension() {
+  const reactDevtoolsExtensionPath = process.env.REACT_DEVTOOLS_EXT_PATH;
+
+  if (!reactDevtoolsExtensionPath) {
+    // eslint-disable-next-line import/no-extraneous-dependencies
+    import('electron-devtools-installer').then(async (devtoolsInstaller) => {
+      const { default: installExtension, REACT_DEVELOPER_TOOLS } = devtoolsInstaller;
+
+      try {
+        await installExtension(REACT_DEVELOPER_TOOLS);
+        console.log('Added React DevTools extension');
+      }
+      catch (e) {
+        console.error('Encountered error while installing React DevTools', e);
+      }
+    });
+  }
+  else {
+    try {
+      await session.defaultSession.loadExtension(reactDevtoolsExtensionPath);
+      console.log('Added React DevTools extension from given path');
+    }
+    catch (e) {
+      console.error('Encountered error while installing React DevTools via given path', e);
+    }
+  }
+}
