@@ -55,8 +55,8 @@ class MiddlewareService {
     global.assistantResponseHistory.append(modifiedResponse);
 
     MainIpcBroker.sendIpcMessageToRenderer(
-      'assistant:syncAssistantResponseHistory',
-      { assistantResponseHistory: global.assistantResponseHistory.history },
+      'assistant:newAssistantResponseItem',
+      { assistantResponse: modifiedResponse },
     );
   }
 

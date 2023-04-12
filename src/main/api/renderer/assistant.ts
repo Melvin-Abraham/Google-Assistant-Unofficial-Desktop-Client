@@ -9,6 +9,14 @@ export function onAssistantResponseHistory(
   });
 }
 
+export function onNewAssistantResponseItem(
+  listener: (assistantResponse: AssistantResponse) => void,
+) {
+  RendererIpcBroker.onMainEmit('assistant:newAssistantResponseItem', (_, { assistantResponse }) => {
+    listener(assistantResponse);
+  });
+}
+
 export function onAssistantAudioResponse(listener: (buffer: Buffer) => void) {
   RendererIpcBroker.onMainEmit('assistant:audioResponse', (_, { audioBuffer }) => {
     listener(audioBuffer);

@@ -21,6 +21,12 @@ interface GAssistApi {
     onAssistantResponseHistory(listener: (assistantResponseHistory: AssistantResponse[]) => void): void;
 
     /**
+     * Callback called when there's a new in assistant response
+     * added to the response history
+     */
+    onNewAssistantResponseItem(listener: (assistantResponse: AssistantResponse) => void): void;
+
+    /**
      * Callback called when assistant service emits an audio
      * response buffer.
      */

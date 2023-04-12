@@ -26,7 +26,7 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
        */
       authUrl: string,
     },
-  };
+  },
 
   'assistant:audioResponse': {
     payload: {
@@ -34,7 +34,7 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
        * Chunk of audio buffer received as a voice response
        */
       audioBuffer: Buffer,
-    }
+    },
   },
 
   'assistant:transcription': {
@@ -48,7 +48,7 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
        * Specifies whether transcription is complete
        */
       done: boolean,
-    }
+    },
   },
 
   'assistant:screenData': {
@@ -62,7 +62,7 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
        * Format of screen data
        */
       format: 'HTML' | string,
-    }
+    },
   },
 
   'assistant:endOfUtterance': {
@@ -77,7 +77,13 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
     payload: {
       assistantResponseHistory: AssistantResponse[],
     },
-  }
+  },
+
+  'assistant:newAssistantResponseItem': {
+    payload: {
+      assistantResponse: AssistantResponse,
+    },
+  },
 
   'assistant:startMic': {
     payload: undefined,

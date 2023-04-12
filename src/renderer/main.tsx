@@ -9,8 +9,9 @@ import App from './App';
 audioPlayer.setDeviceId('default');
 
 // Append incoming assistant audio response buffer to audio player
-gassist.assistant.onAssistantAudioResponse((buffer) => {
-  audioPlayer.appendBuffer(buffer);
+gassist.assistant.onNewAssistantResponseItem((assistantResponse) => {
+  const { audioData } = assistantResponse;
+  if (audioData !== null) audioPlayer.appendBuffer(audioData);
 });
 
 // Play the audio response when conversation is complete

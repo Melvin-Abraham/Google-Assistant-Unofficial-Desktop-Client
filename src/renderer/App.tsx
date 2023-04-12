@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
 import gassist from 'gassist';
 import AssistantContainer from 'components/AssistantContainer/AssistantContainer';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -16,20 +22,34 @@ function App() {
     { label: 'What can you do?' },
   ];
 
-  const [assistantResponseHistory, setAssistantResponseHistory] = useState<AssistantResponse[]>([]);
+  const assistantResponseHistoryRef = useRef<AssistantResponse[]>([]);
+  const assistantResponseHistory = useCallback(() => assistantResponseHistoryRef.current, []);
+  const setAssistantResponseHistory = useCallback((history: AssistantResponse[]) => {
+    assistantResponseHistoryRef.current = history;
+  }, []);
+
   const [historyHead, setHistoryHead] = useState(-1);
 
   useEffect(() => {
     gassist.assistant.onAssistantResponseHistory((history) => {
       setAssistantResponseHistory(history);
-      setHistoryHead(history.length - 1);
+      setHistoryHead(assistantResponseHistory().length);
+    });
+
+    gassist.assistant.onNewAssistantResponseItem((assistantResponse) => {
+      // Push the new response to assistant response history list
+      assistantResponseHistoryRef.current.push(assistantResponse);
+
+      // Additionally trigger re-render for changes made in
+      // assistant response history ref
+      setHistoryHead(assistantResponseHistory().length - 1);
     });
   }, []);
 
   return (
     <AssistantHistoryProvider
       value={{
-        assistantResponseHistory,
+        assistantResponseHistory: assistantResponseHistory(),
         setAssistantResponseHistory,
         historyHead,
         setHistoryHead,
@@ -37,7 +57,7 @@ function App() {
     >
       <div className="App">
         <AssistantContainer>
-          <TitleBar query={assistantResponseHistory.at(historyHead)?.query} />
+          <TitleBar query={assistantResponseHistory().at(historyHead)?.query} />
           <ResponseViewlet />
           <SuggestionsViewlet suggestions={suggestions} />
           <QueryBar />
