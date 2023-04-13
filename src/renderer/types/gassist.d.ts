@@ -56,6 +56,11 @@ interface GAssistApi {
     onEndOfUtterance(listener: () => void): void;
 
     /**
+     * Callback called when the audio response playback is requested to be stopped
+     */
+    onRequestStopAudioResponsePlayback(listener: () => void): void;
+
+    /**
      * Callback called when the mic is requested to be started
      */
     onRequestStartMic(listener: () => void): void;

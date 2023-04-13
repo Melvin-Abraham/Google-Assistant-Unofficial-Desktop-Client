@@ -45,6 +45,10 @@ export function onEndOfUtterance(listener: () => void) {
   RendererIpcBroker.onMainEmit('assistant:endOfUtterance', listener);
 }
 
+export function onRequestStopAudioResponsePlayback(listener: () => void) {
+  RendererIpcBroker.onMainEmit('assistant:stopAudioResponsePlayback', listener);
+}
+
 export function onRequestStartMic(listener: () => void) {
   RendererIpcBroker.onMainEmit('assistant:startMic', listener);
 }

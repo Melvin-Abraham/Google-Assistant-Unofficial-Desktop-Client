@@ -25,6 +25,7 @@ export const rendererInboundIpcChannels = [
   'assistant:conversationEnded',
   'assistant:startMic',
   'assistant:stopMic',
+  'assistant:stopAudioResponsePlayback',
 ] as const;
 
 /**

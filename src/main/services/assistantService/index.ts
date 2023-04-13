@@ -79,6 +79,7 @@ export class AssistantService {
 
       // When the user invokes the assiatnt
       MainIpcBroker.onRendererEmit('assistant:invoke', (_, { query }) => {
+        MainIpcBroker.sendIpcMessageToRenderer('assistant:stopAudioResponsePlayback', undefined);
         this.invokeAssistant(query);
         this.handlers.onQuery(query ?? '');
       });

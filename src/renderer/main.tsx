@@ -19,6 +19,12 @@ gassist.assistant.onNewAssistantResponseItem((assistantResponse) => {
   }
 });
 
+// Stop the audio response playback when requested by main process
+// Possibly called when the user triggers a text query
+gassist.assistant.onRequestStopAudioResponsePlayback(() => {
+  audioPlayer.stop();
+});
+
 // Play the audio response when conversation is complete
 gassist.assistant.onAssistantConversationComplete(() => {
   console.log('Conversation Ended');

@@ -92,4 +92,8 @@ export interface RendererInboundIpcMetadata extends RendererInboundIpcMetadataCo
   'assistant:stopMic': {
     payload: undefined,
   },
+
+  'assistant:stopAudioResponsePlayback': {
+    payload: undefined,
+  },
 }
