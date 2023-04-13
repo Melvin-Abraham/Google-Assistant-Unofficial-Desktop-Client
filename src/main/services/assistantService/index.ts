@@ -59,6 +59,7 @@ export class AssistantService {
       onQuery: () => {},
       onScreenData: () => {},
       onAudioData: () => {},
+      onConversationEnded: () => {},
     };
   }
 
@@ -104,26 +105,9 @@ export class AssistantService {
     this.conversation = conversation;
 
     conversation.on('audio-data', (data) => {
-      // If user disabled audio output, ignore audio data
-
-      if (!global.appConfig.enableAudioOutput) {
-        return;
-      }
-
-      // If current response was for typed query and the user
-      // disabled audio output for typed queries, ignore audio data
-
-      if (
-        this.config.conversation.textQuery
-        && !global.appConfig.enableAudioOutputForTypedQueries
-      ) {
-        return;
-      }
-
       // Append audio buffer to the audio buffer list
 
       const audioBuffer = Buffer.from(data);
-      MainIpcBroker.sendIpcMessageToRenderer('assistant:audioResponse', { audioBuffer });
       this.handlers.onAudioData(audioBuffer);
     });
 
@@ -154,6 +138,7 @@ export class AssistantService {
       }
 
       MainIpcBroker.sendIpcMessageToRenderer('assistant:conversationEnded', undefined);
+      this.handlers.onConversationEnded();
 
       if (shouldContinueConversation && global.appConfig.enableMicOnImmediateResponse) {
         MainIpcBroker.sendIpcMessageToRenderer('assistant:startMic', undefined);

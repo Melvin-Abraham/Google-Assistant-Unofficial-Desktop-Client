@@ -34,12 +34,16 @@ class MiddlewareService {
     this.assistantService = new AssistantService();
     this.responseInterceptors = [];
 
-    this.assistantResponseStage.onStageReady = this.postStageReadyCallback.bind(this);
-
     this.assistantService.initialize({
       onQuery: (query) => this.assistantResponseStage.set('query', query),
       onScreenData: (screenData) => this.assistantResponseStage.set('screenData', screenData),
-      onAudioData: (audioData) => this.assistantResponseStage.set('audioData', audioData),
+      onAudioData: (audioData) => {
+        const stageAudioData = this.assistantResponseStage.get().audioData ?? new Uint8Array();
+        const concatenatedAudioData = Buffer.concat([stageAudioData, audioData]);
+
+        this.assistantResponseStage.set('audioData', concatenatedAudioData);
+      },
+      onConversationEnded: () => this.postStageReadyCallback(),
     });
   }
 
@@ -48,6 +52,9 @@ class MiddlewareService {
    * API fetched response
    */
   async postStageReadyCallback() {
+    // If the response stage is not valid (in some cases), don't proceed
+    if (!this.assistantResponseStage.valid()) return;
+
     const assistantResponse = this.assistantResponseStage.get();
     this.assistantResponseStage.clear();
 

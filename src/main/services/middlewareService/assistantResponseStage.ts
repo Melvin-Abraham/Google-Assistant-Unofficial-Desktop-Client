@@ -1,32 +1,35 @@
 import type AssistantResponse from 'common/assistant-response/assistantResponseNode';
 
+/**
+ * Consolidates the response fetched by Assistant API
+ */
 class AssistantResponseStage {
   private stage: Partial<AssistantResponse>;
-  onStageReady: () => void;
 
   constructor() {
     this.stage = {};
-    this.onStageReady = (() => {});
   }
 
   set<K extends keyof AssistantResponse>(key: K, value: AssistantResponse[K]) {
     this.stage[key] = value;
-
-    // If the stage is ready, invoke callback
-    if (this.ready()) {
-      this.onStageReady();
-    }
   }
 
   get() {
     return this.stage;
   }
 
-  ready() {
+  valid() {
+    // Check if the stage has atleast some data to
+    // be classified as valid
+    const hasData = [
+      this.stage.screenData,
+      this.stage.audioData,
+    ].some((value) => value !== undefined);
+
     return (
       this.stage.query !== undefined
-      && this.stage.screenData !== undefined
-      && this.stage.audioData !== undefined
+      && this.stage.query.length > 0
+      && hasData
     );
   }
 
