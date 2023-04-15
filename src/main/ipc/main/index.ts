@@ -14,7 +14,7 @@ export function initIpcListeners() {
   });
 
   // Send App Config
-  MainIpcBroker.onRendererEmit('app:getAppConfig', () => {
+  MainIpcBroker.onRendererEmit('app:getAppConfig', async () => {
     const { appConfig } = global;
     return appConfig;
   });

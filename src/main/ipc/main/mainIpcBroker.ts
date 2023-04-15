@@ -1,11 +1,6 @@
-import { ipcMain, IpcMainEvent, IpcMainInvokeEvent } from 'electron';
-import { RendererOutboundIpcMetadata } from 'main/ipc/renderer/ipcOutboundMetadata';
-import { RendererInboundIpcMetadata } from 'main/ipc/renderer/ipcInboundMetadata';
-
-import {
-  isRendererSyncRequestIpcChannel,
-  isRendererAsyncRequestIpcChannel,
-} from 'main/ipc/renderer/utils';
+import { ipcMain, IpcMainInvokeEvent } from 'electron';
+import { RendererIpcRequestMetadata } from 'main/ipc/renderer/rendererIpcRequestMetadata';
+import { RendererInboundIpcMetadata } from 'main/ipc/renderer/rendererInboundIpcMetadata';
 
 export class MainIpcBroker {
   /**
@@ -20,36 +15,20 @@ export class MainIpcBroker {
 
   /**
    * Listens for incoming IPC messages and requests from renderer
-   * process.
-   *
-   * @param channel
-   * @param listener
+   * process
    */
-  static onRendererEmit<K extends keyof RendererOutboundIpcMetadata>(
+  static onRendererEmit<K extends keyof RendererIpcRequestMetadata>(
     channel: K,
     listener: RendererListenerCallback<K>,
   ) {
-    if (isRendererAsyncRequestIpcChannel(channel)) {
-      ipcMain.handle(channel, (event, payload) => {
-        const returnValue = listener(event, payload);
-        return returnValue;
-      });
-
-      return;
-    }
-
-    ipcMain.on(channel, (event, payload) => {
+    ipcMain.handle(channel, (event, payload) => {
       const returnValue = listener(event, payload);
-
-      if (isRendererSyncRequestIpcChannel(channel)) {
-        // eslint-disable-next-line no-param-reassign
-        event.returnValue = returnValue;
-      }
+      return returnValue;
     });
   }
 }
 
-type RendererListenerCallback<K extends keyof RendererOutboundIpcMetadata> = (
-  event: IpcMainEvent | IpcMainInvokeEvent,
-  payload: RendererOutboundIpcMetadata[K]['payload'],
-) => RendererOutboundIpcMetadata[K]['returnType'];
+type RendererListenerCallback<K extends keyof RendererIpcRequestMetadata> = (
+  event: IpcMainInvokeEvent,
+  payload: RendererIpcRequestMetadata[K]['payload'],
+) => RendererIpcRequestMetadata[K]['returnType'];
