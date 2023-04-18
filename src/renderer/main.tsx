@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import gassist from 'gassist';
 import { audioPlayer } from 'lib/audio/audioPlayer';
-import './index.scss';
+import { AssistantHistoryProvider } from 'renderer/contexts/assistantHistory';
+import { AssistantConfigProvider } from 'renderer/contexts/config';
 import App from './App';
+import './index.scss';
 
 // Set default Sink ID for audio player
 audioPlayer.setDeviceId('default');
@@ -46,7 +48,11 @@ gassist.assistant.onScreenData((data, format) => {
 
 const rootRenderElement = (
   <React.StrictMode>
-    <App />
+    <AssistantConfigProvider>
+      <AssistantHistoryProvider>
+        <App />
+      </AssistantHistoryProvider>
+    </AssistantConfigProvider>
   </React.StrictMode>
 );
 
