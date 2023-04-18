@@ -1,3 +1,4 @@
+import type { AssistantAppConfig } from 'common/config/types';
 import type AssistantResponse from 'renderer/types/assistantResponse';
 
 interface GAssistApi {
@@ -11,6 +12,13 @@ interface GAssistApi {
      * Requests the window to minimize
      */
     minimizeWindow(): void;
+  };
+
+  app: {
+    /**
+     * Fetches the application's config (or settings)
+     */
+    getAppConfig(): Promise<AssistantAppConfig>;
   };
 
   assistant: {
