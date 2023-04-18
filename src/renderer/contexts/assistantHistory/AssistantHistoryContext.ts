@@ -10,5 +10,4 @@ const context = createContext({
   setHistoryHead: (_head: number) => {},
 });
 
-export const AssistantHistoryProvider = context.Provider;
-export const assistantHistoryContext = context;
+export default context;

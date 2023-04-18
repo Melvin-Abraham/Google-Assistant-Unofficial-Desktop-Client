@@ -1,9 +1,9 @@
 import { useContext, useMemo } from 'react';
-import { assistantHistoryContext } from 'renderer/contexts/assistantHistory/AssistantHistoryContext';
+import { AssistantHistoryContext } from 'renderer/contexts/assistantHistory';
 import AssistantResponseTransformer from 'renderer/lib/assistantResponseTransformer/assistantResponseTransformer';
 
 function useHistory() {
-  const assistantHistoryContextData = useContext(assistantHistoryContext);
+  const assistantHistoryContextData = useContext(AssistantHistoryContext);
   const { assistantResponseHistory, historyHead } = assistantHistoryContextData;
 
   const currentHistoryItem = useMemo(() => {
