@@ -258,15 +258,17 @@ class UpdaterService {
       // Delete existing `.app` in application directory
       // to avoid problems with moving the updated version
       // to the destination.
-
-      cp.execSync(`rm -rf "${appPath}"`);
+      const removeExistingApp = `rm -rf "${appPath}"`;
 
       // Copy the extracted `.app` to the application directory
-      cp.execSync([
+      const moveUpdateToApplications = [
         'mv',
         `"${cacheFolder}/Google Assistant.app"`,
         `"${appPathParent}"`,
-      ].join(' '));
+      ].join(' ');
+
+      // Apply update (remove and move update)
+      cp.execSync(`${removeExistingApp} && ${moveUpdateToApplications}`);
 
       this.sendStatusToWindow(UpdaterStatus.UpdateApplied, null);
       onUpdateApplied();

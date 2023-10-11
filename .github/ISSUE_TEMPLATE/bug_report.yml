@@ -52,6 +52,7 @@ body:
       description: "What version of Google Assistant are you running?"
       options:
         - Built from source
+        - v1.1.0
         - v1.0.0
         - v1.0.0-rc.2
         - v1.0.0-rc.1

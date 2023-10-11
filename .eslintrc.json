@@ -12,7 +12,8 @@
       "ecmaVersion": 12
   },
   "ignorePatterns": [
-    "*.min.js"
+    "*.min.js",
+    "**/lib/pv_workers/*.js"
   ],
   "rules": {
     "linebreak-style": "off",

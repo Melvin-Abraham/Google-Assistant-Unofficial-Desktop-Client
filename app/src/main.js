@@ -37,11 +37,13 @@ minimizeButton.onclick = () => {
 const electron = require('electron');
 const GoogleAssistant = require('google-assistant');
 const isValidAccelerator = require('electron-is-accelerator');
+const googleIt = require('google-it');
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+require('./auth/authHandler');
 const { KeyBindingListener, getNativeKeyName } = require('./keybinding');
 const { getHotwordDetectorInstance } = require('./hotword');
 const supportedLanguages = require('./common/lang');
@@ -1193,6 +1195,29 @@ function inspectResponseType(assistantResponseString) {
     ? youtubeMatch[3].startsWith('https://m.youtube.com/watch?v=')
     : false;
 
+  const googleSearchPrompts = [
+    'here\'s a result from search',
+    'here\'s a result from the web',
+    'here\'s the top search result',
+    'this came back from google',
+    'this came back from a search',
+    'here\'s what i found on the web',
+    'this is the top result',
+    'here\'s what i found',
+    'here\'s some info',
+    'this is from wikipedia',
+    'i found this on wikipedia',
+    'here\'s an answer from wikipedia',
+    'here\'s a wikipedia result',
+    'here\'s the top wikipedia result',
+    'wikipedia has this result',
+    'here\'s something from wikipedia',
+    'here\'s a result from wikipedia',
+    'here\'s a matching wikipedia result',
+  ];
+
+  const isGoogleSearchPrompt = googleSearchPrompts.includes(mainArea.innerText.toLowerCase());
+
   let type;
   let searchResultParts;
 
@@ -1203,6 +1228,10 @@ function inspectResponseType(assistantResponseString) {
   else if (isGoogleTopSearchResult) {
     type = 'google-search-result';
     searchResultParts = searchResultMatch.slice(1, 5);
+  }
+  else if (isGoogleSearchPrompt) {
+    type = 'google-search-result-prompt';
+    searchResultParts = null;
   }
   else {
     type = null;
@@ -3940,6 +3969,40 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
           </div>
         `;
       }
+      else if (responseType['type'] === 'google-search-result-prompt') {
+        activateLoader();
+
+        const searchResults = await googleIt({
+          query: getCurrentQuery(),
+          'no-display': true,
+        });
+
+        const topResult = searchResults[0];
+
+        const googleSearchResultScreenData = `
+          <div
+            class="google-search-result"
+            data-url="${topResult.link}"
+          >
+            <div style="font-size: 22px;">
+              ${topResult.title}
+            </div>
+
+            <div style="opacity: 0.502; padding-top: 5px;">
+              ${topResult.link}
+            </div>
+
+            <hr color="#ffffff" style="opacity: 0.25;">
+
+            <div style="padding-top: 10px;">
+              ${topResult.snippet}
+            </div>
+          </div>
+        `;
+
+        textContainer.innerHTML = googleSearchResultScreenData;
+        deactivateLoader();
+      }
     }
 
     if (innerText.indexOf('https://www.google.com/search?tbm=isch') !== -1) {
@@ -4073,7 +4136,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
   const suggestionsDOM = htmlDocument.querySelector('#assistant-scroll-bar');
   const suggestionParent = document.querySelector('.suggestion-parent');
 
-  if (suggestionsDOM != null) {
+  if (suggestionsDOM != null || responseType['type'] === 'google-search-result-prompt') {
     if (responseType['type'] || hasWebAnswer || hasKnowledgePanel) {
       suggestionParent.innerHTML += `
         <div class="suggestion" onclick="openLink('https://google.com/search?q=${getCurrentQuery()}')" data-flag="action-btn">
@@ -4145,7 +4208,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
       `;
     }
 
-    for (let i = 0; i < suggestionsDOM.children.length; i++) {
+    for (let i = 0; i < suggestionsDOM?.children.length; i++) {
       const label = suggestionsDOM.children[i].innerHTML.trim();
       const query = suggestionsDOM.children[i].getAttribute('data-follow-up-query');
       let action = query;
@@ -4197,7 +4260,7 @@ async function displayScreenData(screen, pushToHistory = false, theme = null) {
   if (pushToHistory && mainArea.querySelector('.error-area') == null) {
     let screenData;
 
-    if (isGoogleImagesContent) {
+    if (isGoogleImagesContent || responseType['type'] === 'google-search-result-prompt') {
       screenData = generateScreenData(true);
     }
     else {
@@ -4247,20 +4310,22 @@ function generateScreenData(includePreventAutoScaleFlag = false) {
   const suggestions = document.querySelector('.suggestion-parent').children;
   let suggestionsDOM = '';
 
-  for (let i = 0; i < suggestions.length; i++) {
-    const flag = suggestions[i].getAttribute('data-flag');
-    const flagAttrib = flag ? `data-flag="${flag}"` : '';
-    const label = suggestions[i].innerHTML.trim();
+  if (suggestions.length > 0 && suggestions[0].classList.contains('suggestion')) {
+    for (let i = 0; i < suggestions.length; i++) {
+      const flag = suggestions[i].getAttribute('data-flag');
+      const flagAttrib = flag ? `data-flag="${flag}"` : '';
+      const label = suggestions[i].innerHTML.trim();
 
-    const followUpQuery = suggestions[i]
-      .getAttribute('onclick')
-      .replace(/assistantTextQuery\(`(.*)`\)/, '$1');
+      const followUpQuery = suggestions[i]
+        .getAttribute('onclick')
+        .replace(/assistantTextQuery\(`(.*)`\)/, '$1');
 
-    suggestionsDOM += `
-    <button data-follow-up-query="${followUpQuery}" ${flagAttrib}>
-      ${label}
-    </button>
-    `;
+      suggestionsDOM += `
+      <button data-follow-up-query="${followUpQuery}" ${flagAttrib}>
+        ${label}
+      </button>
+      `;
+    }
   }
 
   const screenDataSuggestionsHTML = `
@@ -4558,7 +4623,7 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
       >
         Countdown timer
       </span>
-      <div class="no-auth-grid" style="margin-top: 60px;">
+      <div class="no-auth-grid" name="get-token" style="margin-top: 60px;">
         <div class="no-auth-grid-icon">
           <img src="../res/auth.svg" alt="Auth" />
         </div>
@@ -4581,6 +4646,19 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
             placeholder="Paste the code..."
             style="margin-top: 20px;"
           />
+
+          <a
+            onclick="openLink('https://github.com/Melvin-Abraham/Google-Assistant-Unofficial-Desktop-Client/wiki/Setup-Authentication-for-Google-Assistant-Unofficial-Desktop-Client#configure-credentials')"
+            name="configure-creds-link"
+            style="
+              display: none;
+              font-size: 16px;
+              margin-top: 24px;
+              color: var(--color-accent);
+            "
+          >
+              Read updated Credential Configuration Guide
+          </a>
         </div>
       </div>
     </div>
@@ -4817,6 +4895,26 @@ function showGetTokenScreen(oauthValidationCallback, authUrl) {
       };
     }
   };
+
+  // Show the user new link to configure credential guide
+  // if not already using updated oauth key file
+  if (fs.existsSync(config.auth.keyFilePath)) {
+    const oauthKey = JSON.parse(fs.readFileSync(config.auth.keyFilePath));
+
+    // Check if the oauth key file uses old redirect URI or type
+    const isOldKeyFile = (
+      oauthKey.web === undefined
+      || !oauthKey.web.redirect_uris[0].startsWith('http://localhost:5754')
+    );
+
+    if (isOldKeyFile) {
+      const configureCredsGuideLink = document.querySelector('a[name=configure-creds-link]');
+      configureCredsGuideLink.style.display = 'block';
+
+      const getTokenView = document.querySelector('[name=get-token]');
+      getTokenView.style.marginTop = '30px';
+    }
+  }
 }
 
 /**

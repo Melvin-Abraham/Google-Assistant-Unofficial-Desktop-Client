@@ -84,7 +84,7 @@ function getTagReleaseLink(version) {
  */
 function markdownToHtml(markdownString) {
   // Compile Markdown to HTML
-  let htmlString = marked(markdownString);
+  let htmlString = marked.marked(markdownString);
 
   // Sanitize HTML String
   htmlString = sanitize(htmlString);
