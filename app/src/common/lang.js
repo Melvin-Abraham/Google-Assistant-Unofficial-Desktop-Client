@@ -121,7 +121,7 @@ const supportedLanguages = {
     settingsUpdatedText: "Réglages mis à jour !  ",
   },
   "fr-FR": {
-    langName: "Français (Canada)",
+    langName: "Français (France)",
     welcomeMessage: "Bonjour, comment puis-je vous aider ?",
     inputPlaceholder: "Demande-moi n'importe quoi...",
     listeningMessage: "Écoute...",
